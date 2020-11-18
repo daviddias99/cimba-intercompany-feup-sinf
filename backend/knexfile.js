@@ -1,4 +1,5 @@
 const dotenv = require('dotenv');
+
 dotenv.config();
 
 module.exports = {
@@ -14,14 +15,14 @@ module.exports = {
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      directory: `${module.path}/database/migrations`
+      directory: `${module.path}/database/migrations`,
     },
     seeds: {
-      directory: `${module.path}/database/seeds`
-    }
+      directory: `${module.path}/database/seeds`,
+    },
   },
 
 };
