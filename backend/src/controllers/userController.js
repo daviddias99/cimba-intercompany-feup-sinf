@@ -1,8 +1,6 @@
-const router = require('express').Router();
+const db = require('../../database/knex');
 
-const db = require('../../../database/knex');
-
-router.get('/', async (req, res) => {
+exports.all_users = async (req, res) => {
   try {
     const users = await db('users').select();
     res.send(users);
@@ -11,6 +9,4 @@ router.get('/', async (req, res) => {
     console.log(err);
     process.exit(1);
   }
-});
-
-module.exports = router;
+};
