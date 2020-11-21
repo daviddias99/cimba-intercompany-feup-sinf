@@ -22,11 +22,6 @@ exports.new_company_map = async (req, res) => {
       return;
     }
 
-    if (!req.params.id) {
-      res.status(400).json('Expected to have the id as Paramenter for creating a map for a Company\'s!').send();
-      return;
-    }
-
     const ownerCompany = await db('companies').where({ id: req.params.id }).first();
 
     if (ownerCompany.company_key === req.body.company_key) {
@@ -47,25 +42,6 @@ exports.new_company_map = async (req, res) => {
       company_key: req.body.company_key,
     }], ['id', 'company_id', 'local_id', 'company_key']);
     res.send(companyMap);
-  } catch (err) {
-    console.log('DataBase Error...');
-    console.log(err);
-  }
-};
-
-exports.company_by_id = async (req, res) => {
-  try {
-    if (!req.params.id) {
-      res.status(400).json('Expected to have the id as Paramenter for getting a Company!').send();
-      return;
-    }
-
-    const user = await db('companies').where({ id: req.params.id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
-    if (!user) {
-      res.status(404).json(`Company with ID ${req.params.id} not found!`).send();
-      return;
-    }
-    res.send(user);
   } catch (err) {
     console.log('DataBase Error...');
     console.log(err);

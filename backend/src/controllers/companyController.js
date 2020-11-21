@@ -41,11 +41,6 @@ exports.new_company = async (req, res) => {
 
 exports.company_by_id = async (req, res) => {
   try {
-    if (!req.params.id) {
-      res.status(400).json('Expected to have the id as Paramenter for getting a Company!').send();
-      return;
-    }
-
     const user = await db('companies').where({ id: req.params.id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
     if (!user) {
       res.status(404).json(`Company with ID ${req.params.id} not found!`).send();
