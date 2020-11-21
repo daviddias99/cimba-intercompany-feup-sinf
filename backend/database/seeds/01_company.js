@@ -3,7 +3,7 @@ exports.seed = function (knex) {
   return knex('companies').del()
     .then(() => knex('companies').insert([
       {
-        companyKey: 'companyKey', appID: 'appID', appSecret: 'appSecret', tenant: 'tenant', organization: 'organization',
+        company_key: 'company_key', app_id: 'app_id', app_secret: 'app_secret', tenant: 'tenant', organization: 'organization',
       },
     ]));
 };

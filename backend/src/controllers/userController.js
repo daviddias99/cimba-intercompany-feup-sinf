@@ -68,7 +68,7 @@ exports.user_company = async (req, res) => {
       return;
     }
 
-    const company = await db('companies').where({ id: user.company_id }).first(['id', 'companyKey', 'appID', 'tenant', 'organization']);
+    const company = await db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
 
     res.send(company);
   } catch (err) {
