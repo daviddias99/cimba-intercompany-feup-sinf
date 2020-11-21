@@ -4,10 +4,6 @@ exports.allItemMaps = async (req, res) => {
 };
 
 exports.newItemMap = async (req, res) => {
-  if (!req.body.item_id || !req.body.local_id) {
-    return res.status(400).json('Expected to have the item_id and local_id as Arguments for Creating a Company\'s Item Map!');
-  }
-
   const mapsForTheSameLocalID = await req.app.db('item_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
 
   if (mapsForTheSameLocalID.length) {

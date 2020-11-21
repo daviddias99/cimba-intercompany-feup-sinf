@@ -6,10 +6,6 @@ exports.allUsers = async (req, res) => {
 };
 
 exports.newUser = async (req, res) => {
-  if (!req.body.username) {
-    return res.status(400).json('Expected to have the Username Argument for Creating an User!');
-  }
-
   const user = await req.app.db('users').insert([{ username: req.body.username }, { password: bcrypt.hashSync('req.body.password', 10) }], ['id', 'username']);
   return res.status(201).json(user);
 };

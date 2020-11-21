@@ -4,10 +4,6 @@ exports.allCompanyMaps = async (req, res) => {
 };
 
 exports.newCompanyMap = async (req, res) => {
-  if (!req.body.company_key || !req.body.local_id) {
-    return res.status(400).json('Expected to have the company_key and local_id as Arguments for Creating a Company\'s CompanyMap!');
-  }
-
   const ownerCompany = await req.app.db('companies').where({ id: req.params.id }).first();
 
   if (ownerCompany.company_key === req.body.company_key) {

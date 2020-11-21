@@ -4,11 +4,6 @@ exports.allCompanies = async (req, res) => {
 };
 
 exports.newCompany = async (req, res) => {
-  if (!req.body.company_key || !req.body.app_id || !req.body.app_secret || !req.body.tenant
-    || !req.body.organization) {
-    return res.status(400).json('Expected to have the company_key, app_id, app_secret, tenant and organization as Arguments for Creating a Company!');
-  }
-
   const companiesWithSameCompanyKey = await req.app.db('companies').where({ company_key: req.body.company_key });
 
   if (companiesWithSameCompanyKey.length) {
