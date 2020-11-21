@@ -32,3 +32,24 @@ exports.new_user = async (req, res) => {
     process.exit(1);
   }
 };
+
+exports.user_by_id = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      res.status(400).json('Expected to have the id as Paramenter for getting an User!').send();
+      return;
+    }
+
+    const user = await db('users').where({ id: req.params.id }).first(['id', 'username']);
+
+    if (!user) {
+      res.status(404).json(`User with ID ${req.params.id} not found!`).send();
+      return;
+    }
+    res.send(user);
+  } catch (err) {
+    console.log('Failed to establish connection to database! Exiting...');
+    console.log(err);
+    process.exit(1);
+  }
+};
