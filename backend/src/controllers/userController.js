@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt');
 
-exports.all_users = async (req, res) => {
+exports.allUsers = async (req, res) => {
   const users = await req.app.db('users').select(['id', 'username']);
   return res.json(users);
 };
 
-exports.new_user = async (req, res) => {
+exports.newUser = async (req, res) => {
   if (!req.body.username) {
     return res.status(400).json('Expected to have the Username Argument for Creating an User!');
   }
@@ -14,7 +14,7 @@ exports.new_user = async (req, res) => {
   return res.status(201).json(user);
 };
 
-exports.user_by_id = async (req, res) => {
+exports.userById = async (req, res) => {
   const user = await req.app.db('users').where({ id: req.params.id }).first(['id', 'username']);
 
   if (!user) {
@@ -23,7 +23,7 @@ exports.user_by_id = async (req, res) => {
   return res.json(user);
 };
 
-exports.user_company = async (req, res) => {
+exports.userCompany = async (req, res) => {
   const user = await req.app.db('users').where({ id: req.params.id }).first();
 
   if (!user) {

@@ -1,9 +1,9 @@
-exports.all_company_maps = async (req, res) => {
+exports.allCompanyMaps = async (req, res) => {
   const companyMaps = await req.app.db('company_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'company_key']);
   return res.json(companyMaps);
 };
 
-exports.new_company_map = async (req, res) => {
+exports.newCompanyMap = async (req, res) => {
   if (!req.body.company_key || !req.body.local_id) {
     return res.status(400).json('Expected to have the company_key and local_id as Arguments for Creating a Company\'s CompanyMap!');
   }
