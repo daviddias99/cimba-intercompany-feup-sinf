@@ -17,6 +17,15 @@ exports.up = function (knex) {
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id');
     })
+    .createTable('item_maps', (table) => {
+      table.increments();
+      table.string('local_id').notNullable();
+      table.string('item_id').notNullable();
+      table.integer('company_id').unsigned();
+      table.foreign('company_id').references('companies.id');
+
+      table.unique(['local_id', 'company_id'], 'items_map_unique');
+    })
     .createTable('company_maps', (table) => {
       table.increments();
       table.string('local_id').notNullable();
@@ -25,12 +34,14 @@ exports.up = function (knex) {
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id');
 
-      table.unique('local_id', 'company_id');
+      table.unique(['local_id', 'company_id'], 'company_map_unique');
     });
 };
 
 exports.down = function (knex) {
   return knex.schema
+    .dropTable('item_maps')
+    .dropTable('company_maps')
     .dropTable('users')
     .dropTable('companies');
 };
