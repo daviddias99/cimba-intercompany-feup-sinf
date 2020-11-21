@@ -16,11 +16,6 @@ exports.new_item_map = async (req, res) => {
     return;
   }
 
-  if (!req.params.id) {
-    res.status(400).json('Expected to have the id as Paramenter for creating a map for a Company\'s!').send();
-    return;
-  }
-
   const mapsForTheSameLocalID = await db('item_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
 
   if (mapsForTheSameLocalID.length) {
@@ -33,19 +28,5 @@ exports.new_item_map = async (req, res) => {
     local_id: req.body.local_id,
     item_id: req.body.item_id,
   }], ['id', 'company_id', 'local_id', 'item_id']);
-  res.send(companyMap);
-};
-
-exports.company_by_id = async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).json('Expected to have the id as Paramenter for getting a Company!').send();
-    return;
-  }
-
-  const user = await db('companies').where({ id: req.params.id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
-  if (!user) {
-    res.status(404).json(`Company with ID ${req.params.id} not found!`).send();
-    return;
-  }
-  res.send(user);
+  res.status(201).send(companyMap);
 };

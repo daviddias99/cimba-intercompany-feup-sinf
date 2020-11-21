@@ -12,21 +12,11 @@ exports.new_user = async (req, res) => {
     return;
   }
 
-  if (!req.body.password) {
-    res.status(400).json('Expected to have the Password Argument for Creating an User!').send();
-    return;
-  }
-
   const user = await db('users').insert([{ username: req.body.username }, { password: bcrypt.hashSync('req.body.password', 10) }], ['id', 'username']);
-  res.send(user);
+  res.status(201).send(user);
 };
 
 exports.user_by_id = async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).json('Expected to have the id as Paramenter for getting an User!').send();
-    return;
-  }
-
   const user = await db('users').where({ id: req.params.id }).first(['id', 'username']);
 
   if (!user) {
@@ -37,11 +27,6 @@ exports.user_by_id = async (req, res) => {
 };
 
 exports.user_company = async (req, res) => {
-  if (!req.params.id) {
-    res.status(400).json('Expected to have the id as Paramenter for User\'s Company!').send();
-    return;
-  }
-
   const user = await db('users').where({ id: req.params.id }).first();
 
   if (!user) {
