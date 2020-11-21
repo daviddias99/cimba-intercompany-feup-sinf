@@ -19,7 +19,7 @@ exports.all_company_maps = async (req, res) => {
 exports.new_company_map = async (req, res) => {
   try {
     if (!req.body.company_key || !req.body.local_id) {
-      res.status(400).json('Expected to have the company_key and local_id as Arguments for Creating a Company!').send();
+      res.status(400).json('Expected to have the company_key and local_id as Arguments for Creating a Company\'s CompanyMap!').send();
       return;
     }
 
