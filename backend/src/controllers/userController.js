@@ -24,7 +24,7 @@ exports.new_user = async (req, res) => {
     }
 
     const user = await db('users').insert([{ username: req.body.username }, { password: bcrypt.hashSync('req.body.password', 10) }], ['id', 'username']);
-    res.send(user);
+    res.status(201).send(user);
   } catch (err) {
     console.log('DataBase Error...');
     console.log(err);

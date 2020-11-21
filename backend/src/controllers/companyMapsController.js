@@ -41,7 +41,7 @@ exports.new_company_map = async (req, res) => {
       local_id: req.body.local_id,
       company_key: req.body.company_key,
     }], ['id', 'company_id', 'local_id', 'company_key']);
-    res.send(companyMap);
+    res.status(201).send(companyMap);
   } catch (err) {
     console.log('DataBase Error...');
     console.log(err);

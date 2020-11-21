@@ -32,7 +32,7 @@ exports.new_company = async (req, res) => {
       tenant: req.body.tenant,
       organization: req.body.organization,
     }], ['id', 'company_key', 'app_id', 'tenant', 'organization']);
-    res.send(user);
+    res.status(201).send(user);
   } catch (err) {
     console.log('DataBase Error...');
     console.log(err);
