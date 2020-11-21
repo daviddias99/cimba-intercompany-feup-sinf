@@ -1,9 +1,8 @@
 const bcrypt = require('bcrypt');
-const db = require('../../database/knex');
 
 exports.all_users = async (req, res) => {
   try {
-    const users = await db('users').select(['id', 'username']);
+    const users = await req.app.db('users').select(['id', 'username']);
     res.send(users);
   } catch (err) {
     console.log('DataBase Error...');
@@ -23,7 +22,7 @@ exports.new_user = async (req, res) => {
       return;
     }
 
-    const user = await db('users').insert([{ username: req.body.username }, { password: bcrypt.hashSync('req.body.password', 10) }], ['id', 'username']);
+    const user = await req.app.db('users').insert([{ username: req.body.username }, { password: bcrypt.hashSync('req.body.password', 10) }], ['id', 'username']);
     res.status(201).send(user);
   } catch (err) {
     console.log('DataBase Error...');
@@ -33,7 +32,7 @@ exports.new_user = async (req, res) => {
 
 exports.user_by_id = async (req, res) => {
   try {
-    const user = await db('users').where({ id: req.params.id }).first(['id', 'username']);
+    const user = await req.app.db('users').where({ id: req.params.id }).first(['id', 'username']);
 
     if (!user) {
       res.status(404).json(`User with ID ${req.params.id} not found!`).send();
@@ -48,14 +47,14 @@ exports.user_by_id = async (req, res) => {
 
 exports.user_company = async (req, res) => {
   try {
-    const user = await db('users').where({ id: req.params.id }).first();
+    const user = await req.app.db('users').where({ id: req.params.id }).first();
 
     if (!user) {
       res.status(404).json(`User with ID ${req.params.id} not found!`).send();
       return;
     }
 
-    const company = await db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
+    const company = await req.app.db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
 
     res.send(company);
   } catch (err) {

@@ -1,5 +1,3 @@
-const db = require('../../database/knex');
-
 exports.all_item_maps = async (req, res) => {
   try {
     if (!req.params.id) {
@@ -7,7 +5,7 @@ exports.all_item_maps = async (req, res) => {
       return;
     }
 
-    const companyMaps = await db('item_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'item_id']);
+    const companyMaps = await req.app.db('item_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'item_id']);
     res.send(companyMaps);
   } catch (err) {
     console.log('DataBase Error...');
@@ -22,14 +20,14 @@ exports.new_item_map = async (req, res) => {
       return;
     }
 
-    const mapsForTheSameLocalID = await db('item_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
+    const mapsForTheSameLocalID = await req.app.db('item_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
 
     if (mapsForTheSameLocalID.length) {
       res.status(400).json(`There is already a map for local_id ${req.body.local_id} in company ${req.params.id}!`).send();
       return;
     }
 
-    const companyMap = await db('item_maps').insert([{
+    const companyMap = await req.app.db('item_maps').insert([{
       company_id: req.params.id,
       local_id: req.body.local_id,
       item_id: req.body.item_id,

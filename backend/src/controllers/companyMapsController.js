@@ -1,5 +1,3 @@
-const db = require('../../database/knex');
-
 exports.all_company_maps = async (req, res) => {
   try {
     if (!req.params.id) {
@@ -7,7 +5,7 @@ exports.all_company_maps = async (req, res) => {
       return;
     }
 
-    const companyMaps = await db('company_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'company_key']);
+    const companyMaps = await req.app.db('company_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'company_key']);
     res.send(companyMaps);
   } catch (err) {
     console.log('DataBase Error...');
@@ -22,21 +20,21 @@ exports.new_company_map = async (req, res) => {
       return;
     }
 
-    const ownerCompany = await db('companies').where({ id: req.params.id }).first();
+    const ownerCompany = await req.app.db('companies').where({ id: req.params.id }).first();
 
     if (ownerCompany.company_key === req.body.company_key) {
       res.status(400).json(`Owner's Company ID should be different from CompanyMaps Company Key (${req.body.company_key})!`).send();
       return;
     }
 
-    const mapsForTheSameLocalID = await db('company_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
+    const mapsForTheSameLocalID = await req.app.db('company_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
 
     if (mapsForTheSameLocalID.length) {
       res.status(400).json(`There is already a map for local_id ${req.body.local_id} in company ${req.params.id}!`).send();
       return;
     }
 
-    const companyMap = await db('company_maps').insert([{
+    const companyMap = await req.app.db('company_maps').insert([{
       company_id: req.params.id,
       local_id: req.body.local_id,
       company_key: req.body.company_key,
