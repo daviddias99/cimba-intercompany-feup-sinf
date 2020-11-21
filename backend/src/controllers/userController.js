@@ -6,9 +6,8 @@ exports.all_users = async (req, res) => {
     const users = await db('users').select(['id', 'username']);
     res.send(users);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };
 
@@ -27,9 +26,8 @@ exports.new_user = async (req, res) => {
     const user = await db('users').insert([{ username: req.body.username }, { password: bcrypt.hashSync('req.body.password', 10) }], ['id', 'username']);
     res.send(user);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };
 
@@ -48,9 +46,8 @@ exports.user_by_id = async (req, res) => {
     }
     res.send(user);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };
 
@@ -72,8 +69,7 @@ exports.user_company = async (req, res) => {
 
     res.send(company);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };

@@ -5,9 +5,8 @@ exports.all_companies = async (req, res) => {
     const companies = await db('companies').select(['id', 'company_key', 'app_id', 'tenant', 'organization']);
     res.send(companies);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };
 
@@ -35,9 +34,8 @@ exports.new_company = async (req, res) => {
     }], ['id', 'company_key', 'app_id', 'tenant', 'organization']);
     res.send(user);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };
 
@@ -55,8 +53,7 @@ exports.company_by_id = async (req, res) => {
     }
     res.send(user);
   } catch (err) {
-    console.log('Failed to establish connection to database! Exiting...');
+    console.log('DataBase Error...');
     console.log(err);
-    process.exit(1);
   }
 };
