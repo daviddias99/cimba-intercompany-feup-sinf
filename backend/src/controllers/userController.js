@@ -53,3 +53,27 @@ exports.user_by_id = async (req, res) => {
     process.exit(1);
   }
 };
+
+exports.user_company = async (req, res) => {
+  try {
+    if (!req.params.id) {
+      res.status(400).json('Expected to have the id as Paramenter for User\'s Company!').send();
+      return;
+    }
+
+    const user = await db('users').where({ id: req.params.id }).first();
+
+    if (!user) {
+      res.status(404).json(`User with ID ${req.params.id} not found!`).send();
+      return;
+    }
+
+    const company = await db('companies').where({ id: user.company_id }).first(['id', 'companyKey', 'appID', 'tenant', 'organization']);
+
+    res.send(company);
+  } catch (err) {
+    console.log('Failed to establish connection to database! Exiting...');
+    console.log(err);
+    process.exit(1);
+  }
+};
