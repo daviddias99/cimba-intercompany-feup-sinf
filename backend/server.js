@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../database/knex');
+const db = require('./database/knex');
 
 const app = express();
 
@@ -18,6 +18,6 @@ app.get('/users', async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Listening on port ${process.env.PORT}.`);
+app.listen(8080, () => {
+  console.log(`Listening on port 8080.`);
 });

@@ -1,16 +1,12 @@
 {
-  "name": "cimba-api",
-  "version": "0.1.0",
-  "description": "Cimba's Rest API.",
-  "main": "src/server.js",
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "### Setup",
+  "main": "server.js",
   "scripts": {
-    "start": "node .",
-    "dev": "nodemon .",
-    "seed": "knex migrate:latest && knex seed:run",
-    "lint": "eslint . --ext .js",
-    "lintfix": "npm run lint -- --fix"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -20,7 +16,7 @@
     "pg": "^8.5.1"
   },
   "devDependencies": {
-    "eslint": "^7.13.0",
+    "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "nodemon": "^2.0.6"
