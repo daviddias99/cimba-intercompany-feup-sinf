@@ -19,7 +19,7 @@ exports.new_company = async (req, res) => {
       return;
     }
 
-    const companiesWithSameCompanyKey = await db('companies').where({ companyKey: req.body.company_key });
+    const companiesWithSameCompanyKey = await db('companies').where({ company_key: req.body.company_key });
 
     if (companiesWithSameCompanyKey.length) {
       res.status(400).json(`There is already a Company with company_key ${req.body.company_key}!`).send();
