@@ -16,4 +16,4 @@ RUN npm update
 # Bundle app source
 COPY . .
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "dev" ]
