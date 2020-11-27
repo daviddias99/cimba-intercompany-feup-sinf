@@ -1,0 +1,11 @@
+@import "assets/styles/bulma";
+
+.card {
+  min-width: 200px;
+  min-height: 100px;
+  background: #ffffff;
+
+  .card-content {
+    padding: 16px;
+  }
+}

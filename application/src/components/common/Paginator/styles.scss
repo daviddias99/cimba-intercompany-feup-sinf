@@ -1,0 +1,13 @@
+@import "assets/styles/bulma";
+
+.pagination-controller {
+  background-color: $cimba-red;
+
+  i {
+    color: white;
+  }
+}
+
+.page-limit {
+  opacity: 50%;
+}

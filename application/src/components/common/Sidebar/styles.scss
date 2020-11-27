@@ -1,0 +1,82 @@
+@import 'assets/styles/bulma';
+
+.sidebar {
+  min-width: $cimba-sidebar-width;
+  width: $cimba-sidebar-width;
+  height: 100%;
+  z-index: 100;
+  background: $cimba-sidebar-color;
+  left: 0px;
+  transition: left 350ms ease-in-out;
+
+  @media (max-width: $tablet) {
+    position: absolute;
+    left: - $cimba-sidebar-width;
+
+    &.opened {
+      left: 0px;
+    }
+  }
+
+  .header {
+    height: 84px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid darken($cimba-separator, 10);
+  }
+
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0px 0 1px rgba(10, 10, 10, 0.02);
+
+}
+
+.sidebar-hamburguer {
+  height: $cimba-sidebar-hamburguer-size;
+  width: $cimba-sidebar-hamburguer-size;
+  position: absolute;
+  top: calc(#{$cimba-navbar-height} / 2 - #{$cimba-sidebar-hamburguer-size});
+  left: 10px;
+  cursor: pointer;
+  display: none;
+  @media (max-width: $tablet) {
+    display: block;
+  }
+}
+
+.sidebar-split {
+  display: flex;
+}
+
+.sidebar-content {
+  width: 100%;
+  color: $cimba-light-font-color;
+}
+
+.sidebar-title {
+  width: 100%;
+  font-size: 18px;
+  padding: $cimba-sidebar-menu-padding;
+  padding-bottom: 10px;
+  box-sizing: border-box;
+  border-bottom: 1px solid darken($cimba-separator, 10);
+}
+
+.sidebar-cover {
+  z-index: $cimba-sidebar-cover-zindex;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100vh;
+  width: 100vw;
+  background-color: black;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 350ms ease-in-out;
+
+  @media (max-width: $tablet) {
+    &.opened {
+      opacity: 0.7;
+      pointer-events: unset;
+    }
+  }
+}

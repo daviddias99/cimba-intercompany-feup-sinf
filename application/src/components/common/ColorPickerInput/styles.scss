@@ -1,0 +1,38 @@
+@import "assets/styles/bulma";
+
+.color-picker-text {
+  width: 155px;
+  height: 24px;
+  font-size: 14px;
+  border: 1px solid $cimba-separator;
+  box-sizing: border-box;
+  border-right: 0px;
+  border-radius: 9px 0px 0px 9px;
+  padding-right: 2px;
+}
+
+.color-picker {
+  width: 72px;
+  height: 24px;
+  font-size: 14px;
+  border: 1px solid $cimba-separator;
+}
+
+.color-picker-preview {
+  width: 14px;
+  height: 24px;
+  border-radius: 12px 0px 0px 12px;
+  transform: rotate(-180deg);
+}
+
+.delete {
+  margin-left: 5px;
+}
+
+.add .delete {
+  transform: rotate(45deg);
+}
+
+.default {
+  padding-right: 30px;
+}

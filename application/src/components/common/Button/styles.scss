@@ -1,0 +1,15 @@
+@import 'assets/styles/bulma';
+
+.button {
+  text-decoration: none !important;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
+.button.is-text {
+  &:hover {
+    background-color: #e8e8e8 !important;
+  }
+}

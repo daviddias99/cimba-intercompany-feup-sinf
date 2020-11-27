@@ -1,0 +1,16 @@
+@import 'assets/styles/bulma';
+
+.loggerbar {
+  min-width: 84px;
+  width: 84px;
+  height: calc(100vh - 84px);
+  background: $cimba-dark-alpha;
+  border-right: 1px solid darken($cimba-separator, 10);
+  padding-top: 20px;
+
+  .logger-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
