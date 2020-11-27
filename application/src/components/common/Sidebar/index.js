@@ -23,30 +23,20 @@ const Sidebar = ({ loggerName }) => {
    */
   const menus = [
     {
-      title: 'Dashboard',
       links: [
-        { title: 'Activity', link: routes.activity.ref(currentLogger) },
-        { title: 'Performance', link: routes.performance.ref(currentLogger) }
+        { title: 'Dashboard', link: routes.activity.ref(currentLogger) },
+        { title: 'Orders', link: routes.performance.ref(currentLogger) },
+        { title: 'Mapping', link: routes.performance.ref(currentLogger) },
+        { title: 'Settings', link: routes.performance.ref(currentLogger) },
+        { title: 'Logs', link: routes.performance.ref(currentLogger) },
       ],
     },
     {
-      title: 'General',
+      title: 'Support',
       links: [
-        { title: 'Bots', link: routes.bots.ref(currentLogger) },
-        { title: 'Blacklist', link: routes.blacklist.ref(currentLogger) },
-        { title: 'Whitelist', link: routes.whitelist.ref(currentLogger) },
-        { title: 'Notifications', link: routes.notifications.ref(currentLogger) },
+        { title: 'Support', link: routes.bots.ref(currentLogger) },
       ],
     },
-    {
-      title: 'Settings',
-      links: [
-        { title: 'Logs', link: routes.logs.ref(currentLogger) },
-        { title: 'Rules', link: routes.rules.ref(currentLogger) },
-        { title: 'Keys', link: routes.keys.ref(currentLogger) },
-        { title: 'Settings', link: routes.settings.ref(currentLogger) },
-      ],
-    }
   ];
 
   /**
@@ -73,13 +63,8 @@ const Sidebar = ({ loggerName }) => {
         </span>
       </div>
       <div className={cx('sidebar', { opened })}>
-        <div className="header">
-        </div>
         <div className="sidebar-split">
           <div className="sidebar-content">
-            <div className="sidebar-title">
-              {loggerName}
-            </div>
             {getMenus()}
           </div>
         </div>

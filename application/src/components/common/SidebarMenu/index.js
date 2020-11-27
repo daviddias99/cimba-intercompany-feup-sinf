@@ -16,7 +16,7 @@ const SidebarMenu = ({ title, links }) => {
     return (
       <Link
         key={i}
-        className={cx('sidebarmenu-link', 'no-select', { selected })}
+        className={cx('sidebarmenu-link', 'no-select','has-text-weight-semibold', { selected })}
         to={link}
       >
         {title}
@@ -33,11 +33,19 @@ const SidebarMenu = ({ title, links }) => {
     }
   };
 
+  const getTitle = (ttl) => {
+    if (ttl)
+      return (
+      <div className="sidebarmenu-title">
+        {ttl}
+      </div>
+      );
+  }
+
   return (
     <div className="sidebarmenu-wrap">
-      <div className="sidebarmenu-title is-uppercase">
-        {title}
-      </div>
+
+      {getTitle(title)}
 
       <div className="sidebarmenu-links-wrap">
         {getLinks()}
