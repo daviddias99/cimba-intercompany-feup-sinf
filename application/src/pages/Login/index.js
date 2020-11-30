@@ -10,6 +10,9 @@ import { Button } from 'components/common/Button';
 import Toast from 'components/common/Toast';
 import Logo from 'components/common/Logo';
 
+import './styles.scss';
+
+
 // theres probably a better way to do this
 let numErrors = 0;
 
@@ -123,13 +126,10 @@ const Login = () => {
 
   return (
     <>
-      <div className="hero is-fullheight is-dark" >
+      <div className="hero is-fullheight" >
         <div className="hero-body container columns is-centered has-text-centered my-0">
-          <div>
-            <Logo dark large />
-            <hr />
-            <p className="subtitle">Big Brother is watching for you!</p>
-            <div className="card mb-3">
+          <div className="login-card card py-5">
+            <Logo large alt />
               <div className="card-content">
                 <form onSubmit={onSubmit}>
                   <div className="field">
@@ -146,8 +146,6 @@ const Login = () => {
                 </form>
               </div>
             </div>
-            <a className="has-text-grey" href="/">Lost your Password?</a>
-          </div>
         </div>
       </div >
       {getErrorToast()}
