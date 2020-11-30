@@ -1,0 +1,30 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+// Import brand variables
+@import '_variables.scss';
+// import initial variables
+@import 'bulma/sass/utilities/initial-variables.sass';
+// Update Bulma's global variables
+// font
+$family-sans-serif: 'Roboto', sans-serif;
+// colors
+$primary: $cimba-red;
+$info: $cimba-info;
+$success: $cimba-success;
+$warning: $cimba-warning;
+$danger: $cimba-danger;
+$dark: $cimba-dark;
+
+// Update some of Bulma's component variables
+$body-background-color: $cimba-light-background;
+$text: $cimba-dark;
+$pagination-current-background-color: $primary;
+$pagination-current-border-color: $primary;
+$pagination-border-color: $primary;
+$pagination-color: $primary;
+$pagination-ellipsis-color: $black;
+$table-cell-border: 2px solid $cimba-table-separator;
+$card-shadow: none;
+$card-border: 2px solid rgba($color: #3f3f44, $alpha: 0.15);

@@ -1,0 +1,21 @@
+@import 'assets/styles/bulma';
+
+.cimba-title {
+  
+
+
+  &.dark {
+    color: $cimba-logo-text-color;
+  }
+
+  &.light {
+    color: $cimba-logo-text-color;
+  }
+
+}
+
+figure.cimba-logo-image {
+  display: flex;
+  align-items: center;
+  margin-right: 0.3em;
+}

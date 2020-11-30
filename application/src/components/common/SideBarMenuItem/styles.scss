@@ -1,0 +1,33 @@
+@import 'assets/styles/bulma';
+
+.sidebarmenu-link {
+  width: 100%;
+  font-size: 15px;
+  color: $cimba-light-font-color;
+  padding-left: $cimba-sidebar-menu-padding;
+  padding-right: $cimba-sidebar-menu-padding;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: $cimba-light-font-color;
+  }
+
+  &.selected {
+    background-color: rgba(255, 255, 255, 0.16);
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  img {
+    margin-right: 1em;
+    height: 28px;
+  }
+}

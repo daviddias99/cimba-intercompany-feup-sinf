@@ -1,0 +1,10 @@
+@import 'assets/styles/bulma';
+
+.button {
+  text-decoration: none !important;
+
+  &:focus {
+    box-shadow: none !important;
+  }
+}
+
