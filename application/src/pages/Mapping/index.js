@@ -4,16 +4,16 @@ import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
 
 
-const Logs = () => {
+const Mapping = () => {
 
   return (
-    <Layout title='Logs'>
-      <Card title='Logs'>
-        <h1>Logs header</h1>
+    <Layout title='Mapping'>
+      <Card title='Mapping'>
+        <h1>Mapping header</h1>
       </Card>
     </Layout>
   );
 }
 
 
-export default Logs;
+export default Mapping;

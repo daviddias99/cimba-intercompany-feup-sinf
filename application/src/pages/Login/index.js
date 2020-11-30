@@ -81,7 +81,6 @@ const Login = () => {
     api.login({ email, password },
       (res) => {
         setLoading(false);
-        console.log(res.data);
         if (res.data.status === 200) {
           dispatch(loadUser(res.data.token));
         } else {

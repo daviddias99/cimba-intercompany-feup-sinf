@@ -1,7 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useSelector } from 'react-redux';
 import cx from 'classnames';
-import Proptypes from 'prop-types';
 
 import SidebarMenu from 'components/common/SidebarMenu';
 
@@ -9,10 +7,8 @@ import routes from 'routes';
 import icons from '../../../assets/icons';
 import './styles.scss';
 
-const Sidebar = ({ loggerName }) => {
+const Sidebar = () => {
   const [opened, setOpened] = useState(false);
-
-  const currentLogger = useSelector(state => state.global.currentLogger);
 
   const toggleSidebar = () => {
     setOpened(!opened);
@@ -24,17 +20,16 @@ const Sidebar = ({ loggerName }) => {
   const menus = [
     {
       links: [
-        { title: 'Dashboard', link: routes.activity.ref(currentLogger), image: icons.dashboardIcon },
-        { title: 'Orders', link: routes.performance.ref(currentLogger), image: icons.basketIcon },
-        { title: 'Mapping', link: routes.performance.ref(currentLogger), image: icons.peopleIcon},
-        { title: 'Settings', link: routes.performance.ref(currentLogger), image: icons.lockIcon },
-        { title: 'Logs', link: routes.performance.ref(currentLogger), image: icons.textIcon },
+        { title: 'Overview', link: routes.overview.ref(), image: icons.dashboardIcon },
+        { title: 'Mapping', link: routes.mapping.ref(), image: icons.peopleIcon},
+        { title: 'Settings', link: routes.settings.ref(), image: icons.lockIcon },
+        { title: 'Logs', link: routes.logs.ref(), image: icons.textIcon },
       ],
     },
     {
       title: 'Support',
       links: [
-        { title: 'Support', link: routes.bots.ref(currentLogger), image:icons.supportIcon },
+        { title: 'Support', link: routes.support.ref(), image:icons.supportIcon },
       ],
     },
   ];
@@ -75,10 +70,6 @@ const Sidebar = ({ loggerName }) => {
       />
     </Fragment>
   );
-};
-
-Sidebar.propTypes = {
-  loggerName: Proptypes.string,
 };
 
 export default Sidebar;

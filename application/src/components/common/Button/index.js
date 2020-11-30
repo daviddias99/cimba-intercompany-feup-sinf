@@ -17,7 +17,7 @@ const Button = ({ color = 'primary', type = BtnType.outlined, disabled = false, 
       className={cx('button', 'is-uppercase',
         type !== BtnType.text ? `is-${color}` : '',
         type === BtnType.text ? `has-text-${color}` : '', {
-          // 'is-outlined': type === BtnType.outlined,
+          'is-outlined': type === BtnType.outlined,
           'is-text': type === BtnType.text,
           'is-disabled': disabled,
           'is-loading': loading,

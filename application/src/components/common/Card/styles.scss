@@ -1,10 +1,11 @@
 @import "assets/styles/bulma";
+@import "assets/styles/_variables";
 
 .card {
   min-width: 200px;
   min-height: 100px;
   background: #ffffff;
-
+  border: $card-border;
   .card-content {
     padding: 16px;
   }

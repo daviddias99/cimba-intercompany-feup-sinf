@@ -10,7 +10,6 @@ const SidebarMenu = ({ title, links }) => {
    * Link sub-component.
    */
   const menuLink = ({ title, link, image }, i) => {
-    console.log(image);
     return (
       
       <SidebarMenuItem

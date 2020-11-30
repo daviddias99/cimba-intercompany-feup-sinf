@@ -3,6 +3,7 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 import './styles.scss';
+import logo from '../../../assets/images/cimba_logo_white.svg'
 
 const Logo = ({ dark = false, large = false }) => {
   return (
@@ -14,7 +15,7 @@ const Logo = ({ dark = false, large = false }) => {
         'is-24x24': !large
       }, 'cimba-logo-image')}
       >
-        <img src={`${process.env.PUBLIC_URL}/cimba_logo_white.svg`} alt="Cimba Logo" />
+        <img src={logo} alt="Cimba Logo" />
       </figure>
       <h1
         className={cx('pl-2 title has-text-weight-medium cimba-title is-uppercase', {

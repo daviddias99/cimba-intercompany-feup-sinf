@@ -9,7 +9,7 @@ import LoadingScreen from 'components/common/LoadingScreen';
 
 import './styles.scss';
 
-const Layout = ({ title, noSidebar, loading, children }) => {
+const Layout = ({ title, noSidebar, loading = false, children }) => {
   usePage(title);
 
   const getSidebar = () => {

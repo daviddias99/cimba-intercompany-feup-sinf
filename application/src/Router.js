@@ -6,10 +6,9 @@ import PropTypes from 'prop-types';
 import routes from 'routes';
 
 import RouteHandler from 'handlers/RouteHandler';
-
-import LoggerLanding from 'pages/LoggerLanding';
-import Activity from 'pages/Activity';
-import Bots from 'pages/Bots';
+import Overview from 'pages/Overview';
+import Settings from 'pages/Settings';
+import Mapping from 'pages/Mapping';
 import Logs from 'pages/Logs';
 import NotFound from 'pages/NotFound';
 import Login from 'pages/Login';
@@ -45,43 +44,24 @@ const Router = () => {
         <Route exact path={routes.login.def}>
           {loggedIn ? <Redirect to="/" /> : <Login />}
         </Route>
-        <PrivateRoute exact path={routes.dashboard.def}>
-          <Activity />
+        <Route exact path='/'>
+          <Redirect to="/overview" />
+        </Route>
+        <PrivateRoute exact path={routes.overview.def}>
+          <Overview />
         </PrivateRoute>
-        <PrivateRoute exact path={routes.loggerLanding.def}>
-          <LoggerLanding />
+        <PrivateRoute exact path={routes.mapping.def}>
+          <Mapping />
         </PrivateRoute>
-        <PrivateRoute exact path={routes.activity.def}>
-          <Activity />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.performance.def}>
-          <Activity />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.bots.def}>
-          <Bots />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.blacklist.def}>
-          <Activity />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.whitelist.def}>
-          <Activity />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.notifications.def}>
-          <Activity />
+        <PrivateRoute exact path={routes.settings.def}>
+          <Settings />
         </PrivateRoute>
         <PrivateRoute exact path={routes.logs.def}>
           <Logs />
         </PrivateRoute>
-        <PrivateRoute exact path={routes.rules.def}>
-          <Activity />
+        <PrivateRoute exact path={routes.support.def}>
+          <Overview />
         </PrivateRoute>
-        <PrivateRoute exact path={routes.keys.def}>
-          <Activity />
-        </PrivateRoute>
-        <PrivateRoute exact path={routes.settings.def}>
-          <Activity />
-        </PrivateRoute>
-
         <Route>
           <NotFound />
         </Route>
