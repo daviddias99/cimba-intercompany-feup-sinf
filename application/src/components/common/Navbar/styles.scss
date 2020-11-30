@@ -7,4 +7,20 @@
   border-bottom: 1px solid lighten($cimba-separator, 40);
   background: $cimba-dark-blue;
   padding: 0em 2em;
+
+  .navbar-button-wrapper {
+
+    img {
+      padding-left: 1em;
+      padding-right: 1em;
+      height: 24px;
+    }
+
+    border-bottom: 2px solid transparent;
+    border-radius: 3px;
+    &:hover {
+      border-bottom: 2px solid white;
+      border-radius: 3px;
+    }
+  }
 }

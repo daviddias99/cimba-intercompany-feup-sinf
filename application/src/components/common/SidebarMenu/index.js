@@ -1,26 +1,24 @@
 import React from 'react';
-import cx from 'classnames';
-import { useHistory, Link } from 'react-router-dom';
 import Proptypes from 'prop-types';
+import SidebarMenuItem from '../SideBarMenuItem';
 
 import './styles.scss';
 
 const SidebarMenu = ({ title, links }) => {
-  const history = useHistory();
 
   /**
    * Link sub-component.
    */
-  const menuLink = ({ title, link }, i) => {
-    const selected = history.location.pathname === link;
+  const menuLink = ({ title, link, image }, i) => {
+    console.log(image);
     return (
-      <Link
+      
+      <SidebarMenuItem
         key={i}
-        className={cx('sidebarmenu-link', 'no-select','has-text-weight-semibold', { selected })}
-        to={link}
-      >
-        {title}
-      </Link>
+        title={title}
+        image={image}
+        link={link}
+      />
     );
   };
 

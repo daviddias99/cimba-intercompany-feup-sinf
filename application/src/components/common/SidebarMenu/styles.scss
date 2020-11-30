@@ -26,28 +26,3 @@
   flex-direction: column;
   border-bottom: 1px solid rgba(10, 10, 10, 0.1);
 }
-
-.sidebarmenu-link {
-  width: 100%;
-  font-size: 15px;
-  color: $cimba-light-font-color;
-  padding-left: $cimba-sidebar-menu-padding;
-  padding-right: $cimba-sidebar-menu-padding;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  padding-left: 40px;
-  box-sizing: border-box;
-  cursor: pointer;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.08);
-    color: $cimba-light-font-color;
-  }
-
-  &.selected {
-    background-color: rgba(255, 255, 255, 0.16);
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-  }
-}

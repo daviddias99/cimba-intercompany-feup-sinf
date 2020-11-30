@@ -10,14 +10,14 @@ const BtnType = {
   text: 'text'
 };
 
-const Button = ({ color = 'primary', type = BtnType.filled, disabled = false, loading = false, fullwidth = false, onClick, children }) => {
+const Button = ({ color = 'primary', type = BtnType.outlined, disabled = false, loading = false, fullwidth = false, onClick, children }) => {
   return (
     <button
       onClick={onClick}
       className={cx('button', 'is-uppercase',
         type !== BtnType.text ? `is-${color}` : '',
         type === BtnType.text ? `has-text-${color}` : '', {
-          'is-outlined': type === BtnType.outlined,
+          // 'is-outlined': type === BtnType.outlined,
           'is-text': type === BtnType.text,
           'is-disabled': disabled,
           'is-loading': loading,

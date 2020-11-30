@@ -7,6 +7,7 @@ import './styles.scss';
 import api from 'services/api';
 import { useDispatch } from 'react-redux';
 import { logoutUser } from 'actions/userActions';
+import icons from '../../../assets/icons';
 
 const Navbar = () => {
   const [loading, setLoading] = useState(false);
@@ -22,9 +23,9 @@ const Navbar = () => {
         console.log('oops');
       }
     },
-    (error) => {
-      console.log(`login error: ${error}`);
-    });
+      (error) => {
+        console.log(`login error: ${error}`);
+      });
 
   };
 
@@ -34,21 +35,17 @@ const Navbar = () => {
         <Logo dark />
       </div>
       <div className="is-flex">
-        <Button color={'text'} type={BtnType.text}>
-          <span className="icon is-large">
-            <i className="fas fa-lg fa-cog"></i>
-          </span>
-        </Button>
 
-        <Button color={'text'} type={BtnType.text}>
-          <span className="icon is-large">
-            <i className="fas fa-lg fa-bell"></i>
-          </span>
-        </Button>
-
-        <Button onClick={logout} color={'primary'} type={BtnType.text} loading={loading}>
-          Logout
-        </Button>
+        <div className="navbar-button-wrapper">
+          <div className="notif-icon">
+            <img src={icons.notificationIcon} alt="Notification icon" />
+          </div>
+        </div>
+        <div className="navbar-button-wrapper">
+          <div className="logout-icon">
+            <img src={icons.exitIcon} alt="Logout icon" />
+          </div>
+        </div>
       </div>
     </nav>
   );
