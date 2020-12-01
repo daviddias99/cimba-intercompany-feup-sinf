@@ -4,10 +4,11 @@ const middlewares = require('./middlewares');
 
 const app = express();
 
-const db = require('../database/knex');
+const db = require('./database/knex');
+const { getToken } = require('./jasmin/tokens');
 
 app.listen(8080, () => {
-  console.log(`Listening on port 8080.`);
+  console.log('Listening on port 8080.');
 });
 
 // middleware
@@ -19,3 +20,11 @@ app.use('/', routes);
 app.db = db;
 app.use(middlewares.notFound);
 app.use(middlewares.error);
+
+const clientId = 'SINFAMAPP';
+const clientSecret = 'secret';
+
+(async () => {
+  const token = await getToken(clientId, clientSecret);
+  console.log(`Token: ${token}`);
+})();
