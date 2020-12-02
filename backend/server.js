@@ -4,10 +4,11 @@ const middlewares = require('./middlewares');
 
 const app = express();
 
-const db = require('../database/knex');
+const db = require('./database/knex');
+const { getToken } = require('./jasmin/tokens');
 
 app.listen(8080, () => {
-  console.log(`Listening on port 8080.`);
+  console.log('Listening on port 8080.');
 });
 
 // middleware
