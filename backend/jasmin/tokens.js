@@ -13,7 +13,7 @@ const cacheUserToken = (id, token, expiresIn) => {
   });
   setTimeout(() => {
     setInvalidToken(id);
-  }, expiresIn);
+  }, expiresIn * 1000);
 };
 
 exports.getToken = async (id, secret) => {

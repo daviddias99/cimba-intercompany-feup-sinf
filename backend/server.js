@@ -20,11 +20,3 @@ app.use('/', routes);
 app.db = db;
 app.use(middlewares.notFound);
 app.use(middlewares.error);
-
-const clientId = 'SINFAMAPP';
-const clientSecret = 'secret';
-
-(async () => {
-  const token = await getToken(clientId, clientSecret);
-  console.log(`Token: ${token}`);
-})();
