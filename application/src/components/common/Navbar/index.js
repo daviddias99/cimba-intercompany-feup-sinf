@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
-
-import { Button, BtnType } from 'components/common/Button';
+import React from 'react';
 import Logo from 'components/common/Logo';
 
 import './styles.scss';
 import api from 'services/api';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from 'actions/userActions';
 import icons from '../../../assets/icons';
 
 const Navbar = () => {
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
+  const username = window.localStorage.getItem('CIMBA_USERNAME');
   const logout = () => {
-    setLoading(true);
     api.logout((res) => {
-      setLoading(false);
-      if (res.data.status === 200) {
+      if (res.status === 200) {
         dispatch(logoutUser());
       } else {
         console.log('oops');
@@ -36,12 +31,16 @@ const Navbar = () => {
       </div>
       <div className="is-flex">
 
+        <div className="navbar-username-wrapper">
+          <p>You're logged in as {username}</p>
+        </div>
+
         <div className="navbar-button-wrapper">
           <div className="notif-icon">
             <img src={icons.notificationIcon} alt="Notification icon" />
           </div>
         </div>
-        <div className="navbar-button-wrapper">
+        <div className="navbar-button-wrapper" onClick={logout}>
           <div className="logout-icon">
             <img src={icons.exitIcon} alt="Logout icon" />
           </div>

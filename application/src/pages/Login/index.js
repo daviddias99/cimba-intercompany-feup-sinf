@@ -22,28 +22,26 @@ const Login = () => {
   const dispatch = useDispatch();
 
 
-  const [email, setEmail] = useState('');
+  const [username, serUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [toastList, setToastList] = useState([]);
 
-  const validateEmail = (email) => {
-    // eslint-disable-next-line
-    const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  const validateUsername = (username) => {
     // TODO: there is probably a better way to do this
-    if (!email) {
+    if (!username) {
       return {
         id: numErrors++,
-        title: 'Email required',
-        description: 'Please input an email address.',
+        title: 'Username required',
+        description: 'Please input an username.',
         color: 'info',
       };
-    } else if (!emailRegex.test(email.toLowerCase())) {
+    } else if (username.length < 3 || username.length > 10) {
       return {
         id: numErrors++,
-        title: 'Invalid Email',
-        description: 'Please input an actual email address.',
+        title: 'Invalid Username',
+        description: 'Must be between 3 and 10 characters',
         color: 'info',
       };
     }
@@ -70,7 +68,7 @@ const Login = () => {
     setLoading(true);
 
     // TODO: there is probably a better way to do this
-    const toastErrors = [validateEmail(email), validatePassword(password)].filter(obj => obj !== null);
+    const toastErrors = [validateUsername(username), validatePassword(password)].filter(obj => obj !== null);
     if (toastErrors.length !== 0) {
       setLoading(false);
       setError(true);
@@ -81,11 +79,11 @@ const Login = () => {
       return;
     }
 
-    api.login({ email, password },
+    api.login({ username, password },
       (res) => {
         setLoading(false);
         if (res.data.status === 200) {
-          dispatch(loadUser(res.data.token));
+          dispatch(loadUser({token: res.data.token, username: username}));
         } else {
           setError(true);
           setToastList([
@@ -104,9 +102,9 @@ const Login = () => {
     );
   };
 
-  const handleEmailChange = (e) => {
+  const handleUserNameChange = (e) => {
     const { value } = e.target;
-    setEmail(value);
+    serUsername(value);
   };
 
   const handlePasswordChange = (e) => {
@@ -134,7 +132,7 @@ const Login = () => {
                 <form onSubmit={onSubmit}>
                   <div className="field">
                     <div className="control">
-                      <input className="input" name="email" placeholder="Email" onChange={handleEmailChange} />
+                      <input className="input" name="username" placeholder="Username" onChange={handleUserNameChange} />
                     </div>
                   </div>
                   <div className="field">

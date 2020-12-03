@@ -8,7 +8,8 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_USER:
-      window.localStorage.setItem('JWT_TOKEN', action.data);
+      window.localStorage.setItem('JWT_TOKEN', action.data.token);
+      window.localStorage.setItem('CIMBA_USERNAME', action.data.username);
       return {
         ...state,
         loggedIn: true,

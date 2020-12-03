@@ -35,6 +35,13 @@ exports.up = function (knex) {
       table.foreign('company_id').references('companies.id');
 
       table.unique(['local_id', 'company_id'], 'company_map_unique');
+    })
+    .createTable('sessions', (table) => {
+      table.increments();
+      table.integer('user_id').references('id').inTable('users').notNullable()
+        .onDelete('CASCADE');
+      // useTz always store data in UTC Format
+      table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
     });
 };
 
