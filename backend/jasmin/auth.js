@@ -6,6 +6,8 @@ const scope = 'application';
 const grantType = 'client_credentials';
 
 exports.getJasminToken = async (clientId, clientSecret) => {
+
+  try {
   const response = await axios({
     url,
     method: 'post',
@@ -21,4 +23,8 @@ exports.getJasminToken = async (clientId, clientSecret) => {
   });
 
   return response.data;
+
+  } catch(error) {
+    return null;
+  }
 };
