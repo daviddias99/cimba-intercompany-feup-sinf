@@ -26,7 +26,7 @@ exports.userCompany = async (req, res) => {
     return res.status(404).json(`User with ID ${req.params.id} not found!`);
   }
 
-  const company = await req.app.db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_id', 'tenant', 'organization']);
+  const company = await req.app.db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_secret', 'app_id', 'tenant', 'organization']);
 
   return res.json(company);
 };
