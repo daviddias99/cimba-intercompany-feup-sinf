@@ -1,44 +1,46 @@
 const axios = require('axios');
 const { getToken } = require('./tokens');
 const { getCompany } = require('./db');
+const querystring = require('querystring');
 
-const url = 'https://identity.primaverabss.com/connect/token';
+const url = 'https://my.jasminsoftware.com';
 // const scope = 'application';
 // const grantType = 'client_credentials';
-
-const makeUrl = (endPoint, query, company) => {
-  let urlFollow = `${url}/api/${company.tenant}/${company.organization}/${endPoint}?`;
-
-  if (query) {
-    Object.keys(query).forEach((key) => {
-      if (query[key]) urlFollow += `${key}=${query[key]}&`;
-    });
-  }
-
-  return urlFollow;
-};
 
 exports.makeRequest = async (
   endPoint,
   method,
+  params,
   data,
-  query,
   companyID,
 ) => {
   const company = await getCompany(companyID);
 
-  const token = await getToken(companyID);
+  if(company == null)
+    return "Company Not Found";
 
-  const urlFollow = makeUrl(endPoint, query, company);
-  const res = await axios({
-    method,
-    urlFollow,
-    data,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
+  const token = await getToken(company.app_id, company.app_secret);
 
-  return res;
+  if(token == null)
+    return "Could not fetch token";
+
+  const urlFollow = `${url}/api/${company.tenant}/${company.organization}/${endPoint}`;
+
+  try {
+    const res = await axios({
+      method,
+      url: urlFollow,
+      data: querystring.stringify(data),
+      params: querystring.stringify(params),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    })
+    return res.data;
+    
+  } catch(error) {
+    console.log(error);
+    return error;
+  }
 };
