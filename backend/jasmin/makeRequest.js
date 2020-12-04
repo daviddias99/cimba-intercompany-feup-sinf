@@ -1,7 +1,7 @@
 const axios = require('axios');
+const querystring = require('querystring');
 const { getToken } = require('./tokens');
 const { getCompany } = require('./db');
-const querystring = require('querystring');
 
 const url = 'https://my.jasminsoftware.com';
 // const scope = 'application';
@@ -16,13 +16,11 @@ exports.makeRequest = async (
 ) => {
   const company = await getCompany(companyID);
 
-  if(company == null)
-    return "Company Not Found";
+  if (company == null) return 'Company Not Found';
 
   const token = await getToken(company.app_id, company.app_secret);
 
-  if(token == null)
-    return "Could not fetch token";
+  if (token == null) return 'Could not fetch token';
 
   const urlFollow = `${url}/api/${company.tenant}/${company.organization}/${endPoint}`;
 
@@ -36,10 +34,9 @@ exports.makeRequest = async (
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-    })
+    });
     return res.data;
-    
-  } catch(error) {
+  } catch (error) {
     console.log(error);
     return error;
   }

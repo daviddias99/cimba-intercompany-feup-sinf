@@ -23,8 +23,7 @@ exports.getToken = async (id, secret) => {
 
   const response = await getJasminToken(id, secret);
 
-  if(response == null)
-    return null;
+  if (response == null) return null;
 
   cacheUserToken(id, response.access_token, response.expires_in);
 
