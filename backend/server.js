@@ -7,10 +7,6 @@ const db = require('./database/knex');
 
 const app = express();
 
-app.listen(config.port, () => {
-  console.log(`Listening on port ${config.port}.`);
-});
-
 // middleware
 app.use(cors({ maxAge: config.maxAge }));
 app.use(express.json());
@@ -21,3 +17,7 @@ app.db = db;
 app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
+
+app.listen(config.port, () => {
+  console.log(`Listening on port ${config.port}.`);
+});

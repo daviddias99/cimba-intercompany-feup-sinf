@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const { makeRequest } = require('../jasmin/makeRequest');
 
+const { makeRequest } = require('../jasmin/makeRequest');
+
 router.get('/', async (req, res) => {
   res.send('Welcome to Cimba Intercompany.');
 });
