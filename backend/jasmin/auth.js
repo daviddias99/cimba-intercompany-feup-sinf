@@ -6,19 +6,23 @@ const scope = 'application';
 const grantType = 'client_credentials';
 
 exports.getJasminToken = async (clientId, clientSecret) => {
-  const response = await axios({
-    url,
-    method: 'post',
-    data: querystring.stringify({
-      scope,
-      grant_type: grantType,
-      client_id: clientId,
-      client_secret: clientSecret,
-    }),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-  });
+  try {
+    const response = await axios({
+      url,
+      method: 'post',
+      data: querystring.stringify({
+        scope,
+        grant_type: grantType,
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    return null;
+  }
 };
