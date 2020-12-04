@@ -1,7 +1,7 @@
 const axios = require('axios');
 const querystring = require('querystring');
 const { getToken } = require('./tokens');
-const { getCompany } = require('./db');
+const { getCompanyById } = require('../database/methods/companyMethods');
 
 const url = 'https://my.jasminsoftware.com';
 // const scope = 'application';
@@ -14,7 +14,7 @@ exports.makeRequest = async (
   data,
   companyID,
 ) => {
-  const company = await getCompany(companyID);
+  const company = await getCompanyById(companyID);
 
   if (company == null) return 'Company Not Found';
 
