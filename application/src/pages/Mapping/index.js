@@ -1,19 +1,19 @@
 import React from 'react';
 
 import Layout from 'components/common/Layout';
-import Card from 'components/common/Card';
-
+import Tabs from 'components/common/Tabs';
 
 const Mapping = () => {
 
   return (
     <Layout title='Mapping'>
-      <Card title='Mapping'>
-        <h1>Mapping header</h1>
-      </Card>
+      <Tabs>
+        <div label="Companies">
+
+        </div>
+      </Tabs>
     </Layout>
   );
 }
-
 
 export default Mapping;

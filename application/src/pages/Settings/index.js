@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
