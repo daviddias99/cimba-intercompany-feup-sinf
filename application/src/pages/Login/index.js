@@ -22,7 +22,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
 
-  const [username, serUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -104,7 +104,7 @@ const Login = () => {
 
   const handleUserNameChange = (e) => {
     const { value } = e.target;
-    serUsername(value);
+    setUsername(value);
   };
 
   const handlePasswordChange = (e) => {
