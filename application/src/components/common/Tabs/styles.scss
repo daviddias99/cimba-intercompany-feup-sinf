@@ -1,24 +1,27 @@
 @import 'assets/styles/bulma';
 
-.tabs {
-    position: relative;
-}
-
 .tab-list {
     display: flex;
-    // position: absolute;
+    align-items: center;
+    position: relative;
     top: 0;
     font-weight: bold;
-    border-bottom: 1px solid rgb(160, 152, 152);
+    border-bottom: $table-cell-border;
 }
 
-.tab-list * {
+.tab-list > * {
     padding: 0.65em;
     margin-right: 2em;
 }
 
 .tab-list > .active {
-    border-bottom: 2px solid orangered;
+    border-bottom: 2px solid $cimba-orange;
+}
+
+.tab-list-button {
+    position: absolute;
+    right: 0;
+    margin: 0;
 }
 
 .tab-content {
