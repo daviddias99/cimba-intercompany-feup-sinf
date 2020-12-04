@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Logo from 'components/common/Logo';
 
 import './styles.scss';
@@ -8,6 +8,7 @@ import { logoutUser } from 'actions/userActions';
 import icons from '../../../assets/icons';
 
 const Navbar = () => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const logout = () => {

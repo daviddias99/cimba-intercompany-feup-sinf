@@ -2,40 +2,27 @@ import React, { useState } from 'react';
 
 const Tabs = ({children}) => {
 
-    console.log("render")
+    // TODO: descobrir porque e que esta a fazer render duas vezes
 
-    const [activeTab, setActiveTab] = useState(0);
-
-    // const tabComps = children.map((child, idx) => {
-    //     return [
-    //         child,
-    //         idx !== children.length - 1 && (
-    //             <div key={idx} onClick={setActiveTab(idx)}>
-    //                 {child.label ? child.label : `Tab ${idx}`}
-    //             </div>
-    //         )
-    //     ];
-    // })
-
-    // const tabComps = React.Children.toArray(children).map((child, idx) => {
-    //     return (
-    //         <div key={idx} onClick={setActiveTab(idx)}>
-    //             {child.label ? child.label : `Tab ${idx}`}
-    //         </div>
-    //     )
-    // })
+    const [activeTab, setActiveTab] = useState(0)
+    const childrenArray = React.Children.toArray(children)
 
     return (
         <div className="tabs">
             <ol className="tab-list">
                 {
-                    React.Children.toArray(children).forEach((child, idx) => {
-                        <div key={idx} onClick={setActiveTab(idx)}>
-                            {child.label ? child.label : `Tab ${idx}`}
-                        </div>
+                    childrenArray.map((child, idx) => {
+                        return (
+                            <div key={idx} onClick={() => setActiveTab(idx)}>
+                                {child.props.label ? child.props.label : `Tab ${idx}`}
+                            </div> 
+                        )
                     })
                 }
             </ol>
+            <div className="tab-content">
+                {childrenArray[activeTab]}
+            </div>
         </div>
     );
 }
