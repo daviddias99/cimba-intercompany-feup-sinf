@@ -1,0 +1,26 @@
+@import 'assets/styles/bulma';
+
+.tabs {
+    position: relative;
+}
+
+.tab-list {
+    display: flex;
+    // position: absolute;
+    top: 0;
+    font-weight: bold;
+    border-bottom: 1px solid rgb(160, 152, 152);
+}
+
+.tab-list * {
+    padding: 0.65em;
+    margin-right: 2em;
+}
+
+.tab-list > .active {
+    border-bottom: 2px solid orangered;
+}
+
+.tab-content {
+    padding: 2em;
+}

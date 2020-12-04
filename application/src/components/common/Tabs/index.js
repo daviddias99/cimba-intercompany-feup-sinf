@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import classNames from "classnames";
+
+import './styles.scss';
 
 const Tabs = ({children}) => {
 
@@ -13,7 +16,7 @@ const Tabs = ({children}) => {
                 {
                     childrenArray.map((child, idx) => {
                         return (
-                            <div key={idx} onClick={() => setActiveTab(idx)}>
+                            <div key={idx} onClick={() => setActiveTab(idx)} className={idx === activeTab ? "active" : ""}>
                                 {child.props.label ? child.props.label : `Tab ${idx}`}
                             </div> 
                         )
