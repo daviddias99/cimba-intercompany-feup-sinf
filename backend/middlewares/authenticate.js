@@ -30,13 +30,17 @@ const authenticate = async (req, res, next) => {
     }
 
     // Check if user exists
-    const user = await req.app.db('users').where('id', userSession.user_id).first();
+    const user = await req.app.db('users').where('users.id', userSession.user_id).first();
+    const company = await req.app.db('companies').where('companies.id', user.company_id).first();
+    console.log(user);
+    console.log(company);
     if (!user) {
       return res.json({ status: 401 });
     }
 
     // store user
     req.user = user;
+    req.company = company;
     return next();
   } catch (err) {
     console.log(err);

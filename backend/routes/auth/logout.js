@@ -1,10 +1,8 @@
 const express = require('express');
-const middlewares = require('../../middlewares');
 
 const router = express.Router();
 
 router.post('/',
-  middlewares.authenticate,
   async (req, res) => {
     const { user } = req;
     // Check if user exists
