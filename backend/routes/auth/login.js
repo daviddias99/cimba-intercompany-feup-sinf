@@ -15,13 +15,13 @@ module.exports = async (req, res) => {
   // Check if user exists
   const user = await req.app.db('users').where('username', username).first();
   if (!user) {
-    return res.json({ status: 404, message: 'Data does not match our logs' });
+    return res.json({ status: 404, message: 'Username or password is incorrect' });
   }
 
   // Check if password matches
   const match = bcrypt.compareSync(password, user.password);
   if (!match) {
-    return res.json({ status: 404, message: 'Data does not match our logs' });
+    return res.json({ status: 404, message: 'Username or password is incorrect' });
   }
 
   // check if user already has a session available

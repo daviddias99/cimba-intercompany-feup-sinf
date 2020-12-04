@@ -15,7 +15,7 @@ app.listen(config.port, () => {
 app.use(cors({ maxAge: config.maxAge }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(middlewares.timeout(config.timeout)); // In the future change to a config file
+app.use(middlewares.timeout(config.timeout));
 
 app.db = db;
 app.use('/', routes);
