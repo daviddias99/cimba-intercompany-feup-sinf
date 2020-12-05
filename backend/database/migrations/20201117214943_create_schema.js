@@ -7,6 +7,7 @@ exports.up = function (knex) {
       table.string('app_secret').notNullable();
       table.string('tenant').notNullable();
       table.string('organization').notNullable();
+      table.string('name').notNullable();
     })
     .createTable('users', (table) => {
       table.increments();

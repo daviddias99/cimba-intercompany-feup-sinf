@@ -41,7 +41,8 @@ exports.makeRequest = async (
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    return res.data;
+    console.log(res);
+    return { status: res.status, data: res.data };
   } catch (error) {
     console.log(error);
     return error;

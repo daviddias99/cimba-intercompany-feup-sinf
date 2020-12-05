@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import Proptypes from 'prop-types';
 import './styles.scss';
 
-const TextFormField = ({ title, value, valueChanged, id}) => {
+const TextFormField = ({ title, value, disabled, valueChanged, id, placeholder = title}) => {
   return (
     <div className='text-form-field'>
       <p> {title} </p>
-      <input type='text' placeholder={title} value={value} onChange={(event) => valueChanged(id,event.target.value)} />
+      <input type='text' disabled={disabled} placeholder={placeholder} value={value} onChange={(event) => valueChanged(id,event.target.value)} />
     </div>
   );
 };

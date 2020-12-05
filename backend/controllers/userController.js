@@ -27,7 +27,7 @@ exports.userCompany = async (req, res) => {
     return res.status(404).json(`User with ID ${req.params.id} not found!`);
   }
 
-  const company = await req.app.db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_secret', 'app_id', 'tenant', 'organization']);
+  const company = await req.app.db('companies').where({ id: user.company_id }).first(['id', 'company_key', 'app_secret', 'app_id', 'tenant', 'organization', 'name']);
 
   return res.json(company);
 };
@@ -47,24 +47,25 @@ exports.updateUserCompany = async (req, res) => {
     .andWhere('app_secret', req.body.app_secret)
     .andWhere('tenant', req.body.tenant)
     .andWhere('organization', req.body.organization)
-    .select('id')
+    .select('id', 'name')
     .first());
 
   if (existentCompany) {
     await req.app.db('users').where('id', req.user.id).update('company_id', existentCompany.id);
     responseBody.id = existentCompany.id;
+    responseBody.name = existentCompany.name;
     return res.status(200).json({ status: 200, id: 'Success', data: responseBody });
   }
 
   // Check for existent company in jasmin database
   const jasminCompanySearch = await makeRequest(`corepatterns/companies/${req.body.company_key}`, 'get', '', null, null, req.body);
 
-  if (jasminCompanySearch.status) {
+  if (jasminCompanySearch.status !== 200) {
     return res.status(400).json({ status: 400, id: 'Bad Request', reason: 'Invalid company info.' });
   }
-
   // Create new company in cimba database and link user
 
+  responseBody.name = jasminCompanySearch.data.name;
   const newCompanyId = (await req.app.db('companies').insert(responseBody).returning('id'))[0];
   await req.app.db('users').where('id', req.user.id).update('company_id', newCompanyId);
   responseBody.id = newCompanyId;
