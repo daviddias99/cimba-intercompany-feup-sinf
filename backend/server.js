@@ -19,8 +19,8 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
-// TODO: change interval to config file
-setInterval(pollOrders, 15000);
+pollOrders();
+setInterval(pollOrders, config.pollInterval);
 
 app.listen(config.port, () => {
   console.log(`Listening on port ${config.port}.`);
