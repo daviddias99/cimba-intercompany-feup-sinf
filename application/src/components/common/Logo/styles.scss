@@ -1,17 +1,13 @@
 @import 'assets/styles/bulma';
 
 .cimba-title {
-  
-
-
   &.dark {
     color: $cimba-logo-text-color;
   }
 
   &.light {
-    color: $cimba-logo-text-color;
+    color: $cimba-dark-font-color;
   }
-
 }
 
 figure.cimba-logo-image {
