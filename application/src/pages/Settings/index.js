@@ -6,18 +6,23 @@ import { Button, BtnType } from 'components/common/Button';
 import TextFormField from 'components/common/TextFormField';
 import './styles.scss';
 import api from 'services/api';
+import Toast from 'components/common/Toast';
 
+// theres probably a better way to do this
+let numToasts = 0;
 
 const Settings = () => {
 
   const [data, setData] = useState(JSON.parse(window.localStorage.getItem('CIMBA_COMPANY')));
-  // const [isLoading, setIsLoading] = useState(true);
+  const [toastUp, setToastUp] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [toastList, setToastList] = useState([]);
   const userId = JSON.parse(window.localStorage.getItem('CIMBA_USER')).id;
 
   const getFooter = () => {
     return (
       <div className='save-settings'>
-        <Button btnType='submit' type={BtnType.filled} color={'primary'}> Save Settings</Button>
+        <Button btnType='submit' type={BtnType.filled} color={'primary'} loading={loading}> Save Settings</Button>
       </div>
     );
   }
@@ -25,21 +30,9 @@ const Settings = () => {
   const valueChanged = (id, value) => {
     setData(prevState => ({ ...prevState, [id]: value }));
   }
-  //   /**
-  //  * Fetches current user settings
-  //  */
-  //   const fetchSettings = () => {
-  //     api.getSettings(userId, (res) => {
-
-  //       if (res.status === 200) {
-  //         setData(res.data);
-  //         setSettings(res.data);
-  //       }
-  //       setIsLoading(false);
-  //     });
-  //   };
 
   const handleSubmit = (event) => {
+    setLoading(true);
     event.preventDefault();
     api.setSettings(
       userId,
@@ -51,14 +44,50 @@ const Settings = () => {
         organization: data.organization,
       },
       (res) => {
+        setToastUp(true);
+        setLoading(false);
         if (res.status === 200) {
-          window.localStorage.setItem('CIMBA_COMPANY', JSON.stringify(res.data.data));
-          console.log(res.data.data.name);
-          valueChanged('name', res.data.data.name);
+
+          if (res.data.data.name !== data.name) {
+            window.localStorage.setItem('CIMBA_COMPANY', JSON.stringify(res.data.data));
+            valueChanged('name', res.data.data.name);
+
+            setToastList([
+              ...toastList, {
+                id: numToasts++,
+                title: 'Company changed',
+                description: `Changed to company ${res.data.data.name}`,
+                color: 'success',
+              }
+            ]);
+          }
+
+        }
+        else {
+          setToastUp(true);
+          setToastList([
+            ...toastList, {
+              id: numToasts++,
+              title: 'Wrong Credentials',
+              description: 'Invalid company settings',
+              color: 'danger',
+            }
+          ]);
         }
       });
   };
 
+
+  const getErrorToast = () => {
+    if (toastUp) {
+      return (
+        <Toast
+          toastList={toastList}
+          position='top-right'
+        />
+      );
+    }
+  }
   return (
     <Layout title='Settings'>
       <div className='settings-content-card'>
@@ -75,6 +104,7 @@ const Settings = () => {
           </Card>
         </form>
       </div>
+      {getErrorToast()}
     </Layout>
   );
 }

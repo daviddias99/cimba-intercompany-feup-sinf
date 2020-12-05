@@ -36,28 +36,35 @@ const Toast = ({ toastList, position = 'bottom-right' }) => {
     <>
       <div className={`toast-container ${position}`}>
         {
-          list.map((toast, i) => (
-            <div
-              key={toast.id}
-              className={cx('notification toast',
-                toast.color ? `is-${toast.color}` : '', {
+          list.map((toast, i) => {
+
+            setTimeout(() =>
+              deleteToast(toast.id)
+              , 2000);
+
+            return (
+              <div
+                key={toast.id}
+                className={cx('notification toast',
+                  toast.color ? `is-${toast.color}` : '', {
                   'is-light': toast.light,
                 })}
-            >
-              <button className="delete" onClick={() => deleteToast(toast.id)}></button>
-              <div className="is-flex is-align-items-center mb-1">
-                <span className="icon">
-                  <i className={`fas ${getIconClass(toast.color)}`}></i>
-                </span>
-                <h3 className="title is-5">
-                  {toast.title}
-                </h3>
+              >
+                <button className="delete" onClick={() => deleteToast(toast.id)}></button>
+                <div className="is-flex is-align-items-center mb-1">
+                  <span className="icon">
+                    <i className={`fas ${getIconClass(toast.color)}`}></i>
+                  </span>
+                  <h3 className="title is-5">
+                    {toast.title}
+                  </h3>
+                </div>
+                <p>
+                  {toast.description}
+                </p>
               </div>
-              <p>
-                {toast.description}
-              </p>
-            </div>
-          ))
+            );
+          })
         }
       </div>
     </>
