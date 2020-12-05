@@ -1,16 +1,15 @@
-const { getCompanies } = require('../database/methods/companyMethods');
+const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
 const { getOrders } = require('../jasmin/orders');
 const { newPurchaseOrder } = require('./purchase');
 
-// TODO: lastPoll initial value should probably be the created time of the company
-let lastPoll = new Date('1995-12-17T03:24:00');
-
-const pollOrdersCompany = async (companyId, lastPollTime) => {
+const pollOrdersCompany = async (companyId) => {
   const orders = await getOrders(companyId);
+  const company = await getCompanyById(companyId);
+  const mostRecentOrderTime = company.most_recent_order;
 
   const newOrders = orders.filter((order) => {
     const orderDate = new Date(order.createdOn);
-    return orderDate.getTime() >= lastPollTime;
+    return orderDate.getTime() > mostRecentOrderTime;
   });
 
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
@@ -18,6 +17,5 @@ const pollOrdersCompany = async (companyId, lastPollTime) => {
 
 exports.pollOrders = async () => {
   const companies = await getCompanies();
-  companies.forEach((company) => pollOrdersCompany(company.id, lastPoll.getTime()));
-  lastPoll = new Date();
+  companies.forEach((company) => pollOrdersCompany(company.id));
 };
