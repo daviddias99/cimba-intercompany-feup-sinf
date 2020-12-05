@@ -1,3 +1,5 @@
+const { triggersUp, triggersDown } = require('../triggers');
+
 exports.up = function (knex) {
   return knex.schema
     .createTable('companies', (table) => {
@@ -8,6 +10,7 @@ exports.up = function (knex) {
       table.string('tenant').notNullable();
       table.string('organization').notNullable();
       table.unique('company_key');
+      table.timestamp('most_recent_order', { useTz: true }).defaultTo(knex.fn.now());
     })
     .createTable('users', (table) => {
       table.increments();
@@ -48,7 +51,11 @@ exports.up = function (knex) {
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.string('order_id').notNullable();
       table.unique('order_id');
-    });
+      table.timestamp('jasmin_created_on').notNullable();
+    })
+    .then(() => triggersUp.forEach(async (elem) => {
+      await knex.schema.raw(elem);
+    }));
 };
 
 exports.down = function (knex) {
@@ -57,5 +64,8 @@ exports.down = function (knex) {
     .dropTable('company_maps')
     .dropTable('users')
     .dropTable('companies')
-    .dropTable('orders');
+    .dropTable('orders')
+    .then(() => triggersDown.forEach(async (elem) => {
+      await knex.raw(elem);
+    }));
 };

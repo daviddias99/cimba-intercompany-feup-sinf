@@ -5,15 +5,15 @@ const { newPurchaseOrder } = require('./purchase');
 // TODO: lastPoll initial value should probably be the created time of the company
 let lastPoll = new Date('1995-12-17T03:24:00');
 
-const pollOrdersCompany = async (id, lastPollTime) => {
-  const orders = await getOrders(id);
+const pollOrdersCompany = async (companyId, lastPollTime) => {
+  const orders = await getOrders(companyId);
 
   const newOrders = orders.filter((order) => {
-    const orderDate = new Date(order.postingDate);
+    const orderDate = new Date(order.createdOn);
     return orderDate.getTime() >= lastPollTime;
   });
 
-  newOrders.forEach(newPurchaseOrder);
+  newOrders.forEach((order) => newPurchaseOrder(companyId, order));
 };
 
 exports.pollOrders = async () => {
