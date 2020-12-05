@@ -10,7 +10,7 @@ const BtnType = {
   text: 'text'
 };
 
-const Button = ({ color = 'primary', type = BtnType.outlined, disabled = false, loading = false, fullwidth = false, onClick, children }) => {
+const Button = ({ color = 'primary', type = BtnType.filled, disabled = false, loading = false, fullwidth = false, onClick, children }) => {
   return (
     <button
       onClick={onClick}

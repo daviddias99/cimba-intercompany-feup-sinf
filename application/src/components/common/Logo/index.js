@@ -3,9 +3,11 @@ import cx from 'classnames';
 import PropTypes from 'prop-types';
 
 import './styles.scss';
-import logo from '../../../assets/images/cimba_logo_white.svg'
+import whiteLogo from '../../../assets/images/cimba_logo_white.svg'
+import orangeLogo from '../../../assets/images/cimba-logo-orange.svg'
 
-const Logo = ({ dark = false, large = false }) => {
+const Logo = ({ dark = false, large = false, alt = false }) => {
+  const logo = alt ? orangeLogo : whiteLogo;
   return (
     <div className={cx('is-flex is-align-items-center is-justify-content-center', {
       'is-flex-direction-column': large,
