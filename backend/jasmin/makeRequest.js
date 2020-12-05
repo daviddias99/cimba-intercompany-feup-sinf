@@ -13,11 +13,17 @@ exports.makeRequest = async (
   params,
   data,
   companyID,
+  companyInfo,
 ) => {
-  const company = await getCompanyById(companyID);
+  let company = null;
 
-  if (company == null) return 'Company Not Found';
-
+  if (companyInfo !== null) {
+    company = companyInfo;
+  } else {
+    company = await getCompanyById(companyID);
+    if (company == null) return 'Company Not Found';
+  }
+  console.log(company);
   const token = await getToken(company.app_id, company.app_secret);
 
   if (token == null) return 'Could not fetch token';

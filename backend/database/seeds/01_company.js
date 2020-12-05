@@ -3,10 +3,10 @@ exports.seed = function (knex) {
   return knex('companies').del()
     .then(() => knex('companies').insert([
       {
-        id: 1, company_key: 'company_key', app_id: 'app_id', app_secret: 'app_secret', tenant: 'tenant', organization: 'organization',
+        company_key: 'SINFAM', app_id: process.env.CLIENT_ID, app_secret: process.env.CLIENT_SECRET, tenant: '242993', organization: '242993-0001',
       },
       {
-        id: 2, company_key: 'company_key1', app_id: 'app_id1', app_secret: 'app_secret1', tenant: 'tenant1', organization: 'organization1',
+        company_key: 'SINFAM', app_id: process.env.CLIENT_ID, app_secret: process.env.CLIENT_SECRET, tenant: '242994', organization: '242994-0001',
       },
     ]));
 };

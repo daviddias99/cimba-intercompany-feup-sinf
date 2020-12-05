@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-
+import { setSettings } from 'actions/userActions';
 import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
 import { Button, BtnType } from 'components/common/Button';
@@ -10,8 +10,9 @@ import api from 'services/api';
 
 const Settings = () => {
 
-  const [data, setData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState(JSON.parse(window.localStorage.getItem('CIMBA_COMPANY')));
+  // const [isLoading, setIsLoading] = useState(true);
+  const userId = JSON.parse(window.localStorage.getItem('CIMBA_USER')).id;
 
   const getFooter = () => {
     return (
@@ -24,32 +25,28 @@ const Settings = () => {
   const valueChanged = (id, value) =>{
     setData(prevState => ({...prevState, [id]: value}));
   }
+//   /**
+//  * Fetches current user settings
+//  */
+//   const fetchSettings = () => {
+//     api.getSettings(userId, (res) => {
 
-  /**
- * Fetches current user settings
- */
-  const fetchSettings = () => {
-    
-    api.getSettings((res) => {
-
-      if (res.status === 200) {
-        setData(res.data);
-      }
-      setIsLoading(false);
-    });
-  };
+//       if (res.status === 200) {
+//         setData(res.data);
+//         setSettings(res.data);
+//       }
+//       setIsLoading(false);
+//     });
+//   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Send to DB');
-  }
-
-  // fetches user settings
-  useEffect(() => {
-    if (isLoading) {
-      fetchSettings();
-    }
-  }, [isLoading]);
+    api.setSettings(userId, data, (res) => {
+      if(res.status === 200) {
+        window.localStorage.setItem('CIMBA_COMPANY', JSON.stringify(res.data.data));
+      }
+    });
+  };
 
   return (
     <Layout title='Settings'>
@@ -57,11 +54,11 @@ const Settings = () => {
         <form onSubmit={handleSubmit}>
           <Card title='Settings' footer={getFooter()}>
 
-            <TextFormField title={'Company Key'} value={isLoading ? '' : data.company_key} id='company_key' valueChanged={valueChanged} ></TextFormField>
-            <TextFormField title={'App ID'} value={isLoading ? '' : data.app_id} id='app_id' valueChanged={valueChanged} ></TextFormField>
-            <TextFormField title={'App Secret'} value={isLoading ? '' : data.app_secret} id='app_secret' valueChanged={valueChanged} ></TextFormField>
-            <TextFormField title={'Tenant'} value={isLoading ? '' : data.tenant} id='tenant' valueChanged={valueChanged} ></TextFormField>
-            <TextFormField title={'Organization'} value={isLoading ? '' : data.organization} id='organization' valueChanged={valueChanged} ></TextFormField>
+            <TextFormField title={'Company Key'} value={data.company_key} id='company_key' valueChanged={valueChanged} ></TextFormField>
+            <TextFormField title={'App ID'} value={data.app_id} id='app_id' valueChanged={valueChanged} ></TextFormField>
+            <TextFormField title={'App Secret'} value={data.app_secret} id='app_secret' valueChanged={valueChanged} ></TextFormField>
+            <TextFormField title={'Tenant'} value={data.tenant} id='tenant' valueChanged={valueChanged} ></TextFormField>
+            <TextFormField title={'Organization'} value={data.organization} id='organization' valueChanged={valueChanged} ></TextFormField>
 
           </Card>
         </form>

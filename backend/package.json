@@ -23,7 +23,6 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.12",
     "pg": "^8.5.1",
-    "cors": "^2.8.5",
     "querystring": "^0.2.0"
   },
   "devDependencies": {

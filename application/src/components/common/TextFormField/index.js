@@ -3,7 +3,6 @@ import Proptypes from 'prop-types';
 import './styles.scss';
 
 const TextFormField = ({ title, value, valueChanged, id}) => {
-  console.log(value)
   return (
     <div className='text-form-field'>
       <p> {title} </p>

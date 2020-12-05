@@ -7,7 +7,6 @@ exports.up = function (knex) {
       table.string('app_secret').notNullable();
       table.string('tenant').notNullable();
       table.string('organization').notNullable();
-      table.unique('company_key');
     })
     .createTable('users', (table) => {
       table.increments();
@@ -30,7 +29,7 @@ exports.up = function (knex) {
       table.increments();
       table.string('local_id').notNullable();
       table.string('company_key').notNullable();
-      table.foreign('company_key').references('companies.company_key').onUpdate('CASCADE').onDelete('CASCADE');
+      table.foreign('company_key');
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
 
