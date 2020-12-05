@@ -1,1 +1,7 @@
-// TODO: fazer Tab, de modo a passar os props para ele
+const Tab = ({children}) => {
+    return (
+        children
+    );
+}
+
+export default Tab;

@@ -2,6 +2,7 @@ import React from 'react';
 
 import Layout from 'components/common/Layout';
 import Tabs from 'components/common/Tabs';
+import Tab from 'components/common/Tab';
 import Card from 'components/common/Card';
 
 const Mapping = () => {
@@ -9,12 +10,12 @@ const Mapping = () => {
   return (
     <Layout title='Mapping'>
       <Tabs>
-        <div label="Items" btntext="New Item Mapping" btnfunc={() => console.log("new item mapping")}>
+        <Tab label="Items" btntext="New Item Mapping" btnfunc={() => console.log("new item mapping")}>
           <Card title="Items"></Card>
-        </div>
-        <div label="Companies" btntext="New Company Mapping" btnfunc={() => console.log("new company mapping")}>
+        </Tab>
+        <Tab label="Companies" btntext="New Company Mapping" btnfunc={() => console.log("new company mapping")}>
           <Card title="Companies"></Card>
-        </div>
+        </Tab>
       </Tabs>
     </Layout>
   );

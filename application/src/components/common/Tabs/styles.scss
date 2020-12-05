@@ -11,7 +11,16 @@
 
 .tab-list > * {
     padding: 0.65em;
-    margin-right: 2em;
+    margin-right: 1em;
+}
+
+.tab-list-elem {
+    cursor: pointer;
+
+    &:hover {
+        background-color: $cimba-dark-blue;
+        color: white;
+    }
 }
 
 .tab-list > .active {
