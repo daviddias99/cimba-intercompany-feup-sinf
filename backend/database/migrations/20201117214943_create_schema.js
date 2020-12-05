@@ -42,6 +42,12 @@ exports.up = function (knex) {
         .onDelete('CASCADE');
       // useTz always store data in UTC Format
       table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
+    })
+    .createTable('orders', (table) => {
+      table.integer('company_id').unsigned();
+      table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
+      table.string('order_id').notNullable();
+      table.unique('order_id');
     });
 };
 
@@ -50,5 +56,6 @@ exports.down = function (knex) {
     .dropTable('item_maps')
     .dropTable('company_maps')
     .dropTable('users')
-    .dropTable('companies');
+    .dropTable('companies')
+    .dropTable('orders');
 };
