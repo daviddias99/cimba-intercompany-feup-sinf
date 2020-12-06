@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Proptypes from 'prop-types';
 import './styles.scss';
 
