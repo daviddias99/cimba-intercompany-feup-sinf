@@ -10,9 +10,9 @@ const url = 'https://my.jasminsoftware.com';
 exports.makeRequest = async (
   endPoint,
   method,
-  params,
-  data,
   companyID,
+  params = {},
+  data = {},
 ) => {
   const company = await getCompanyById(companyID);
 

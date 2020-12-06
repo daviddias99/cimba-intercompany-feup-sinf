@@ -4,12 +4,9 @@ const routes = require('./routes');
 const middlewares = require('./middlewares');
 const config = require('./config').express;
 const db = require('./database/knex');
+const { pollOrders } = require('./processes/poll');
 
 const app = express();
-
-app.listen(config.port, () => {
-  console.log(`Listening on port ${config.port}.`);
-});
 
 // middleware
 app.use(cors({ maxAge: config.maxAge }));
@@ -21,3 +18,10 @@ app.db = db;
 app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
+
+pollOrders();
+setInterval(pollOrders, config.pollInterval);
+
+app.listen(config.port, () => {
+  console.log(`Listening on port ${config.port}.`);
+});
