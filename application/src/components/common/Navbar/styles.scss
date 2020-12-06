@@ -10,6 +10,9 @@
 
   .navbar-button-wrapper {
 
+    display: flex;
+    align-items: center;
+
     img {
       padding-left: 1em;
       padding-right: 1em;
@@ -23,4 +26,9 @@
       border-radius: 3px;
     }
   }
+}
+
+.navbar-button-wrapper > * {
+  display: flex;
+  align-items: center;
 }
