@@ -1,5 +1,10 @@
 @import 'assets/styles/bulma';
 
+.tabs {
+    display: flex;
+    flex-direction: column;
+}
+
 .tab-list {
     display: flex;
     align-items: center;
