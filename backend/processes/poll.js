@@ -9,7 +9,7 @@ const pollOrdersCompany = async (companyId) => {
 
   const newOrders = orders.data.filter((order) => {
     const orderDate = new Date(order.createdOn);
-    return orderDate.getTime() > mostRecentOrderTime.getTime();
+    return order.documentType === 'ECF' && orderDate.getTime() > mostRecentOrderTime;
   });
 
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
