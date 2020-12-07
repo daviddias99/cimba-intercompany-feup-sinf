@@ -20,7 +20,7 @@ app.use(middlewares.notFound);
 app.use(middlewares.error);
 
 pollOrders();
-// setInterval(pollOrders, config.pollInterval);
+setInterval(pollOrders, config.pollInterval);
 
 app.listen(config.port, () => {
   console.log(`Listening on port ${config.port}.`);
