@@ -23,10 +23,10 @@ const Mapping = () => {
     <Layout title='Mapping'>
       <Tabs>
         <Tab label="Items" btntext="New Item Mapping" btnfunc={newItemMapping}>
-          <Table columns={itemTableColumns} urltofetch={itemTableURL} />
+          <Table columns={itemTableColumns} urltofetch={itemTableURL} selecrows={true} />
         </Tab>
         <Tab label="Companies" btntext="New Company Mapping" btnfunc={newCompanyMapping}>
-          <Table columns={companyTableColumns} urltofetch={companyTableURL} />
+          <Table columns={companyTableColumns} urltofetch={companyTableURL} selecrows={true}  />
         </Tab>
       </Tabs>
     </Layout>
