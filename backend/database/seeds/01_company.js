@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 exports.seed = function (knex) {
   // Deletes ALL existing entries
   return knex('companies').del()

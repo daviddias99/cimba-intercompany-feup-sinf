@@ -1,3 +1,5 @@
+const { triggersUp, triggersDown } = require('../triggers');
+
 exports.up = function (knex) {
   return knex.schema
     .createTable('companies', (table) => {
@@ -43,7 +45,17 @@ exports.up = function (knex) {
         .onDelete('CASCADE');
       // useTz always store data in UTC Format
       table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
-    });
+    })
+    .createTable('orders', (table) => {
+      table.integer('company_id').unsigned();
+      table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
+      table.string('order_id').notNullable();
+      table.unique('order_id');
+      table.timestamp('jasmin_created_on').notNullable();
+    })
+    .then(() => triggersUp.forEach(async (elem) => {
+      await knex.schema.raw(elem);
+    }));
 };
 
 exports.down = function (knex) {
@@ -51,5 +63,9 @@ exports.down = function (knex) {
     .dropTable('item_maps')
     .dropTable('company_maps')
     .dropTable('users')
-    .dropTable('companies');
+    .dropTable('companies')
+    .dropTable('orders')
+    .then(() => triggersDown.forEach(async (elem) => {
+      await knex.raw(elem);
+    }));
 };

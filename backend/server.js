@@ -4,6 +4,7 @@ const routes = require('./routes');
 const middlewares = require('./middlewares');
 const config = require('./config').express;
 const db = require('./database/knex');
+const { pollOrders } = require('./processes/poll');
 
 const app = express();
 
@@ -22,3 +23,6 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}.`);
 });
+
+pollOrders();
+setInterval(pollOrders, config.pollInterval);

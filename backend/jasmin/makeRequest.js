@@ -10,19 +10,20 @@ const url = 'https://my.jasminsoftware.com';
 exports.makeRequest = async (
   endPoint,
   method,
+  companyID,
   params,
   data,
-  companyID,
   companyInfo,
 ) => {
   let company = null;
 
-  if (companyInfo !== null) {
+  if (companyInfo !== undefined) {
     company = companyInfo;
   } else {
     company = await getCompanyById(companyID);
     if (company == null) return 'Company Not Found';
   }
+
   const token = await getToken(company.app_id, company.app_secret);
 
   if (token == null) return 'Could not fetch token';
