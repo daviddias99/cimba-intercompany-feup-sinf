@@ -10,6 +10,7 @@ exports.up = function (knex) {
       table.string('tenant').notNullable();
       table.string('organization').notNullable();
       table.string('name').notNullable();
+      table.timestamp('most_recent_order', { useTz: true }).defaultTo(knex.fn.now());
       table.unique(['tenant', 'organization'], 'tenant_organization_unique');
     })
     .createTable('users', (table) => {
@@ -29,7 +30,7 @@ exports.up = function (knex) {
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
 
-      table.unique(['local_id', 'company_key', 'company_id'], 'items_map_unique');
+      table.unique(['local_id', 'map_company_id', 'company_id'], 'items_map_unique');
     })
     .createTable('company_maps', (table) => {
       table.increments();
