@@ -4,9 +4,11 @@ const { jwtSecret } = require('../config');
 const authenticate = async (req, res, next) => {
   // token is being sent to us throught the authorization header
   const { authorization } = req.headers;
+  console.log(req.headers);
 
   // Check if authorization header is set
   if (authorization === null || authorization === undefined || typeof authorization !== 'string') {
+    console.log('first');
     return res.json({ status: 401 });
   }
 
@@ -35,6 +37,8 @@ const authenticate = async (req, res, next) => {
     console.log(user);
     console.log(company);
     if (!user) {
+      console.log('second');
+
       return res.json({ status: 401 });
     }
 

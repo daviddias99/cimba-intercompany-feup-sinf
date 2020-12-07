@@ -8,6 +8,7 @@ exports.up = function (knex) {
       table.string('tenant').notNullable();
       table.string('organization').notNullable();
       table.string('name').notNullable();
+      table.unique(['tenant', 'organization'], 'tenant_organization_unique');
     })
     .createTable('users', (table) => {
       table.increments();

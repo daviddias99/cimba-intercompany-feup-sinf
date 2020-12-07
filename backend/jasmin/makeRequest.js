@@ -23,7 +23,6 @@ exports.makeRequest = async (
     company = await getCompanyById(companyID);
     if (company == null) return 'Company Not Found';
   }
-  console.log(company);
   const token = await getToken(company.app_id, company.app_secret);
 
   if (token == null) return 'Could not fetch token';
@@ -41,7 +40,6 @@ exports.makeRequest = async (
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    console.log(res);
     return { status: res.status, data: res.data };
   } catch (error) {
     console.log(error);
