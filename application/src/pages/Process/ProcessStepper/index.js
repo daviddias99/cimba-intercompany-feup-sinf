@@ -9,14 +9,14 @@ const useColorlibStepIconStyles = makeStyles({
   root: {
     backgroundColor: '#ccc',
     color: '#fff',
-    width: 25,
-    height: 25,
+    width: 50,
+    height: 50,
     display: 'flex',
     borderRadius: '50%',
     justifyContent: 'center',
     alignItems: 'center',
     margin: '0em 2em 0em 2em',
-    fontSize: 'small'
+    // fontSize: 'large'
   },
   active: {
     backgroundColor: '#ff4000',
@@ -72,7 +72,7 @@ function getSteps() {
 }
 
 
-export default function CustomizedSteppers({ activeStp }) {
+export default function OverviewTooltipStepper({ activeStp }) {
   const classes = useColorlibStepIconStyles();
   const [activeStep] = React.useState(activeStp);
   const steps = getSteps();
@@ -90,15 +90,17 @@ export default function CustomizedSteppers({ activeStp }) {
   // };
 
   return (
-
-    <div className={clsx(classes.root)}>
-      <Stepper alternativeLabel activeStep={activeStep}>
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{<span className='tooltiplabel'>{label}</span>}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
+    <div className='stepperWrapper'>
+      <div className={clsx(classes.root)}>
+        <Stepper alternativeLabel activeStep={activeStep}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel StepIconComponent={ColorlibStepIcon}>{<span className='tooltiplabel'>{label}</span>}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </div>
     </div>
   );
+
 }

@@ -12,7 +12,7 @@ import Mapping from 'pages/Mapping';
 import Logs from 'pages/Logs';
 import NotFound from 'pages/NotFound';
 import Login from 'pages/Login';
-import Order from 'pages/Order';
+import Process from 'pages/Process';
 
 const PrivateRoute = ({ children, component, ...rest }) => {
 
@@ -61,8 +61,8 @@ const Router = () => {
         <PrivateRoute exact path={routes.support.def}>
           <Overview />
         </PrivateRoute>
-        <PrivateRoute exact component={Order} path={routes.order.def}>
-          <Order/>
+        <PrivateRoute exact component={Process} path={routes.process.def}>
+          <Process/>
         </PrivateRoute>
         <Route>
           <NotFound />

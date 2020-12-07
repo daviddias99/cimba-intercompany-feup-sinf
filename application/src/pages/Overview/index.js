@@ -13,7 +13,7 @@ const Overview = () => {
     {
       id: 0,
       date: '12/12/2020',
-      orderId: 'ECF-5',
+      processId: 'ECF-5',
       companyName: 'FEUP',
       statusCode: 0,
       status: 'Order',
@@ -22,7 +22,7 @@ const Overview = () => {
     {
       id: 1,
       date: '12/12/2020',
-      orderId: 'ECF-4',
+      processId: 'ECF-4',
       companyName: 'Vem Pro Futji',
       statusCode: 1,
       status: 'Delivery',
@@ -40,7 +40,7 @@ const Overview = () => {
     {
       id: 3,
       date: '12/12/2020',
-      orderId: 'ECF-2',
+      processId: 'ECF-2',
       companyName: 'Mister Cimba',
       statusCode: 3,
       status: 'Payment',
@@ -49,7 +49,7 @@ const Overview = () => {
     {
       id: 4,
       date: '12/12/2020',
-      orderId: 'ECF-2',
+      processId: 'ECF-2',
       companyName: 'Mister Cimba',
       statusCode: 4,
       status: 'Done',

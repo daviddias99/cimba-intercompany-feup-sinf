@@ -13,9 +13,9 @@ const routes = {
   settings: route('/settings',),
   logs: route('/logs',),
   support: route('/support',),
-  order: route(
-    '/order/:orderId',
-    (orderId) => `order/${orderId}/`
+  process: route(
+    '/process/:processId',
+    (processId) => `process/${processId}/`
   ),
 };
 

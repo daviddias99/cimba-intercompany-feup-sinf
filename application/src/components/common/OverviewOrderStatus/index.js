@@ -1,5 +1,5 @@
 import LightTooltip from 'components/common/Tooltip';
-import HorizontalLabelPositionBelowStepper from 'components/common/Stepper';
+import OverviewTooltipStepper from 'components/common/OverviewTooltipStepper';
 import React from 'react';
 
 import './styles.scss';
@@ -24,7 +24,7 @@ const OverviewOrderStatus = ({ row }) => {
       <LightTooltip
         title={
           <React.Fragment>
-            <HorizontalLabelPositionBelowStepper activeStp={row.currentStep} />
+            <OverviewTooltipStepper activeStp={row.currentStep} />
           </React.Fragment>
         }
         placement="top"

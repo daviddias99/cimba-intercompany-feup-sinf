@@ -1,0 +1,15 @@
+.processStepperCard {
+  .card-content > div.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-content .stepperWrapper > *{
+    margin-top: 2em;
+  }
+
+  .card-content .stepperWrapper .tooltiplabel{
+    font-weight: bolder;
+  }
+}

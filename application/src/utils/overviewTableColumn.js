@@ -9,8 +9,8 @@ const overviewTableColumns = [
         selector: 'date',
     },
     {
-        name: 'Order',
-        selector: 'orderId',
+        name: 'Process',
+        selector: 'processId',
     },
     {
         name: 'Company',
@@ -27,7 +27,7 @@ const overviewTableColumns = [
             <Link
                 to={
                     {
-                        pathname: routes.order.ref(row.id),
+                        pathname: routes.process.ref(row.id),
                         props: { ...row }
                     }}
             >
