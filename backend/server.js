@@ -19,7 +19,7 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
-// pollOrders();
+pollOrders();
 // setInterval(pollOrders, config.pollInterval);
 
 app.listen(config.port, () => {
