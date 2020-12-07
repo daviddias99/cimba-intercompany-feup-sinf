@@ -5,11 +5,11 @@ const { newPurchaseOrder } = require('./purchase');
 const pollOrdersCompany = async (companyId) => {
   const orders = await getOrders(companyId);
   const company = await getCompanyById(companyId);
-  const mostRecentOrderTime = company.most_recent_order;
+  const mostRecentOrderTime = new Date(company.most_recent_order);
 
   const newOrders = orders.data.filter((order) => {
     const orderDate = new Date(order.createdOn);
-    return orderDate.getTime() > mostRecentOrderTime;
+    return orderDate.getTime() > mostRecentOrderTime.getTime();
   });
 
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
