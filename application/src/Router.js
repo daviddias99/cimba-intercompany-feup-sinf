@@ -12,15 +12,16 @@ import Mapping from 'pages/Mapping';
 import Logs from 'pages/Logs';
 import NotFound from 'pages/NotFound';
 import Login from 'pages/Login';
+import Order from 'pages/Order';
 
-const PrivateRoute = ({ children, ...rest }) => {
+const PrivateRoute = ({ children, component, ...rest }) => {
 
   const loggedIn = useSelector(state => state.user.loggedIn);
 
   return (
-    <Route {...rest} render={() => {
+    <Route {...rest} render={(props) => {
       return loggedIn
-        ? children
+        ? (component ? component(props) : children)
         : <Redirect to="/login" />;
     }}
     />
@@ -59,6 +60,9 @@ const Router = () => {
         </PrivateRoute>
         <PrivateRoute exact path={routes.support.def}>
           <Overview />
+        </PrivateRoute>
+        <PrivateRoute exact component={Order} path={routes.order.def}>
+          <Order/>
         </PrivateRoute>
         <Route>
           <NotFound />

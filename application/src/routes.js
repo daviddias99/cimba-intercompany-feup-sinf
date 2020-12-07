@@ -13,6 +13,10 @@ const routes = {
   settings: route('/settings',),
   logs: route('/logs',),
   support: route('/support',),
+  order: route(
+    '/order/:orderId',
+    (orderId) => `order/${orderId}/`
+  ),
 };
 
 export default routes;
