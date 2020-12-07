@@ -32,8 +32,8 @@ exports.up = function (knex) {
     .createTable('company_maps', (table) => {
       table.increments();
       table.string('local_id').notNullable();
-      table.string('company_key').notNullable();
-      table.foreign('company_key');
+      table.integer('map_company_id').notNullable();
+      table.foreign('map_company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
 
