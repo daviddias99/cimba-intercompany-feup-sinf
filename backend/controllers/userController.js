@@ -44,16 +44,16 @@ exports.updateUserCompany = async (req, res) => {
   const existentCompany = (await req.app.db('companies')
     .where('tenant', req.body.tenant)
     .andWhere('organization', req.body.organization)
-    .select('id', 'name')
+    .select('*')
     .first());
+
   if (!existentCompany) {
     newCompany = true;
   }
 
-  if (existentCompany === req.body) {
+  if (Object.keys(responseBody).every((x) => responseBody[x] === existentCompany[x])) {
     await req.app.db('users').where('id', req.user.id).update('company_id', existentCompany.id);
-
-    return res.status(200).json({ status: 200, id: 'Success', data: responseBody });
+    return res.status(200).json({ status: 200, id: 'Success', data: existentCompany });
   }
 
   const token = await getJasminToken(req.body.app_id, req.body.app_secret);
