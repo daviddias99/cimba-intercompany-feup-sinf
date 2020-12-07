@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import DataTable from 'react-data-table-component';
 
 import './styles.scss';
@@ -263,16 +263,16 @@ const Table = ({title, columns, selecrows = false, urltofetch}) => {
             companyID: "176689-00006",
             name: "Sousa & Morgado, LDA",
         },
-    ], [])
+    ], [urltofetch])
 
-    const contextAction = <div>Teste</div>
+    const [rows, setRows] = useState(data)
 
     return (
         <DataTable
             className="table-display"
             title={title}
-            columns={columns}
-            data={data}
+            columns={columns(setRows)}
+            data={rows}
             highlightOnHover={true}
             pagination={true}
             selectableRows={selecrows}

@@ -1,6 +1,28 @@
+import { Button } from "components/common/Button"
+import DeleteIcon from '@material-ui/icons/Delete';
+
+const deleteItemButton = (setRows) => {
+    return (row, index) =>         
+    <Button 
+        color={'secondary'} 
+        onClick={ () => {
+            setRows(rows => {
+                const newRows = rows.slice()
+                newRows.splice(index, 1)
+                return newRows
+            })
+            console.log(`Apaguei o cenas: ${row.description}`)
+        }}>
+        <DeleteIcon />
+    </Button>
+}
+
 // TODO: change URL to connect with backend
 const itemTableURL = "item"
-const itemTableColumns = [
+const itemTableColumns = (setRows) => [
+    {
+        cell: deleteItemButton(setRows)
+    },
     {
         name: 'Company',
         selector: 'company',

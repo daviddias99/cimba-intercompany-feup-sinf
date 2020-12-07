@@ -5,5 +5,5 @@ export {
     itemTableURL,
     itemTableColumns,
     companyTableURL,
-    companyTableColumns
+    companyTableColumns,
 }
