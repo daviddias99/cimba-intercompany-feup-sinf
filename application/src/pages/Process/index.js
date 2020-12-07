@@ -15,7 +15,7 @@ const Process = (props) => {
     <Layout title={`Process ${processId}`}>
       <div className='processStepperCard'>
         <Card title={`Process ${processId}`}>
-          <ProcessStepper activeStp={1}/>
+          <ProcessStepper activeStp={2}/>
         </Card>
       </div>
 

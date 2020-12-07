@@ -1,0 +1,29 @@
+@import "assets/styles/bulma.scss";
+
+.goodsAndServices{
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+}
+
+.orderTotal {
+  align-self: flex-end;
+  margin-right: 2em;
+  font-size: 1.2em;
+  float: right;
+  border-bottom: 1px solid #444;
+}
+
+.taxIncluded {
+  color: $cimba-dark-background;
+  display:inline-block; 
+  font-size: 0.7em;
+}
+
+.orderTotalText {
+  margin-right: 5em;
+  color: #444;
+}
+
+
+

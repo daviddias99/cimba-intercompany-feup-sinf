@@ -1,3 +1,5 @@
+@import "assets/styles/_variables";
+
 .processStepperCard {
   .card-content > div.content{
     display: flex;
@@ -12,4 +14,35 @@
   .card-content .stepperWrapper .tooltiplabel{
     font-weight: bolder;
   }
+
+  .MuiStepConnector-horizontal{
+    top: 17px;    
+  }
+
+  .MuiStepConnector-active {
+    .MuiStepConnector-line{
+      border-color: $cimba-orange;
+      border-width: 3px;
+    }
+  }
+
+  .MuiStepConnector-completed {
+    .MuiStepConnector-line{
+      border-color: $cimba-orange;
+      border-width: 3px;
+    }
+  }
+
+  .Mui-disabled {
+    .MuiStepConnector-line{
+      border-top: 3px solid #ff400088;
+    }
+  }
+
+  .Mui-disabled {
+    .MuiStepLabel-iconContainer div{
+      background-color: #ff400088;
+    }
+  }
+
 }

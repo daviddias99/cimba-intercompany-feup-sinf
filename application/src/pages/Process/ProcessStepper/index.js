@@ -9,9 +9,10 @@ const useColorlibStepIconStyles = makeStyles({
   root: {
     backgroundColor: '#ccc',
     color: '#fff',
-    width: 50,
-    height: 50,
+    width: 35,
+    height: 35,
     display: 'flex',
+    alignContent: 'center',
     borderRadius: '50%',
     justifyContent: 'center',
     alignItems: 'center',
@@ -21,6 +22,9 @@ const useColorlibStepIconStyles = makeStyles({
   active: {
     backgroundColor: '#ff4000',
     border: '2px solid #22333b',
+  },
+  alternativeLabel: {
+    color: '#ffffff'
   },
   completed: {
     backgroundColor: '#ff4000',
@@ -46,7 +50,7 @@ function ColorlibStepIcon(props) {
         [classes.completed]: completed,
       })}
     >
-      {icons[String(props.icon)]}
+      {<i className="overviewStatusIcon fas fa-circle"></i>}
     </div>
   );
 }
