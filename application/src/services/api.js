@@ -3,7 +3,7 @@ import axios from 'axios';
 /**
  * Constant variables
  */
-const API_URL = process.env.REACT_APP_API_URI ? process.env.REACT_APP_API_URI : 'http://localhost:8002';
+const API_URL = process.env.REACT_APP_API_URI ? process.env.REACT_APP_API_URI : 'http://localhost:8001';
 const JTW_TOKEN_KEY = 'JWT_TOKEN';
 
 /**
@@ -12,7 +12,8 @@ const JTW_TOKEN_KEY = 'JWT_TOKEN';
 const routes = {
   login: '/login',
   logout: '/logout',
-  getActivity: (loggerId) => (`logger/${loggerId}/activity`),
+  getSettings: (userId) => (`/users/${userId}/company`),
+  setSettings: (userId) => (`/users/${userId}/company`),
   getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
   getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
 };
@@ -30,7 +31,7 @@ const getToken = () => localStorage.getItem(JTW_TOKEN_KEY);
  * In case the user is not authenticated,
  * makes an unauthenticated request.
  */
-const request = (path, method, data, _cb) => {
+const request = (path, method, data, callback) => {
   if (!path.startsWith('/')) {
     path = '/' + path;
   }
@@ -53,13 +54,13 @@ const request = (path, method, data, _cb) => {
     }
 
     const res = { data: { status: 'error' } };
-    _cb(res);
+    callback(res);
   };
 
   if (method.toLowerCase() === 'get') {
-    axios.get(API_URL + path, { headers }).then(_cb).catch(errorHandler);
+    axios.get(API_URL + path, { headers }).then(callback).catch(errorHandler);
   } else if (method.toLowerCase() === 'post') {
-    axios.post(API_URL + path, data, { headers }).then(_cb).catch(errorHandler);
+    axios.post(API_URL + path, data, { headers }).then(callback).catch(errorHandler);
   }
 };
 
@@ -70,20 +71,17 @@ const request = (path, method, data, _cb) => {
  * the app and the server.
  */
 const api = {
-  login: (data, _cb) => {
-    request(routes.login, 'post', data, _cb);
+  login: (data, callback) => {
+    request(routes.login, 'post', data, callback);
   },
-  logout: (_cb) => {
-    request(routes.logout, 'post', null, _cb);
+  logout: (callback) => {
+    request(routes.logout, 'post', null, callback);
   },
-  getActivity: (loggerId, _cb) => {
-    request(routes.getActivity(loggerId), 'get', null, _cb);
+  getSettings: (userId, callback) => {
+    request(routes.getSettings(userId), 'get', null, callback);
   },
-  getBots: (loggerId, nRequests, curPage, _cb) => {
-    request(routes.getBots(loggerId, nRequests, curPage), 'get', null, _cb);
-  },
-  getLogs: (loggerId, nRequests, curPage, _cb) => {
-    request(routes.getLogs(loggerId, nRequests, curPage), 'get', null, _cb);
+  setSettings: (userId, data, callback) => {
+    request(routes.setSettings(userId), 'post', data, callback);
   },
 };
 

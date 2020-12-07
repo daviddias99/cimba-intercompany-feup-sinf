@@ -19,9 +19,10 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}.`);
+});
+
 pollOrders();
 setInterval(pollOrders, config.pollInterval);
-
-app.listen(config.port, () => {
-  console.log(`Listening on port ${config.port}.`);
-});

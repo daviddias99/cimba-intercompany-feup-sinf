@@ -34,5 +34,5 @@ module.exports = async (req, res) => {
   const token = jwt.sign({ sub: user.id }, jwtSecret, { expiresIn: '1w' });
   // Create session
   await req.app.db('sessions').insert({ user_id: user.id });
-  return res.json({ status: 200, token });
+  return res.json({ status: 200, token, data: { username: user.username, id: user.id } });
 };

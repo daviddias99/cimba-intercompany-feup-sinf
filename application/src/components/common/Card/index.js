@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import './styles.scss';
 
-const Card = ({ title, children }) => {
+const Card = ({ title, children, footer }) => {
   return (
     <div className="card">
       <header className="card-header">
@@ -16,6 +16,16 @@ const Card = ({ title, children }) => {
           {children}
         </div>
       </div>
+
+      {footer ? 
+      <div className="card-footer">
+        <div className="content">
+          {footer}
+        </div>
+      </div>
+      : ""
+    }
+
     </div>
   );
 };

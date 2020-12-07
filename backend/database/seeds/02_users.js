@@ -6,8 +6,8 @@ exports.seed = function (knex) {
     .then(() => knex('users').insert([
       { username: 'david', password: bcrypt.hashSync('password', 10), company_id: 1 },
       { username: 'eduardo', password: bcrypt.hashSync('password', 10), company_id: 1 },
-      { username: 'filipa', password: bcrypt.hashSync('password', 10), company_id: 2 },
-      { username: 'luis', password: bcrypt.hashSync('password', 10), company_id: 2 },
+      { username: 'filipa', password: bcrypt.hashSync('password', 10) },
+      { username: 'luis', password: bcrypt.hashSync('password', 10) },
       { username: 'manuel', password: bcrypt.hashSync('password', 10) },
     ]));
 };

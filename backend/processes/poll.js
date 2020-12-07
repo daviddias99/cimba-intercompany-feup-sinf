@@ -7,7 +7,7 @@ const pollOrdersCompany = async (companyId) => {
   const company = await getCompanyById(companyId);
   const mostRecentOrderTime = company.most_recent_order;
 
-  const newOrders = orders.filter((order) => {
+  const newOrders = orders.data.filter((order) => {
     const orderDate = new Date(order.createdOn);
     return orderDate.getTime() > mostRecentOrderTime;
   });
