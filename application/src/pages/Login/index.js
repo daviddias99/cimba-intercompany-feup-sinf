@@ -83,7 +83,7 @@ const Login = () => {
       (res) => {
         setLoading(false);
         if (res.data.status === 200) {
-          dispatch(loadUser({token: res.data.token, username: username}));
+          dispatch(loadUser({token: res.data.token, data: res.data.data}));
         } else {
           setError(true);
           setToastList([

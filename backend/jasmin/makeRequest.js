@@ -11,12 +11,18 @@ exports.makeRequest = async (
   endPoint,
   method,
   companyID,
-  params = {},
-  data = {},
+  params,
+  data,
+  companyInfo,
 ) => {
-  const company = await getCompanyById(companyID);
+  let company = null;
 
-  if (company == null) return 'Company Not Found';
+  if (companyInfo !== undefined) {
+    company = companyInfo;
+  } else {
+    company = await getCompanyById(companyID);
+    if (company == null) return 'Company Not Found';
+  }
 
   const token = await getToken(company.app_id, company.app_secret);
 
@@ -35,7 +41,7 @@ exports.makeRequest = async (
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     });
-    return res.data;
+    return { status: res.status, data: res.data };
   } catch (error) {
     console.log(error);
     return error;

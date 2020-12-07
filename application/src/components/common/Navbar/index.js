@@ -3,13 +3,13 @@ import Logo from 'components/common/Logo';
 
 import './styles.scss';
 import api from 'services/api';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { logoutUser } from 'actions/userActions';
 import icons from '../../../assets/icons';
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const username = window.localStorage.getItem('CIMBA_USERNAME');
+  const username = JSON.parse(window.localStorage.getItem('CIMBA_USER')).username;
   const logout = () => {
     api.logout((res) => {
       if (res.status === 200) {
