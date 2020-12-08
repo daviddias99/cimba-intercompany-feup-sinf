@@ -46,7 +46,6 @@ exports.up = function (knex) {
       table.increments();
       table.integer('user_id').references('id').inTable('users').notNullable()
         .onDelete('CASCADE');
-      // useTz always store data in UTC Format
       table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
     })
     .createTable('orders', (table) => {
@@ -55,6 +54,10 @@ exports.up = function (knex) {
       table.string('order_id').notNullable();
       table.unique('order_id');
       table.timestamp('jasmin_created_on').notNullable();
+      table.enu('type', ['purchase', 'sale'], { useNative: true, enumName: 'order_type' }).notNullable();
+      table.string('invoice_id');
+      table.string('delivery_id');
+      table.string('payment_id');
     })
     .then(() => triggersUp.forEach(async (elem) => {
       await knex.schema.raw(elem);
