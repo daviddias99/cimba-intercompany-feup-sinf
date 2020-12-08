@@ -2,7 +2,7 @@
 const orderTableColumns = [
     {
         name: 'Item',
-        selector: 'purchasesItem',
+        selector: 'item',
     },
     {
         name: 'Description',
@@ -15,6 +15,7 @@ const orderTableColumns = [
     },
     {
         name: 'Quantity',
+        // selector: 'quantity',
         cell: (row) => row.quantity.toFixed(row.quantityDecimalPlaces)
     },
     {
@@ -27,26 +28,8 @@ const orderTableColumns = [
         cell: (row) => `${row.unitPrice.amount.toFixed(2)} ${row.unitPrice.symbol} `
     },
     {
-        name: 'Discount',
-        // selector: 'discount1',
-        cell: (row) => `${row.discount1.toFixed(2)} %`
-    },
-    {
-        name: 'DeliveryDate',
-        selector: 'deliveryDate',
-        cell: (row) => {
-            const date = new Date(row.deliveryDate);
-            const dateStr = date.getUTCDay() + "/" + (date.getUTCMonth() + 1) + "/" + date.getUTCFullYear();
-            return dateStr;
-        },
-    },
-    {
-        name: 'VAT Type',
-        selector: 'itemTaxSchema',
-    },
-    {
         name: 'Total',
-        selector: 'grossValue.amount',
+        // selector: 'grossValue.amount',
         cell: (row) => `${row.grossValue.amount.toFixed(2)} ${row.grossValue.symbol} `
     },
 ]

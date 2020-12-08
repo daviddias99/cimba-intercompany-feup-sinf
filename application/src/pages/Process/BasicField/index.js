@@ -1,12 +1,12 @@
 import React from 'react';
 import './styles.scss';
-
-const BasicField = ({ label, value}) => {
+import cx from 'classnames';
+const BasicField = ({ label, value, fieldSize='small'}) => {
 
   return (
-    <div className="itemField">
+    <div className='itemField'>
       <span className='labelField'>{label}</span>
-      <input className='valueField' type='text' disabled value={value}></input>
+      <input className={cx('valueField', fieldSize)} type='text' disabled value={value}></input>
     </div>
   );
 }
