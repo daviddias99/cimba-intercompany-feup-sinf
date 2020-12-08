@@ -5,5 +5,8 @@ exports.addOrder = async (companyId, order) => {
     company_id: companyId,
     jasmin_created_on: order.createdOn,
     order_id: order.id,
+    type: 'purchase',
   });
 };
+
+exports.getSalesOrdersNoInvoice = async (companyId) => db('orders').select('order_id').where({ company_id: companyId, type: 'sale', invoice_id: null });

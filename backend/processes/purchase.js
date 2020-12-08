@@ -13,3 +13,7 @@ exports.newPurchaseOrder = async (companyId, order) => {
     console.log(error.message);
   }
 };
+
+exports.newInvoice = async (companyId, invoice) => {
+  console.log(`Detect new invoice ${invoice.id} from company ${companyId}`);
+};

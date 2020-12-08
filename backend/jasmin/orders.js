@@ -49,3 +49,5 @@ exports.createSalesOrder = async (
     },
   );
 };
+
+exports.getInvoices = async (companyId) => makeRequest('billing/invoices', 'get', companyId);

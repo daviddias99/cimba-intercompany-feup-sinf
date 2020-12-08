@@ -1,11 +1,12 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
-const { getOrders } = require('../jasmin/orders');
-const { newPurchaseOrder } = require('./purchase');
+const { getSalesOrdersNoInvoice } = require('../database/methods/orderMethods');
+const { getOrders, getInvoices } = require('../jasmin/orders');
+const { newPurchaseOrder, newInvoice } = require('./purchase');
 
 const pollOrdersCompany = async (companyId) => {
   const orders = await getOrders(companyId);
   const company = await getCompanyById(companyId);
-  const mostRecentOrderTime = new Date(company.most_recent_order);
+  const mostRecentOrderTime = new Date(company.most_recent_order).getTime();
 
   const newOrders = orders.data.filter((order) => {
     const orderDate = new Date(order.createdOn);
@@ -15,7 +16,26 @@ const pollOrdersCompany = async (companyId) => {
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
 };
 
-exports.pollOrders = async () => {
+exports.pollPurchaseOrders = async () => {
   const companies = await getCompanies();
   companies.forEach((company) => pollOrdersCompany(company.id));
+};
+
+const pollInvoiceCompany = async (companyId) => {
+  const salesOrders = await getSalesOrdersNoInvoice(companyId);
+  const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
+
+  const invoices = await getInvoices(companyId);
+
+  const newInvoices = invoices.filter((invoice) => {
+    const orderId = invoice.documentLines[0].sourceDocId;
+    return salesOrdersId.has(orderId);
+  });
+
+  newInvoices.forEach((invoice) => newInvoice(companyId, invoice));
+};
+
+exports.pollInvoice = async () => {
+  const companies = await getCompanies();
+  companies.forEach((company) => pollInvoiceCompany(company.id));
 };

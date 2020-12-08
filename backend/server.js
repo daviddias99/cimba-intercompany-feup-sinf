@@ -4,7 +4,7 @@ const routes = require('./routes');
 const middlewares = require('./middlewares');
 const config = require('./config').express;
 const db = require('./database/knex');
-const { pollOrders } = require('./processes/poll');
+const { pollPurchaseOrders, pollInvoice } = require('./processes/poll');
 
 const app = express();
 
@@ -19,6 +19,7 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
+<<<<<<< HEAD
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}.`);
@@ -26,3 +27,16 @@ app.listen(PORT, () => {
 
 pollOrders();
 setInterval(pollOrders, config.pollInterval);
+=======
+pollPurchaseOrders();
+setInterval(pollPurchaseOrders, config.pollInterval);
+
+setTimeout(() => {
+  pollInvoice();
+  setInterval(pollInvoice, config.pollInterval);
+}, config.pollInterval / 2);
+
+app.listen(config.port, () => {
+  console.log(`Listening on port ${config.port}.`);
+});
+>>>>>>> da7c8d8... Detect new sales invoice
