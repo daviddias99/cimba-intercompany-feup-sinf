@@ -1,7 +1,6 @@
 // TODO: change URL to connect with backend
-
-import {dateFormat} from './utilFuncs';
-const orderTableColumns = [
+import {dateFormat} from 'utils/utilFuncs'
+const invoiceTableColumns = [
     {
         name: 'Item',
         selector: 'purchasesItem',
@@ -29,26 +28,17 @@ const orderTableColumns = [
         cell: (row) => `${row.unitPrice.amount.toFixed(2)} ${row.unitPrice.symbol} `
     },
     {
-        name: 'Discount',
-        // selector: 'discount1',
-        cell: (row) => `${row.discount1.toFixed(2)} %`
-    },
-    {
-        name: 'DeliveryDate',
-        selector: 'deliveryDate',
-        cell: (row) => {
-            return dateFormat(row.deliveryDate);
-        },
-    },
-    {
         name: 'VAT Type',
         selector: 'itemTaxSchema',
     },
     {
-        name: 'Total',
-        selector: 'grossValue.amount',
-        cell: (row) => `${row.grossValue.amount.toFixed(2)} ${row.grossValue.symbol} `
+        name: 'WHT',
+        selector: 'itemWithholdingTaxSchema',
+    },
+    {
+        name: 'Delivery Date',
+        cell: (row) => dateFormat(row.deliveryDate)
     },
 ]
 
-export default orderTableColumns;
+export default invoiceTableColumns;

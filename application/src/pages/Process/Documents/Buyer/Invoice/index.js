@@ -5,41 +5,38 @@ import LargeField from 'pages/Process/LargeField';
 import BasicField from 'pages/Process/BasicField';
 import Subsection from 'pages/Process/Subsection';
 import DataTable from 'react-data-table-component';
-import invoiceTableColumns from 'utils/invoiceTableColumns';
+import invoiceTableColumns from 'utils/buyerInvoiceTableColumns';
+import { dateFormat, dateTimeFormat } from 'utils/utilFuncs';
 
 import './styles.scss';
 
-const Invoice = (props) => {
+const BuyerInvoice = (props) => {
   const invoiceData = props.invoice
 
-  const documentDate = new Date(invoiceData.documentDate);
-  const dateStr = documentDate.getUTCDate() + "/" + (documentDate.getUTCMonth() + 1) + "/" + documentDate.getUTCFullYear();
-  const dueDate = new Date(invoiceData.dueDate);
-  const dueDateStr = dueDate.getUTCDate() + "/" + (dueDate.getUTCMonth() + 1) + "/" + dueDate.getUTCFullYear();
+  const dateStr = dateFormat(invoiceData.documentDate);
+  const dueDateStr = dateFormat(invoiceData.dueDate);
+  const loadingTimeStr = dateTimeFormat(invoiceData.loadingDateTime);
+  const unloadingTimeStr = dateTimeFormat(invoiceData.unloadingDateTime);
 
   const overviewFields = [
     { id: 0, fieldSize: 'small', label: 'Document Type', value: invoiceData.documentType },
     { id: 1, fieldSize: 'small', label: 'Series / Number', value: `${invoiceData.serie} - ${invoiceData.seriesNumber}` },
     { id: 2, fieldSize: 'small', label: 'Date', value: dateStr },
     { id: 3, fieldSize: 'small', label: 'Reference', value: invoiceData.reference },
-    { id: 4, fieldSize: 'small', label: 'Customer', value: invoiceData.buyerCustomerPartyDescription },
+    { id: 4, fieldSize: 'small', label: 'Supplier', value: invoiceData.sellerSupplierPartyName },
     { id: 5, fieldSize: 'small', label: 'Payment Term', value: invoiceData.paymentTermDescription },
-    { id: 6, fieldSize: 'small', label: 'Discount', value: invoiceData.discountInValueAmountAmount.toFixed(2) + "%" },
-    { id: 7, fieldSize: 'small', label: 'Due Date', value: dueDateStr },
     { id: 8, fieldSize: 'small', label: 'Payment Method', value: invoiceData.paymentMethodDescription },
+    { id: 6, fieldSize: 'small', label: 'Discount', value: invoiceData.discountInValueAmountAmount.toFixed(2) + "%" },
   ];
 
-  const postingDate = new Date(invoiceData.postingDate);
-  const postingDateStr = postingDate.getUTCDate() + "/" + (postingDate.getUTCMonth() + 1) + "/" + postingDate.getUTCFullYear();
+  const postingDateStr = dateFormat(invoiceData.postingDate);
 
   const financialFields = [
-    { id: 0, fieldSize: 'small', label: 'Financial Account', value: invoiceData.financialAccountDescription },
-    { id: 1, fieldSize: 'small', label: 'Currency', value: invoiceData.currency },
-    { id: 2, fieldSize: 'small', label: 'Economic Activity', value: invoiceData.economicActivityClassificationDescription },
-    { id: 3, fieldSize: 'small', label: 'Exchange Rate', value: invoiceData.exchangeRate.toFixed(invoiceData.exchangeRateDecimalPlaces) },
     { id: 4, fieldSize: 'small', label: 'Posting Date', value: postingDateStr },
-    { id: 5, fieldSize: 'small', label: 'Bill to', value: invoiceData.accountingPartyDescription },
-    { id: 5, fieldSize: 'small', label: 'Discount in Value', value: invoiceData.discount.toFixed(2) + '%' },
+    { id: 1, fieldSize: 'small', label: 'Currency', value: invoiceData.currency },
+    { id: 5, fieldSize: 'small', label: 'Bill from', value: invoiceData.accountingPartyDescription },
+    { id: 3, fieldSize: 'small', label: 'Exchange Rate', value: invoiceData.exchangeRate.toFixed(invoiceData.exchangeRateDecimalPlaces) },
+    { id: 6, fieldSize: 'small', label: 'Due Date', value: dueDateStr },
   ];
 
   const goodsAndServicesTitleAppendix = invoiceData.taxIncluded ? ' (Prices are tax inclusive)' : '(Prices are not tax inclusive)';
@@ -65,28 +62,27 @@ const Invoice = (props) => {
               noHeader={true}
               pagination={true}
             />
-            <div className="noneAndChage">
-              <LargeField label={'Note do Recipient'} value={invoiceData.noteToRecipient} />
-              <div className='chargingInfo'>
-                <h2 ><span className='orderTotalText'>Goods and Services:</span> {`${invoiceData.grossValue.amount.toFixed(2)} ${invoiceData.grossValue.symbol}`}</h2>
-                <h2 ><span className='orderTotalText'>Discount:</span> {`${invoiceData.discountInValueAmount.amount.toFixed(2)} ${invoiceData.discountInValueAmount.symbol}`}</h2>
-                <h2 ><span className='orderTotalText'>Net:</span> {`${invoiceData.taxExclusiveAmount.amount.toFixed(2)} ${invoiceData.taxExclusiveAmount.symbol}`}</h2>
-                <h2 ><span className='orderTotalText'>VAT:</span> {`${invoiceData.taxTotal.amount.toFixed(2)} ${invoiceData.taxTotal.symbol}`}</h2>
-                <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${invoiceData.payableAmount.amount.toFixed(2)} ${invoiceData.payableAmount.symbol}`}</h2>
-              </div>
-            </div>
-
+            <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${invoiceData.payableAmount.amount.toFixed(2)} ${invoiceData.payableAmount.symbol}`}</h2>
           </div>
         </Subsection>
         <hr />
 
         <Subsection sectionId='commercial' title='Commercial'>
-          <BasicField label={'Sales Channel'} value={invoiceData.salesChannelDescription} />
-          <BasicField label={'Name'} value={invoiceData.buyerCustomerPartyDescription} />
-          <BasicField label={'Salesperson'} value={invoiceData.salesperson} />
-          <BasicField label={'DeliveryTerm'} value={invoiceData.deliveryTermDescription} />
-          <BasicField label={'PriceList'} value={invoiceData.priceListDescription} />
-          <LargeField label={'Address'} value={invoiceData.buyerCustomerPartyAddress} />
+          <LargeField label={'Note do Recipient'} value={invoiceData.noteToRecipient} />
+          <div>
+            <BasicField label={'Delivery Term'} value={invoiceData.deliveryTermDescription} />
+            <BasicField label={'Suplier'} value={invoiceData.supplierPartyDescription} />
+          </div>
+
+          <LargeField label={'Supplier Address'} value={invoiceData.buyerCustomerPartyAddress} />
+        </Subsection>
+        <hr />
+
+        <Subsection sectionId='cashInvoice' title='Cash Invoice'>
+          <BasicField label={'Cash Flow Item'} value={invoiceData.cashFlowItemDescription} />
+          <BasicField label={'Financial Account'} value={invoiceData.financialAccountDescription} />
+          <BasicField label={'Outgoing Check Lot'} value={invoiceData.outgoingCheckLotDescription} />
+          <BasicField label={'Check Number'} value={invoiceData.checkDescription} />
         </Subsection>
         <hr />
 
@@ -103,23 +99,23 @@ const Invoice = (props) => {
         <Subsection sectionId='delivery' title='Delivery'>
           <div className='fieldGroup'>
             <h3>Loading</h3>
-            <BasicField fieldSize='large' label={'Warehouse'} value={invoiceData.warehouse} />
             <BasicField fieldSize='large' label={'Point'} value={invoiceData.loadingPoint} />
             <LargeField label={'Address'} value={invoiceData.loadingPointAddress} />
             <BasicField fieldSize='large' label={'Country'} value={invoiceData.loadingCountryDescription} />
+            <BasicField fieldSize='large' label={'Date/Time'} value={loadingTimeStr} />
           </div>
 
           <div className='fieldGroup'>
             <h3>Unloading</h3>
-            <BasicField fieldSize='large' label={'Vehicle License Plate'} value={invoiceData.vehiclePlateNumber} />
             <BasicField fieldSize='large' label={'Point'} value={invoiceData.unloadingPoint} />
             <LargeField label={'Address'} value={invoiceData.unloadingPointAddress} />
             <BasicField fieldSize='large' label={'Country'} value={invoiceData.loadingCountryDescription} />
+            <BasicField fieldSize='large' label={'Date/Time'} value={unloadingTimeStr} />
           </div>
 
           <div className='fieldGroup'>
             <h3>Other</h3>
-            <BasicField fieldSize='small' label={'AT Code'} value={invoiceData.aTDocCodeID} />
+            <BasicField fieldSize='small' label={'License Plate'} value={invoiceData.vehiclePlateNumber} />
           </div>
         </Subsection>
       </Subsection>
@@ -130,4 +126,4 @@ const Invoice = (props) => {
 }
 
 
-export default Invoice;
+export default BuyerInvoice;

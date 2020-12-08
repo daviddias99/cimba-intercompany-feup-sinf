@@ -2,11 +2,13 @@ import React from 'react';
 
 import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
-import Order from './Documents/Order';
-import Delivery from './Documents/Delivery';
-import Invoice from './Documents/Invoice';
+import Order from './Documents/Buyer/Order';
+import Delivery from './Documents/Seller/Delivery';
+import Payment from './Documents/Buyer/Payment';
+import BuyerInvoice from './Documents/Buyer/Invoice';
+import SellerInvoice from './Documents/Seller/Invoice';
 import ProcessStepper from './ProcessStepper';
-import {purchaseOrder, delivery, invoice} from './stubData';
+import {purchaseOrder, sellerDelivery, sellerInvoice, buyerInvoice, payment} from './stubData';
 
 import './styles.scss';
 
@@ -41,9 +43,11 @@ const Process = (props) => {
         </Card>
       </div>
 
-      <Order orderData={purchaseOrder} title='Order Details' />
-      <Delivery delivery={delivery} title='Delivery Details' />
-      <Invoice invoice={invoice} title='Invoice Details' />
+      <BuyerInvoice invoice={buyerInvoice} title='Invoice Details' />
+      <SellerInvoice invoice={sellerInvoice} title='Invoice Details' />
+      {/* <Order orderData={purchaseOrder} title='Order Details' />
+      <Delivery delivery={sellerDelivery} title='Delivery Details' />
+      <Payment payment={payment} title='Payment Details' /> */}
     </Layout>
   );
 }
