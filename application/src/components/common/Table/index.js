@@ -3,7 +3,7 @@ import DataTable from 'react-data-table-component';
 
 import './styles.scss';
 
-const Table = ({title, columns, selecrows = false, urltofetch}) => {
+const Table = ({title, columns, selecrows = false, urltofetch, actionfunc}) => {
 
     // Some dummy data. In reality we would fetch the data from the backend
     const data = useMemo(() => urltofetch === "item" ? 
@@ -271,7 +271,7 @@ const Table = ({title, columns, selecrows = false, urltofetch}) => {
         <DataTable
             className="table-display"
             title={title}
-            columns={columns(setRows)}
+            columns={columns(setRows, actionfunc)}
             data={rows}
             highlightOnHover={true}
             pagination={true}
