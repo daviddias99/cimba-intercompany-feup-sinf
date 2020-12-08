@@ -19,15 +19,6 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
-<<<<<<< HEAD
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}.`);
-});
-
-pollOrders();
-setInterval(pollOrders, config.pollInterval);
-=======
 pollPurchaseOrders();
 setInterval(pollPurchaseOrders, config.pollInterval);
 
@@ -39,4 +30,3 @@ setTimeout(() => {
 app.listen(config.port, () => {
   console.log(`Listening on port ${config.port}.`);
 });
->>>>>>> da7c8d8... Detect new sales invoice
