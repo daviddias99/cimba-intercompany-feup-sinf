@@ -13,8 +13,6 @@ const Delivery = (props) => {
   const deliveryData = props.delivery
 
   const documentDate = new Date(deliveryData.documentDate);
-  console.log(deliveryData.documentDate);
-  console.log(documentDate.getUTCDate());
   const dateStr = documentDate.getUTCDate() + "/" + (documentDate.getUTCMonth() + 1) + "/" + documentDate.getUTCFullYear();
 
   const overviewFields = [
@@ -89,16 +87,16 @@ const Delivery = (props) => {
         <Subsection sectionId='delivery' title='Delivery'>
           <div className='fieldGroup'>
             <h3>Loading</h3>
-            <BasicField fieldSize='large' label={'Point'} value={deliveryData.loadingPoint}/>
             <BasicField fieldSize='large' label={'Warehouse'} value={deliveryData.warehouse}/>
+            <BasicField fieldSize='large' label={'Point'} value={deliveryData.loadingPoint}/>
             <LargeField label={'Address'} value={deliveryData.loadingPointAddress} />
             <BasicField fieldSize='large' label={'Country'} value={deliveryData.loadingCountryDescription}/>
           </div>
 
           <div className='fieldGroup'>
             <h3>Unloading</h3>
-            <BasicField fieldSize='large' label={'Point'} value={deliveryData.unloadingPoint}/>
             <BasicField fieldSize='large' label={'Vehicle License Plate'} value={deliveryData.vehiclePlateNumber}/>
+            <BasicField fieldSize='large' label={'Point'} value={deliveryData.unloadingPoint}/>
             <LargeField label={'Address'} value={deliveryData.unloadingPointAddress} />
             <BasicField fieldSize='large' label={'Country'} value={deliveryData.loadingCountryDescription}/>
           </div>

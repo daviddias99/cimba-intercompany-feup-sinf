@@ -1,0 +1,52 @@
+@import "assets/styles/bulma.scss";
+
+.chargingInfo {
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    align-self: flex-end;
+    margin-right: 2em;
+    font-size: 1.2em;
+    float: right;
+  }
+
+  .orderTotalText {
+    margin-right: 5em;
+    color: #444;
+  }
+}
+
+.noneAndChage {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.goodsAndServices{
+  display: flex;
+  flex-direction: column;
+  margin-top: 1em;
+  width: 100%;
+
+  h1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+
+
+.taxIncluded {
+  color: $cimba-dark-background;
+  display:inline-block; 
+  font-size: 0.7em;
+  margin-left: 0.5em;
+}
+
+
+
+
+

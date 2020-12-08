@@ -2,10 +2,11 @@ import React from 'react';
 
 import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
-import Order from './Order';
-import Delivery from './Delivery';
+import Order from './Documents/Order';
+import Delivery from './Documents/Delivery';
+import Invoice from './Documents/Invoice';
 import ProcessStepper from './ProcessStepper';
-import {purchaseOrder, delivery} from './stubData';
+import {purchaseOrder, delivery, invoice} from './stubData';
 
 import './styles.scss';
 
@@ -42,6 +43,7 @@ const Process = (props) => {
 
       <Order orderData={purchaseOrder} title='Order Details' />
       <Delivery delivery={delivery} title='Delivery Details' />
+      <Invoice invoice={invoice} title='Invoice Details' />
     </Layout>
   );
 }
