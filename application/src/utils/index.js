@@ -1,9 +1,11 @@
-import {itemTableURL, itemTableColumns} from './itemTableColumns'
-import {companyTableURL, companyTableColumns} from './companyTableColumns'
+import {itemTableURL, itemTableColumns, deleteItemButton} from './itemTableColumns'
+import {companyTableURL, companyTableColumns, deleteCompanyButton} from './companyTableColumns'
 
 export {
     itemTableURL,
     itemTableColumns,
+    deleteItemButton,
     companyTableURL,
     companyTableColumns,
+    deleteCompanyButton,
 }

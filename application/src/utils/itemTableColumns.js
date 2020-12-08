@@ -1,32 +1,21 @@
 import { Button } from "components/common/Button"
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const deleteItemButton = (setRows, actionFunction) => {
+const deleteItemButton = (actionFunction) => {
     return (row, index) =>         
-    <Button 
-        color={'secondary'} 
-        onClick={ () => {
-            setRows(rows => {
-                const newRows = rows.slice()
-                newRows.splice(index, 1)
-                return newRows
-            })
-            actionFunction({
-                id: row.localID,
-                title: 'Row Deleted',
-                description: `Row "${row.description}" was deleted.`,
-                color: 'info',
-            })
-        }}>
-        <DeleteIcon />
-    </Button>
+        <Button 
+            color={'secondary'} 
+            onClick={ () => actionFunction(row, index) }
+        >
+            <DeleteIcon />
+        </Button>
 }
 
 // TODO: change URL to connect with backend
 const itemTableURL = "item"
-const itemTableColumns = (setRows, actionFunction) => [
+const itemTableColumns = (actioncell) => [
     {
-        cell: deleteItemButton(setRows, actionFunction)
+        cell: actioncell,
     },
     {
         name: 'Company',
@@ -83,4 +72,5 @@ const itemTableColumns = (setRows, actionFunction) => [
 export {
     itemTableURL,
     itemTableColumns,
+    deleteItemButton,
 }
