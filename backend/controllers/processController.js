@@ -10,13 +10,20 @@ const getProcessState = (process) => {
 };
 
 exports.getOrder = async (req, res) => {
-  const { process } = req;
+  const process = await getProcess(req.params.id);
+
+  if (!process) {
+    return res.status(404).json({ status: 404 });
+  }
+
   let order;
   if (process.type === 'purchase') {
-    order = jasmin.getPurchaseOrder(process.company_id, process.order_id);
+    order = await jasmin.getPurchaseOrder(process.company_id, process.order_id);
   } else if (process.type === 'sale') {
-    order = jasmin.getSalesOrder(process.company_id, process.order_id);
+    order = await jasmin.getSalesOrder(process.company_id, process.order_id);
   }
+
+  console.log(process.type);
 
   return res.json({
     type: process.type,
@@ -26,7 +33,11 @@ exports.getOrder = async (req, res) => {
 };
 
 exports.getTransportation = async (req, res) => {
-  const { process } = req;
+  const process = await getProcess(req.params.id);
+
+  if (!process) {
+    return res.status(404).json({ status: 404 });
+  }
 
   let order;
   if (process.type === 'purchase') {
@@ -43,7 +54,11 @@ exports.getTransportation = async (req, res) => {
 };
 
 exports.getInvoice = async (req, res) => {
-  const { process } = req;
+  const process = await getProcess(req.params.id);
+
+  if (!process) {
+    return res.status(404).json({ status: 404 });
+  }
 
   let order;
   if (process.type === 'purchase') {
@@ -60,7 +75,11 @@ exports.getInvoice = async (req, res) => {
 };
 
 exports.getFinancial = async (req, res) => {
-  const { process } = req;
+  const process = await getProcess(req.params.id);
+
+  if (!process) {
+    return res.status(404).json({ status: 404 });
+  }
 
   let order;
   if (process.type === 'purchase') {

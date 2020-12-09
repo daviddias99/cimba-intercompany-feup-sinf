@@ -98,7 +98,7 @@ const apiRequests = (id, type) => {
 
 const Process = (props) => {
   const processId = props.match.params.processId;
-  const type = 'sale';
+  const [type, setType] = useState('purchase');
   const exampleProp = sellerPropsExample
   const [shownStep, setShownStep] = useState(0);
   const [shownCard, setShownCard] = useState(0);
@@ -110,7 +110,8 @@ const Process = (props) => {
     const endpoint = apiRequests(shownStep, type);
     const callback = (res) => {
       if (res.status === 200) {
-        setShownCard(getComponent(shownStep, res.data,type))
+        setType(res.data.type)
+        setShownCard(getComponent(shownStep, res.data.document, type))
         setIsLoading(false)
       }
       else {
@@ -121,7 +122,7 @@ const Process = (props) => {
     };
 
     endpoint(processId, callback);
-  }, [shownStep]);
+  }, [redirect, processId, shownStep, type]);
   // useEffect(
   //   () => {
   //     // Do initial API call
@@ -130,14 +131,14 @@ const Process = (props) => {
   // );
 
   return (
-    <Layout title={`Process ${exampleProp.processId}`}>
+    <Layout title={`Process ${processId}`}>
       {redirect ? <Redirect to="/overview" /> : ""}
       {
         isLoading ?
           <LoadingScreen /> :
           <div>
             <div className='processStepperCard'>
-              <Card title={`Process ${exampleProp.processId}`}>
+              <Card title={`Process ${processId}`}>
                 <ProcessStepper activeStp={shownStep} maxStep={exampleProp.currentStep} handlers={[setShownStep, setShownStep]} />
               </Card>
             </div>
