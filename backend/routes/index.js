@@ -8,5 +8,6 @@ router.use('/', require('./auth'));
 
 router.use('/users', require('./users'));
 router.use('/companies', require('./companies'));
+router.use('/process', require('./process'));
 
 module.exports = router;

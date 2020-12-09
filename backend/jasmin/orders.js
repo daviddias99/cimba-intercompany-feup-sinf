@@ -2,6 +2,7 @@ const { makeRequest } = require('./makeRequest');
 const { mapLocalCompanyId, mapUniversalCompanyId } = require('../database/methods/companyMapsMethods');
 const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
+const { addOrder } = require('../database/methods/orderMethods');
 
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
@@ -36,7 +37,7 @@ exports.createSalesOrder = async (
     documentLinesMapped.push({ salesItem: element });
   });
 
-  return makeRequest(
+  const salesOrder = await makeRequest(
     'sales/orders',
     'post',
     suplier.id,
@@ -48,4 +49,27 @@ exports.createSalesOrder = async (
       documentLines: documentLinesMapped,
     },
   );
+
+  addOrder(universalIdSuplier, salesOrder.data, 'sale');
+  console.log(`Created sales order ${salesOrder.data} for company ${universalIdSuplier}`);
+
+  return salesOrder;
 };
+
+exports.getInvoices = async (companyId) => (await makeRequest('billing/invoices', 'get', companyId)).data;
+
+exports.getDeliveries = async (companyId) => (await makeRequest('shipping/deliveries', 'get', companyId)).data;
+
+exports.getPurchaseOrder = async (companyId, orderId) => (await makeRequest(`purchases/orders/${orderId}`, 'get', companyId)).data;
+
+exports.getPurchaseInvoice = async (companyId, invoiceId) => (await makeRequest(`invoiceReceipt/invoices/${invoiceId}`, 'get', companyId)).data;
+
+exports.getPurchaseFinancial = async (companyId, id) => (await makeRequest(`/accountsPayable/payments/${id}`, 'get', companyId)).data;
+
+exports.getSalesOrder = async (companyId, orderId) => (await makeRequest(`sales/orders/${orderId}`, 'get', companyId)).data;
+
+exports.getSalesInvoice = async (companyId, invoiceId) => (await makeRequest(`billing/invoices/${invoiceId}`, 'get', companyId)).data;
+
+exports.getSalesDelivery = async (companyId, deliveryId) => (await makeRequest(`shipping/deliveries/${deliveryId}`, 'get', companyId)).data;
+
+exports.getSalesFinancial = async (companyId, id) => (await makeRequest(`/accountsReceivable/receipts/${id}`, 'get', companyId)).data;
