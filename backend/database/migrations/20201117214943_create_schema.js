@@ -1,3 +1,5 @@
+const { triggersUp, triggersDown } = require('../triggers');
+
 exports.up = function (knex) {
   return knex.schema
     .createTable('companies', (table) => {
@@ -8,6 +10,8 @@ exports.up = function (knex) {
       table.string('tenant').notNullable();
       table.string('organization').notNullable();
       table.string('name').notNullable();
+      table.timestamp('most_recent_order', { useTz: true }).defaultTo(knex.fn.now());
+      table.unique(['tenant', 'organization'], 'tenant_organization_unique');
     })
     .createTable('users', (table) => {
       table.increments();
@@ -21,16 +25,18 @@ exports.up = function (knex) {
       table.increments();
       table.string('local_id').notNullable();
       table.string('item_id').notNullable();
+      table.integer('map_company_id').notNullable();
+      table.foreign('map_company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
 
-      table.unique(['local_id', 'company_id'], 'items_map_unique');
+      table.unique(['local_id', 'map_company_id', 'company_id'], 'items_map_unique');
     })
     .createTable('company_maps', (table) => {
       table.increments();
       table.string('local_id').notNullable();
-      table.string('company_key').notNullable();
-      table.foreign('company_key');
+      table.integer('map_company_id').notNullable();
+      table.foreign('map_company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
 
@@ -42,7 +48,17 @@ exports.up = function (knex) {
         .onDelete('CASCADE');
       // useTz always store data in UTC Format
       table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
-    });
+    })
+    .createTable('orders', (table) => {
+      table.integer('company_id').unsigned();
+      table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
+      table.string('order_id').notNullable();
+      table.unique('order_id');
+      table.timestamp('jasmin_created_on').notNullable();
+    })
+    .then(() => triggersUp.forEach(async (elem) => {
+      await knex.schema.raw(elem);
+    }));
 };
 
 exports.down = function (knex) {
@@ -50,5 +66,9 @@ exports.down = function (knex) {
     .dropTable('item_maps')
     .dropTable('company_maps')
     .dropTable('users')
-    .dropTable('companies');
+    .dropTable('companies')
+    .dropTable('orders')
+    .then(() => triggersDown.forEach(async (elem) => {
+      await knex.raw(elem);
+    }));
 };

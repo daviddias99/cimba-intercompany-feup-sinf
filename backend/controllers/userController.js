@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { makeRequest } = require('../jasmin/makeRequest');
+const { getJasminToken } = require('../jasmin/auth');
 
 exports.allUsers = async (req, res) => {
   const users = await req.app.db('users').select(['id', 'username']);
@@ -36,27 +37,29 @@ exports.updateUserCompany = async (req, res) => {
   if (parseInt(req.params.id, 10) !== req.user.id) {
     return res.status(403).json({ status: 200, id: 'Forbidden' });
   }
-
   const responseBody = req.body;
   delete responseBody.id;
-
   // Check for existent company in cimba database
+  let newCompany = false;
   const existentCompany = (await req.app.db('companies')
-    .where('company_key', req.body.company_key)
-    .andWhere('app_id', req.body.app_id)
-    .andWhere('app_secret', req.body.app_secret)
-    .andWhere('tenant', req.body.tenant)
+    .where('tenant', req.body.tenant)
     .andWhere('organization', req.body.organization)
-    .select('id', 'name')
+    .select('*')
     .first());
 
-  if (existentCompany) {
-    await req.app.db('users').where('id', req.user.id).update('company_id', existentCompany.id);
-    responseBody.id = existentCompany.id;
-    responseBody.name = existentCompany.name;
-    return res.status(200).json({ status: 200, id: 'Success', data: responseBody });
+  if (!existentCompany) {
+    newCompany = true;
   }
 
+  if (Object.keys(responseBody).every((x) => responseBody[x] === existentCompany[x])) {
+    await req.app.db('users').where('id', req.user.id).update('company_id', existentCompany.id);
+    return res.status(200).json({ status: 200, id: 'Success', data: existentCompany });
+  }
+
+  const token = await getJasminToken(req.body.app_id, req.body.app_secret);
+  if (token === null) {
+    return res.status(400).json({ status: 400, id: 'Bad Request', reason: 'Invalid company info: could not authenticate using given client ID and secret.' });
+  }
   // Check for existent company in jasmin database
   const jasminCompanySearch = await makeRequest(`corepatterns/companies/${req.body.company_key}`, 'get', '', null, null, req.body);
 
@@ -65,10 +68,14 @@ exports.updateUserCompany = async (req, res) => {
   }
   // Create new company in cimba database and link user
 
-  responseBody.name = jasminCompanySearch.data.name;
-  const newCompanyId = (await req.app.db('companies').insert(responseBody).returning('id'))[0];
-  await req.app.db('users').where('id', req.user.id).update('company_id', newCompanyId);
-  responseBody.id = newCompanyId;
+  if (newCompany) {
+    responseBody.name = jasminCompanySearch.data.name;
+    const newCompanyId = (await req.app.db('companies').insert(responseBody).returning('id'))[0];
+    await req.app.db('users').where('id', req.user.id).update('company_id', newCompanyId);
+    responseBody.id = newCompanyId;
+  } else {
+    (await req.app.db('companies').update(responseBody).where({ id: existentCompany.id }).returning('id')[0]);
+  }
 
   return res.status(200).json({ status: 200, id: 'Success', data: responseBody });
 };
