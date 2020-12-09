@@ -1,5 +1,5 @@
 // TODO: change URL to connect with backend
-const paymenTableColumns = [
+const paymentTableColumns = [
     {
         name: 'Source',
         selector: 'sourceDoc',
@@ -26,4 +26,4 @@ const paymenTableColumns = [
     },
 ]
 
-export default paymenTableColumns;
+export default paymentTableColumns;
