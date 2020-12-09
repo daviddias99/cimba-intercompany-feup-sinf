@@ -18,3 +18,5 @@ router.get(`/:id(${regexNum})/invoice`,
 router.get(`/:id(${regexNum})/financial`,
   authenticate,
   processController.getFinancial);
+
+module.exports = router;
