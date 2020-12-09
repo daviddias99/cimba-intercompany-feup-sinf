@@ -14,14 +14,14 @@ import NotFound from 'pages/NotFound';
 import Login from 'pages/Login';
 import Process from 'pages/Process';
 
-const PrivateRoute = ({ children, component, ...rest }) => {
+const PrivateRoute = ({ children, ...rest }) => {
 
   const loggedIn = useSelector(state => state.user.loggedIn);
 
   return (
     <Route {...rest} render={(props) => {
       return loggedIn
-        ? (component ? component(props) : children)
+        ? children
         : <Redirect to="/login" />;
     }}
     />
@@ -61,7 +61,7 @@ const Router = () => {
         <PrivateRoute exact path={routes.support.def}>
           <Overview />
         </PrivateRoute>
-        <PrivateRoute exact component={Process} path={routes.process.def}>
+        <PrivateRoute exact path={routes.process.def}>
           <Process/>
         </PrivateRoute>
         <Route>

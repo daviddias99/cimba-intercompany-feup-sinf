@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import classNames from 'classnames';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
+import { Button } from 'components/common/Button';
+
 const useColorlibStepIconStyles = makeStyles({
   root: {
     backgroundColor: '#ccc',
@@ -34,7 +37,6 @@ const useColorlibStepIconStyles = makeStyles({
 function ColorlibStepIcon(props) {
   const classes = useColorlibStepIconStyles();
   const { active, completed } = props;
-
   const icons = {
     1: 1,
     2: 2,
@@ -76,18 +78,20 @@ function getSteps() {
 }
 
 
-export default function OverviewTooltipStepper({ activeStp }) {
+export default function OverviewTooltipStepper({ activeStp, maxStep, handlers }) {
   const classes = useColorlibStepIconStyles();
-  const [activeStep] = React.useState(activeStp);
   const steps = getSteps();
+  // const [thisActiveStep, setThisActiveStep] = useState(activeStp);
 
-  // const handleNext = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  // };
+  const handleNext = () => {
+    handlers[1](activeStp === maxStep ? maxStep : activeStp + 1);
+    // setThisActiveStep(thisActiveStep+1)
+  };
 
-  // const handleBack = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  // };
+  const handleBack = () => {
+    handlers[0](activeStp === 0 ? 0 : activeStp - 1);
+    // setThisActiveStep(thisActiveStep+1)
+  };
 
   // const handleReset = () => {
   //   setActiveStep(0);
@@ -96,14 +100,22 @@ export default function OverviewTooltipStepper({ activeStp }) {
   return (
     <div className='stepperWrapper'>
       <div className={clsx(classes.root)}>
-        <Stepper alternativeLabel activeStep={activeStep}>
-          {steps.map((label) => (
+        <Stepper alternativeLabel activeStep={activeStp}>
+          {steps.map((label, idx) => (
+
             <Step key={label}>
               <StepLabel StepIconComponent={ColorlibStepIcon}>{<span className='tooltiplabel'>{label}</span>}</StepLabel>
             </Step>
+
           ))}
         </Stepper>
       </div>
+      <Button onClick={handleBack}>
+        Back
+      </Button>
+      <Button onClick={handleNext} >
+        Next
+      </Button>
     </div>
   );
 
