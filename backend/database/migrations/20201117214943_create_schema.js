@@ -49,6 +49,7 @@ exports.up = function (knex) {
       table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
     })
     .createTable('orders', (table) => {
+      table.increments();
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.string('order_id').notNullable();

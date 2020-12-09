@@ -10,7 +10,7 @@ const getProcessState = (process) => {
 };
 
 exports.getOrder = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
   let order;
   if (process.type === 'purchase') {
@@ -27,7 +27,7 @@ exports.getOrder = async (req, res) => {
 };
 
 exports.getTransportation = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
   let order;
   if (process.type === 'purchase') {
@@ -44,7 +44,7 @@ exports.getTransportation = async (req, res) => {
 };
 
 exports.getInvoice = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
   let order;
   if (process.type === 'purchase') {
@@ -61,7 +61,7 @@ exports.getInvoice = async (req, res) => {
 };
 
 exports.getFinancial = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
   let order;
   if (process.type === 'purchase') {
