@@ -10,3 +10,5 @@ exports.addOrder = async (companyId, order) => {
 };
 
 exports.getSalesOrdersNoInvoice = async (companyId) => db('orders').select('order_id').where({ company_id: companyId, type: 'sale', invoice_id: null });
+
+exports.getSalesOrdersNoDelivery = async (companyId) => db('orders').select('order_id').where({ company_id: companyId, type: 'sale', delivery_id: null });

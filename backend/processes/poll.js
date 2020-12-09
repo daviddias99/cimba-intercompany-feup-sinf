@@ -1,6 +1,6 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
-const { getSalesOrdersNoInvoice } = require('../database/methods/orderMethods');
-const { getOrders, getInvoices } = require('../jasmin/orders');
+const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery } = require('../database/methods/orderMethods');
+const { getOrders, getInvoices, getDeliveries } = require('../jasmin/orders');
 const { newPurchaseOrder, newInvoice } = require('./purchase');
 
 const pollOrdersCompany = async (companyId) => {
@@ -38,4 +38,23 @@ const pollInvoiceCompany = async (companyId) => {
 exports.pollInvoice = async () => {
   const companies = await getCompanies();
   companies.forEach((company) => pollInvoiceCompany(company.id));
+};
+
+const pollDeliveryCompany = async (companyId) => {
+  const salesOrders = await getSalesOrdersNoDelivery(companyId);
+  const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
+
+  const deliveries = await getDeliveries(companyId);
+
+  const newDeliveries = deliveries.filter((delivery) => {
+    const orderId = delivery.documentLines[0].sourceDocId;
+    return salesOrdersId.has(orderId);
+  });
+
+  newDeliveries.forEach((delivery) => newInvoice(companyId, delivery));
+};
+
+exports.pollDelivery = async () => {
+  const companies = await getCompanies();
+  companies.forEach((company) => pollDeliveryCompany(company.id));
 };

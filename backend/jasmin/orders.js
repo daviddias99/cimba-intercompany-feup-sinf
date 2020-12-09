@@ -51,3 +51,5 @@ exports.createSalesOrder = async (
 };
 
 exports.getInvoices = async (companyId) => makeRequest('billing/invoices', 'get', companyId);
+
+exports.getDeliveries = async (companyId) => makeRequest('shipping/deliveries', 'get', companyId);
