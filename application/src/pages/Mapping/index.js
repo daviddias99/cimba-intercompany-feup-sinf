@@ -328,11 +328,29 @@ const Mapping = () => {
   }
 
   const insertItemAction = data => {
-    console.log(data)
+    console.log("Chamada a API para meter item")
+    const newItemData = itemData.slice()
+    newItemData.unshift(data)
+    setItemData(newItemData)
+    addNewToast({
+      id: data.localID,
+      title: 'Row Inserted',
+      description: `Row "${data.description}" was inserted.`,
+      color: 'info',
+    })
   }
 
   const insertCompanyAction = data => {
-    console.log(data)
+    console.log("Chamada a API para meter company")
+    const newCompanyData = companyData.slice()
+    newCompanyData.unshift(data)
+    setCompanyData(newCompanyData)
+    addNewToast({
+      id: data.localID,
+      title: 'Row Inserted',
+      description: `Row "${data.name}" was inserted.`,
+      color: 'info',
+    })
   }
 
   return (

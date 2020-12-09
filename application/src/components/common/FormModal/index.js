@@ -13,7 +13,6 @@ const FormModal = ({title, formfields, open, closefunc, submitfunc}) => {
         setData(prevState => ({...prevState, [id]: value}));
     }
 
-    // TODO: posso ter de limpar data depois de submeter
     return (
         <Modal open={open} onClose={closefunc} center>
             <div className="form-modal">
@@ -33,7 +32,11 @@ const FormModal = ({title, formfields, open, closefunc, submitfunc}) => {
                 }
                 <Button 
                     className="form-modal-button"
-                    onClick={() => submitfunc(data)}
+                    onClick={() => {
+                        closefunc()
+                        submitfunc(data)
+                        setData({})
+                    }}
                 >
                     <p>Submit</p>
                 </Button>
