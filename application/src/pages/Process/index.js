@@ -99,8 +99,8 @@ const apiRequests = (id, type) => {
 const Process = (props) => {
   const processId = props.match.params.processId;
   const [type, setType] = useState('purchase');
-  const exampleProp = sellerPropsExample
   const [shownStep, setShownStep] = useState(0);
+  const [processState, setProcessState] = useState(0);
   const [shownCard, setShownCard] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
@@ -111,6 +111,8 @@ const Process = (props) => {
     const callback = (res) => {
       if (res.status === 200) {
         setType(res.data.type)
+        setShownStep(res.data.documentState);
+        setProcessState(res.data.processState);
         setShownCard(getComponent(shownStep, res.data.document, type))
         setIsLoading(false)
       }
@@ -139,7 +141,7 @@ const Process = (props) => {
           <div>
             <div className='processStepperCard'>
               <Card title={`Process ${processId}`}>
-                <ProcessStepper activeStp={shownStep} maxStep={exampleProp.currentStep} handlers={[setShownStep, setShownStep]} />
+                <ProcessStepper activeStp={shownStep} maxStep={processState} handlers={[setShownStep, setShownStep]} />
               </Card>
             </div>
             {shownCard}

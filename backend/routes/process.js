@@ -16,7 +16,7 @@ async function processMiddleware(req, res, next) {
   next();
 }
 
-// router.use(authenticate);
+router.use(authenticate);
 router.use(`/:id(${regexNum})`, processMiddleware);
 
 router.get(`/:id(${regexNum})/order`, processController.getOrder);
