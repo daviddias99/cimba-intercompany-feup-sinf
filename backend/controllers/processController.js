@@ -8,6 +8,13 @@ const getProcessState = (process) => {
   return 3;
 };
 
+exports.getProcess = async (req, res) => {
+  const { process } = req;
+  process.state = getProcessState(process);
+
+  return res.json(process);
+};
+
 exports.getOrder = async (req, res) => {
   const { process } = req;
 
@@ -21,7 +28,8 @@ exports.getOrder = async (req, res) => {
   return res.json({
     type: process.type,
     document,
-    state: getProcessState(process),
+    processState: getProcessState(process),
+    documentState: 0,
   });
 };
 
@@ -38,7 +46,8 @@ exports.getTransportation = async (req, res) => {
   return res.json({
     type: process.type,
     document,
-    state: getProcessState(process),
+    processState: getProcessState(process),
+    documentState: 1,
   });
 };
 
@@ -55,7 +64,8 @@ exports.getInvoice = async (req, res) => {
   return res.json({
     type: process.type,
     document,
-    state: getProcessState(process),
+    processState: getProcessState(process),
+    documentState: 2,
   });
 };
 
@@ -72,6 +82,7 @@ exports.getFinancial = async (req, res) => {
   return res.json({
     type: process.type,
     document,
-    state: getProcessState(process),
+    processState: getProcessState(process),
+    documentState: 3,
   });
 };
