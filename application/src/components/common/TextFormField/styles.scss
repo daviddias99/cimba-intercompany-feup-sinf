@@ -24,6 +24,10 @@
     border-radius: 4px 4px 4px 4px;
   }
 
+  input:disabled {
+    background: #ebebeb;
+  }
+
   input::placeholder {
     font-family: Roboto;
     font-style: normal;

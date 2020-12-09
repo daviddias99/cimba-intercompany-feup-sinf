@@ -16,8 +16,8 @@ const routes = {
   singleItemMap : (companyId, mapId) => `/companies/${companyId}/itemMaps/${mapId}`,
   companyMaps: (companyId) => `/companies/${companyId}/companyMaps`,
   singleCompanyMap: (companyId, mapId) => `/companies/${companyId}/companyMaps/${mapId}`,
-
-  getSettings: () => (`/users/1/company`),
+  getSettings: (userId) => (`/users/${userId}/company`),
+  setSettings: (userId) => (`/users/${userId}/company`),
   getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
   getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
 };
@@ -83,8 +83,11 @@ const api = {
   logout: (callback) => {
     request(routes.logout, 'post', null, callback);
   },
-  getSettings: (callback) => {
-    request(routes.getSettings(), 'get', null, callback);
+  getSettings: (userId, callback) => {
+    request(routes.getSettings(userId), 'get', null, callback);
+  },
+  setSettings: (userId, data, callback) => {
+    request(routes.setSettings(userId), 'post', data, callback);
   },
   getItemMaps: (companyId, callback) => {
     request(routes.itemMaps(companyId), 'get', null, callback);

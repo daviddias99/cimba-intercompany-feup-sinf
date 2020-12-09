@@ -10,6 +10,9 @@ import { Button } from 'components/common/Button';
 import Toast from 'components/common/Toast';
 import Logo from 'components/common/Logo';
 
+import './styles.scss';
+
+
 // theres probably a better way to do this
 let numErrors = 0;
 
@@ -19,28 +22,26 @@ const Login = () => {
   const dispatch = useDispatch();
 
 
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [toastList, setToastList] = useState([]);
 
-  const validateEmail = (email) => {
-    // eslint-disable-next-line
-    const emailRegex = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  const validateUsername = (username) => {
     // TODO: there is probably a better way to do this
-    if (!email) {
+    if (!username) {
       return {
         id: numErrors++,
-        title: 'Email required',
-        description: 'Please input an email address.',
+        title: 'Username required',
+        description: 'Please input an username.',
         color: 'info',
       };
-    } else if (!emailRegex.test(email.toLowerCase())) {
+    } else if (username.length < 3 || username.length > 10) {
       return {
         id: numErrors++,
-        title: 'Invalid Email',
-        description: 'Please input an actual email address.',
+        title: 'Invalid Username',
+        description: 'Must be between 3 and 10 characters',
         color: 'info',
       };
     }
@@ -67,7 +68,7 @@ const Login = () => {
     setLoading(true);
 
     // TODO: there is probably a better way to do this
-    const toastErrors = [validateEmail(email), validatePassword(password)].filter(obj => obj !== null);
+    const toastErrors = [validateUsername(username), validatePassword(password)].filter(obj => obj !== null);
     if (toastErrors.length !== 0) {
       setLoading(false);
       setError(true);
@@ -78,11 +79,11 @@ const Login = () => {
       return;
     }
 
-    api.login({ email, password },
+    api.login({ username, password },
       (res) => {
         setLoading(false);
         if (res.data.status === 200) {
-          dispatch(loadUser(res.data.token));
+          dispatch(loadUser({token: res.data.token, data: res.data.data}));
         } else {
           setError(true);
           setToastList([
@@ -101,9 +102,9 @@ const Login = () => {
     );
   };
 
-  const handleEmailChange = (e) => {
+  const handleUserNameChange = (e) => {
     const { value } = e.target;
-    setEmail(value);
+    setUsername(value);
   };
 
   const handlePasswordChange = (e) => {
@@ -123,18 +124,15 @@ const Login = () => {
 
   return (
     <>
-      <div className="hero is-fullheight is-dark" >
+      <div className="hero is-fullheight" >
         <div className="hero-body container columns is-centered has-text-centered my-0">
-          <div>
-            <Logo dark large />
-            <hr />
-            <p className="subtitle">Big Brother is watching for you!</p>
-            <div className="card mb-3">
+          <div className="login-card card py-5">
+            <Logo large alt />
               <div className="card-content">
                 <form onSubmit={onSubmit}>
                   <div className="field">
                     <div className="control">
-                      <input className="input" name="email" placeholder="Email" onChange={handleEmailChange} />
+                      <input className="input" name="username" placeholder="Username" onChange={handleUserNameChange} />
                     </div>
                   </div>
                   <div className="field">
@@ -146,8 +144,6 @@ const Login = () => {
                 </form>
               </div>
             </div>
-            <a className="has-text-grey" href="/">Lost your Password?</a>
-          </div>
         </div>
       </div >
       {getErrorToast()}

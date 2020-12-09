@@ -15,15 +15,13 @@ import Login from 'pages/Login';
 
 const PrivateRoute = ({ children, ...rest }) => {
 
-  // const loggedIn = useSelector(state => state.user.loggedIn);
+  const loggedIn = useSelector(state => state.user.loggedIn);
 
   return (
-    // <Route {...rest} render={() => {
-    //   return loggedIn
-    //     ? children
-    //     : <Redirect to="/login" />;
     <Route {...rest} render={() => {
-      return children;
+      return loggedIn
+        ? children
+        : <Redirect to="/login" />;
     }}
     />
   );
