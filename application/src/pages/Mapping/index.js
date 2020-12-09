@@ -1,13 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {itemTableURL, itemTableColumns, deleteItemButton, 
-  companyTableURL, companyTableColumns, deleteCompanyButton} from 'utils'
-import { Modal } from 'react-responsive-modal';
+import {itemTableURL, itemTableColumns, deleteItemButton, insertItemForm,
+  companyTableURL, companyTableColumns, deleteCompanyButton, insertCompanyForm} from 'utils';
 
 import Layout from 'components/common/Layout';
 import Tabs from 'components/common/Tabs';
 import Tab from 'components/common/Tab';
 import Table from 'components/common/Table';
 import Toast from 'components/common/Toast';
+import FormModal from 'components/common/FormModal';
 
 import 'react-responsive-modal/styles.css';
 
@@ -23,6 +23,7 @@ const Mapping = () => {
 
   // TODO: fazer API call ao backend aqui, de modo a poder chamar quando se muda de tab
   const fetchItemData = () => {
+    console.log("Chamada a API para ir buscar items")
     setItemData([
       {
           company: 50001,
@@ -220,6 +221,7 @@ const Mapping = () => {
 
   // TODO: fazer API call ao backend aqui, de modo a poder chamar quando se muda de tab
   const fetchCompanyData = () => {
+    console.log("Chamada a API para ir buscar companies")
     setCompanyData([
       {
           localID: 50001,
@@ -320,9 +322,17 @@ const Mapping = () => {
     addNewToast({
         id: row.localID,
         title: 'Row Deleted',
-        description: `Row "${row.description}" was deleted.`,
+        description: `Row "${row.name}" was deleted.`,
         color: 'info',
     })
+  }
+
+  const insertItemAction = data => {
+    console.log(data)
+  }
+
+  const insertCompanyAction = data => {
+    console.log(data)
   }
 
   return (
@@ -345,12 +355,23 @@ const Mapping = () => {
           </Tab>
         </Tabs>
       </Layout>
-      <Modal open={itemModalVisible} onClose={() => setItemModalVisible(false)} center>
-        <h2>Item Modal</h2>
-      </Modal>
-      <Modal open={companyModalVisible} onClose={() => setCompanyModalVisible(false)} center>
-        <h2>Company Modal</h2>
-      </Modal>
+
+      <FormModal 
+        title={"Insert Item Mapping"}
+        formfields={insertItemForm}
+        open={itemModalVisible}
+        closefunc={() => setItemModalVisible(false)}
+        submitfunc={insertItemAction}
+      />
+
+      <FormModal 
+        title={"Insert Company Mapping"}
+        formfields={insertCompanyForm}
+        open={companyModalVisible}
+        closefunc={() => setCompanyModalVisible(false)}
+        submitfunc={insertCompanyAction}
+      />
+
       {displayToasts()}
     </>
   );

@@ -1,6 +1,49 @@
 import { Button } from "components/common/Button"
 import DeleteIcon from '@material-ui/icons/Delete';
 
+const insertItemForm = [
+    {
+        title: "Company",
+        id: "company"
+    },
+    {
+        title: "Local ID",
+        id: "localID"
+    },
+    {
+        title: "Item ID",
+        id: "itemID"
+    },
+    {
+        title: "Description",
+        id: "description"
+    },
+    {
+        title: "Warehouse",
+        id: "warehouse"
+    },
+    {
+        title: "Unit",
+        id: "unit"
+    },
+    {
+        title: "Unit Price 1",
+        id: "unit_price_1"
+    },
+    {
+        title: "VAT Type 1",
+        id: "vat_type_1"
+    },
+    {
+        title: "Unit Price 2",
+        id: "unit_price_2"
+    },
+    {
+        title: "VAT Type 2",
+        id: "vat_type_2"
+    }
+]
+
 const deleteItemButton = (actionFunction) => {
     return (row, index) =>         
         <Button 
@@ -73,4 +116,5 @@ export {
     itemTableURL,
     itemTableColumns,
     deleteItemButton,
+    insertItemForm
 }

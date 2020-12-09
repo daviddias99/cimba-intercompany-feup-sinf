@@ -5,14 +5,6 @@ import './styles.scss';
 
 const Table = ({title, columns, selecrows = false, data}) => {
 
-    // const styles = {
-    //     table: {
-    //         style: {
-    //             backgroundColor: "white"
-    //         }
-    //     }
-    // }
-
     return (
         <DataTable
             className="table-display"

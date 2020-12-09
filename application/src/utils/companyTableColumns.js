@@ -1,6 +1,21 @@
 import { Button } from "components/common/Button"
 import DeleteIcon from '@material-ui/icons/Delete';
 
+const insertCompanyForm = [
+    {
+        title: "Local ID",
+        id: "localID"
+    },
+    {
+        title: "Company ID",
+        id: "companyID"
+    },
+    {
+        title: "Name",
+        id: "name"
+    }
+]
+
 const deleteCompanyButton = (actionFunction) => {
     return (row, index) =>         
         <Button 
@@ -39,4 +54,5 @@ export {
     companyTableURL,
     companyTableColumns,
     deleteCompanyButton,
+    insertCompanyForm
 }
