@@ -1,5 +1,7 @@
 const db = require('../knex');
 
+exports.getProcess = async (processId) => db('orders').where({ id: processId }).select();
+
 exports.addOrder = async (companyId, orderId, type, createdOn = null) => {
   const order = {
     company_id: companyId,
