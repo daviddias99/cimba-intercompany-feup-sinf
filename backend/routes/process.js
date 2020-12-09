@@ -2,21 +2,30 @@ const router = require('express').Router();
 const authenticate = require('../middlewares/authenticate');
 const regexNum = require('../helper/regexNum');
 const processController = require('../controllers/processController');
+const { getProcess } = require('../database/methods/orderMethods');
 
-router.get(`/:id(${regexNum})/order`,
-  authenticate,
-  processController.getOrder);
 
-router.get(`/:id(${regexNum})/transportation`,
-  authenticate,
-  processController.getTransportation);
+async function processMiddleware(req, res, next) {
+  const process = await getProcess(req.params.id);
 
-router.get(`/:id(${regexNum})/invoice`,
-  authenticate,
-  processController.getInvoice);
+  if (!process) {
+    res.status(404).json({ status: 404 });
+    return;
+  }
 
-router.get(`/:id(${regexNum})/financial`,
-  authenticate,
-  processController.getFinancial);
+  req.process = process;
+  next();
+}
+
+router.use(authenticate);
+router.use(processMiddleware);
+
+router.get(`/:id(${regexNum})/order`, processController.getOrder);
+
+router.get(`/:id(${regexNum})/transportation`, processController.getTransportation);
+
+router.get(`/:id(${regexNum})/invoice`, processController.getInvoice);
+
+router.get(`/:id(${regexNum})/financial`, processController.getFinancial);
 
 module.exports = router;
