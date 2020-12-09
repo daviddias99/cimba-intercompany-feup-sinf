@@ -2,6 +2,7 @@ const { makeRequest } = require('./makeRequest');
 const { mapLocalCompanyId, mapUniversalCompanyId } = require('../database/methods/companyMapsMethods');
 const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
+const { addOrder } = require('../database/methods/orderMethods');
 
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
@@ -36,7 +37,7 @@ exports.createSalesOrder = async (
     documentLinesMapped.push({ salesItem: element });
   });
 
-  return makeRequest(
+  const salesOrder = await makeRequest(
     'sales/orders',
     'post',
     suplier.id,
@@ -48,8 +49,13 @@ exports.createSalesOrder = async (
       documentLines: documentLinesMapped,
     },
   );
+
+  addOrder(universalIdSuplier, salesOrder.data, 'sale');
+  console.log(`Created sales order ${salesOrder.data} for company ${universalIdSuplier}`);
+
+  return salesOrder;
 };
 
-exports.getInvoices = async (companyId) => makeRequest('billing/invoices', 'get', companyId);
+exports.getInvoices = async (companyId) => (await makeRequest('billing/invoices', 'get', companyId)).data;
 
-exports.getDeliveries = async (companyId) => makeRequest('shipping/deliveries', 'get', companyId);
+exports.getDeliveries = async (companyId) => (await makeRequest('shipping/deliveries', 'get', companyId)).data;
