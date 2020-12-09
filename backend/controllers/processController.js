@@ -11,7 +11,7 @@ const getProcessState = (process) => {
 
 exports.getOrder = async (req, res) => {
   const process = await getProcess(req.params.id);
-
+  console.log(process);
   let order;
   if (process.type === 'purchase') {
     order = jasmin.getPurchaseOrder(process.company_id, process.order_id);

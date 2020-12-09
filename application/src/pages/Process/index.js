@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
+import { Redirect } from 'react-router-dom';
 import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
+import LoadingScreen from 'components/common/LoadingScreen';
 import BuyerOrder from './Documents/Buyer/Order';
 import SellerOrder from './Documents/Seller/Order';
 import Delivery from './Documents/Seller/Delivery';
@@ -10,8 +11,9 @@ import Receipt from './Documents/Seller/Receipt';
 import BuyerInvoice from './Documents/Buyer/Invoice';
 import SellerInvoice from './Documents/Seller/Invoice';
 import ProcessStepper from './ProcessStepper';
-import {purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice,receipt, payment} from './stubData';
+import { purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice, receipt, payment } from './stubData';
 
+import api from 'services/api';
 import './styles.scss';
 
 /*
@@ -40,9 +42,9 @@ const buyerPropsExample = {
   status: 'Payment',
   currentStep: 3,
   data: {
-    order: purchaseOrder ,
+    order: purchaseOrder,
     delivery: null,
-    invoice: buyerInvoice ,
+    invoice: buyerInvoice,
     payment: payment
   }
 }
@@ -55,40 +57,94 @@ const sellerPropsExample = {
   status: 'Payment',
   currentStep: 2,
   data: {
-    order: salesOrder ,
+    order: salesOrder,
     delivery: sellerDelivery,
-    invoice: sellerInvoice ,
+    invoice: sellerInvoice,
     payment: receipt
   }
 }
 
-const prp = [
-      <SellerOrder orderData={sellerPropsExample.data.order} title='Sales Order Details' />,
-      <Delivery delivery={sellerPropsExample.data.delivery} title='Delivery Details' />,
-      <SellerInvoice invoice={sellerPropsExample.data.invoice} title='Invoice Details' />,
-      <Receipt receipt={sellerPropsExample.data.payment} title='Receipt Details' />,
-]
+const getComponent = (id, data, type) => {
+  return {
+    sale: [
+      <SellerOrder orderData={data} title='Sales Order Details' />,
+      <Delivery delivery={data} title='Delivery Details' />,
+      <SellerInvoice invoice={data} title='Invoice Details' />,
+      <Receipt receipt={data} title='Receipt Details' />,
+    ],
+    purchase: [
+      <BuyerOrder orderData={data} title='Purchase Order Details' />,
+      <BuyerInvoice invoice={data} title='Invoice Details' />,
+      <Payment payment={data} title='Payment Details' />,
+    ]
+  }[type][id];
+}
+
+const apiRequests = (id, type) => {
+  return {
+    sale: [
+      api.getOrder,
+      api.getTransportation,
+      api.getInvoice,
+      api.getFinancial
+    ],
+    purchase: [
+      api.getOrder,
+      api.getInvoice,
+      api.getFinancial,
+    ]
+  }[type][id]
+}
 
 const Process = (props) => {
+  const processId = props.match.params.processId;
+  const type = 'sale';
   const exampleProp = sellerPropsExample
-  const [shownStep, setShownStep] = useState(exampleProp.currentStep);
-  const [shownCard, setShownCard] = useState(exampleProp.currentStep);
+  const [shownStep, setShownStep] = useState(0);
+  const [shownCard, setShownCard] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  
+  useEffect(() => {
+    setIsLoading(true);
+    const endpoint = apiRequests(shownStep, type);
+    const callback = (res) => {
+      if (res.status === 200) {
+        setShownCard(getComponent(shownStep, res.data,type))
+        setIsLoading(false)
+      }
+      else {
+        setIsLoading(false);
+        setRedirect(true);
+        return;
+      }
+    };
 
-  useEffect(
-    () => {
-      // Do initial API call
-      setShownCard(prp[shownStep])
-    }, [shownStep]
-  );
+    endpoint(processId, callback);
+  }, [shownStep]);
+  // useEffect(
+  //   () => {
+  //     // Do initial API call
+  //     setShownCard(prp[shownStep])
+  //   }, [shownStep]
+  // );
 
   return (
     <Layout title={`Process ${exampleProp.processId}`}>
-      <div className='processStepperCard'>
-        <Card title={`Process ${exampleProp.processId}`}>
-          <ProcessStepper activeStp={shownStep} maxStep={exampleProp.currentStep} handlers={[setShownStep, setShownStep]}/>
-        </Card>
-      </div>
-      {shownCard}
+      {redirect ? <Redirect to="/overview" /> : ""}
+      {
+        isLoading ?
+          <LoadingScreen /> :
+          <div>
+            <div className='processStepperCard'>
+              <Card title={`Process ${exampleProp.processId}`}>
+                <ProcessStepper activeStp={shownStep} maxStep={exampleProp.currentStep} handlers={[setShownStep, setShownStep]} />
+              </Card>
+            </div>
+            {shownCard}
+          </div>
+      }
+
       {/* <SellerOrder orderData={exampleProp.data.order} title='Sales Order Details' />
       <Delivery delivery={exampleProp.data.delivery} title='Delivery Details' />
       <SellerInvoice invoice={exampleProp.data.invoice} title='Invoice Details' />

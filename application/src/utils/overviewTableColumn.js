@@ -28,7 +28,6 @@ const overviewTableColumns = [
                 to={
                     {
                         pathname: routes.process.ref(row.id),
-                        props: { ...row }
                     }}
             >
                 <Button isUppercase={false}>See details</Button>

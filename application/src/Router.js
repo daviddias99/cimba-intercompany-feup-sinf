@@ -20,8 +20,15 @@ const PrivateRoute = ({ children, ...rest }) => {
 
   return (
     <Route {...rest} render={(props) => {
+      const childrenWithProps = React.Children.map(children, child => {
+        // checking isValidElement is the safe way and avoids a typescript error too
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, props);
+        }
+        return child;
+      });
       return loggedIn
-        ? children
+        ? childrenWithProps
         : <Redirect to="/login" />;
     }}
     />
@@ -62,7 +69,7 @@ const Router = () => {
           <Overview />
         </PrivateRoute>
         <PrivateRoute exact path={routes.process.def}>
-          <Process/>
+          <Process />
         </PrivateRoute>
         <Route>
           <NotFound />

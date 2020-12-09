@@ -7,13 +7,13 @@ const authenticate = async (req, res, next) => {
 
   // Check if authorization header is set
   if (authorization === null || authorization === undefined || typeof authorization !== 'string') {
-    return res.json({ status: 401 });
+    return res.status(401).json({ status: 401 });
   }
 
   // Check if header is in a valid format
   const splitted = authorization.split(' ');
   if (splitted.length !== 2) {
-    return res.json({ status: 400 });
+    return res.status(400).json({ status: 400 });
   }
 
   // get token and JWT secret
@@ -26,7 +26,7 @@ const authenticate = async (req, res, next) => {
     const userId = decoded.sub;
     const userSession = await req.app.db('sessions').where('user_id', userId).first();
     if (!userSession) {
-      return res.json({ status: 400 });
+      return res.status(400).json({ status: 400 });
     }
 
     // Check if user exists
@@ -34,7 +34,7 @@ const authenticate = async (req, res, next) => {
     const company = await req.app.db('companies').where('companies.id', user.company_id).first();
 
     if (!user) {
-      return res.json({ status: 401 });
+      return res.status(401).json({ status: 401 });
     }
 
     // store user
@@ -43,7 +43,7 @@ const authenticate = async (req, res, next) => {
     return next();
   } catch (err) {
     console.log(err);
-    return res.json({ status: 500 });
+    return res.status(500).json({ status: 500 });
   }
 };
 
