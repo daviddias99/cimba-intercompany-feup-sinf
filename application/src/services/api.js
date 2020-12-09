@@ -12,6 +12,11 @@ const JTW_TOKEN_KEY = 'JWT_TOKEN';
 const routes = {
   login: '/login',
   logout: '/logout',
+  itemMaps: (companyId) => `/companies/${companyId}/itemMaps`,
+  singleItemMap : (companyId, mapId) => `/companies/${companyId}/itemMaps/${mapId}`,
+  companyMaps: (companyId) => `/companies/${companyId}/companyMaps`,
+  singleCompanyMap: (companyId, mapId) => `/companies/${companyId}/companyMaps/${mapId}`,
+
   getSettings: () => (`/users/1/company`),
   getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
   getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
@@ -38,6 +43,8 @@ const request = (path, method, data, callback) => {
     path = path + '/';
   }
 
+  console.log(path)
+
   const headers = {};
 
   // Add authorization header
@@ -52,7 +59,7 @@ const request = (path, method, data, callback) => {
     } else { // Other error
     }
 
-    const res = { data: { status: 'error' } };
+    const res = { data: { status: 'error', error: err } };
     callback(res);
   };
 
@@ -78,6 +85,24 @@ const api = {
   },
   getSettings: (callback) => {
     request(routes.getSettings(), 'get', null, callback);
+  },
+  getItemMaps: (companyId, callback) => {
+    request(routes.itemMaps(companyId), 'get', null, callback);
+  },
+  addItemMap: (companyId, data, callback) => {
+    request(routes.itemMaps(companyId), 'post', data, callback);
+  },
+  deleteItemMap: (companyId, mapId, callback) => {
+    request(routes.singleItemMap(companyId, mapId), 'delete', null, callback);
+  },
+  getCompanyMaps: (companyId, callback) => {
+    request(routes.companyMaps(companyId), 'get', null, callback);
+  },
+  addCompanyMap: (companyId, data, callback) => {
+    request(routes.companyMaps(companyId), 'post', data, callback);
+  },
+  deleteCompanyMap: (companyId, mapId, callback) => {
+    request(routes.singleCompanyMap(companyId, mapId), 'delete', null, callback);
   },
 };
 

@@ -9,6 +9,7 @@ import Table from 'components/common/Table';
 import Toast from 'components/common/Toast';
 import FormModal from 'components/common/FormModal';
 
+import api from 'services/api';
 import 'react-responsive-modal/styles.css';
 
 const Mapping = () => {
@@ -284,6 +285,17 @@ const Mapping = () => {
           name: "Sousa & Morgado, LDA",
       },
   ])}
+
+  // useEffect(() => {
+  //   api.getItemMaps(1,
+  //     (res) => {
+  //       if (res.status === 200) {
+  //         console.log(res.data)
+  //       } else {
+  //         console.log(res)
+  //       }
+  //     })
+  // }, [])
 
   const displayToasts = () => {
     if (toastInfo) {
