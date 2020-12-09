@@ -4,7 +4,7 @@ const routes = require('./routes');
 const middlewares = require('./middlewares');
 const config = require('./config').express;
 const db = require('./database/knex');
-const { pollOrders } = require('./processes/poll');
+const { pollPurchaseOrders, pollInvoice, pollDelivery } = require('./processes/poll');
 
 const app = express();
 
@@ -19,10 +19,19 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}.`);
-});
+pollPurchaseOrders();
+setInterval(pollPurchaseOrders, config.pollInterval);
 
-pollOrders();
-setInterval(pollOrders, config.pollInterval);
+setTimeout(() => {
+  pollInvoice();
+  setInterval(pollInvoice, config.pollInterval);
+}, config.pollInterval / 3);
+
+setTimeout(() => {
+  pollDelivery();
+  setInterval(pollDelivery, config.pollInterval);
+}, (config.pollInterval * 2) / 3);
+
+app.listen(config.port, () => {
+  console.log(`Listening on port ${config.port}.`);
+});
