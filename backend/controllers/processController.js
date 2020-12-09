@@ -1,4 +1,3 @@
-const { getProcess } = require('../database/methods/orderMethods');
 const jasmin = require('../jasmin/orders');
 
 const getProcessState = (process) => {
@@ -9,88 +8,81 @@ const getProcessState = (process) => {
   return 3;
 };
 
+exports.getProcess = async (req, res) => {
+  const { process } = req;
+  process.state = getProcessState(process);
+
+  return res.json(process);
+};
+
 exports.getOrder = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
-  if (!process) {
-    return res.status(404).json({ status: 404 });
-  }
-
-  let order;
+  let document;
   if (process.type === 'purchase') {
-    order = await jasmin.getPurchaseOrder(process.company_id, process.order_id);
+    document = await jasmin.getPurchaseOrder(process.company_id, process.document_id);
   } else if (process.type === 'sale') {
-    order = await jasmin.getSalesOrder(process.company_id, process.order_id);
+    document = await jasmin.getSalesOrder(process.company_id, process.document_id);
   }
-
-  console.log(process.type);
 
   return res.json({
     type: process.type,
-    document: order,
-    state: getProcessState(process),
+    document,
+    processState: getProcessState(process),
+    documentState: 0,
   });
 };
 
 exports.getTransportation = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
-  if (!process) {
-    return res.status(404).json({ status: 404 });
-  }
-
-  let order;
+  let document;
   if (process.type === 'purchase') {
-    order = { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' };
+    document = { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' };
   } else if (process.type === 'sale') {
-    order = jasmin.getSalesDelivery(process.company_id, process.order_id);
+    document = await jasmin.getSalesDelivery(process.company_id, process.document_id);
   }
 
   return res.json({
     type: process.type,
-    document: order,
-    state: getProcessState(process),
+    document,
+    processState: getProcessState(process),
+    documentState: 1,
   });
 };
 
 exports.getInvoice = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
-  if (!process) {
-    return res.status(404).json({ status: 404 });
-  }
-
-  let order;
+  let document;
   if (process.type === 'purchase') {
-    order = jasmin.getPurchaseInvoice(process.company_id, process.invoice_id);
+    document = await jasmin.getPurchaseInvoice(process.company_id, process.invoice_id);
   } else if (process.type === 'sale') {
-    order = jasmin.getSalesInvoice(process.company_id, process.invoice_id);
+    document = await jasmin.getSalesInvoice(process.company_id, process.invoice_id);
   }
 
   return res.json({
     type: process.type,
-    document: order,
-    state: getProcessState(process),
+    document,
+    processState: getProcessState(process),
+    documentState: 2,
   });
 };
 
 exports.getFinancial = async (req, res) => {
-  const process = await getProcess(req.params.id);
+  const { process } = req;
 
-  if (!process) {
-    return res.status(404).json({ status: 404 });
-  }
-
-  let order;
+  let document;
   if (process.type === 'purchase') {
-    order = jasmin.getPurchaseFinancial(process.company_id, process.order_id);
+    document = await jasmin.getPurchaseFinancial(process.company_id, process.document_id);
   } else if (process.type === 'sale') {
-    order = jasmin.getSalesFinancial(process.company_id, process.order_id);
+    document = await jasmin.getSalesFinancial(process.company_id, process.document_id);
   }
 
   return res.json({
     type: process.type,
-    document: order,
-    state: getProcessState(process),
+    document,
+    processState: getProcessState(process),
+    documentState: 3,
   });
 };
