@@ -1,7 +1,7 @@
 const { getCompanyById } = require('../database/methods/companyMethods');
 
 exports.allCompanies = async (req, res) => {
-  const companies = await req.app.db('companies').select(['id', 'company_key', 'app_id', 'tenant', 'organization']);
+  const companies = await req.app.db('companies').select(['id', 'name', 'company_key', 'app_id', 'tenant', 'organization']);
   res.json(companies);
 };
 
@@ -18,6 +18,7 @@ exports.newCompany = async (req, res) => {
     appSecret: req.body.app_secret,
     tenant: req.body.tenant,
     organization: req.body.organization,
+    name: req.body.name,
   }]);
   return res.status(201).json(user);
 };

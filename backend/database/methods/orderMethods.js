@@ -1,7 +1,7 @@
 const db = require('../knex');
 
-exports.getAllProcesses = async (companyId, page = null, pageSize = null) => {
-  let query = db('orders').where({ company_id: companyId });
+exports.getAllProcesses = async (icId, page = null, pageSize = null) => {
+  let query = db('orders').where({ ic_id: icId });
 
   if (page != null && pageSize != null) query = query.offset(page * pageSize).limit(pageSize);
 

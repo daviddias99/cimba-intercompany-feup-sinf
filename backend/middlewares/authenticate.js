@@ -31,7 +31,7 @@ const authenticate = async (req, res, next) => {
 
     // Check if user exists
     const user = await req.app.db('users').where('users.id', userSession.user_id).first();
-    const company = await req.app.db('companies').where('companies.id', user.company_id).first();
+    const company = await req.app.db('companies').where('companies.id', user.ic_id).first();
 
     if (!user) {
       return res.status(401).json({ status: 401 });

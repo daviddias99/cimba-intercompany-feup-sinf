@@ -22,9 +22,9 @@ exports.getOrder = async (req, res) => {
 
   let document;
   if (process.type === 'purchase') {
-    document = await jasmin.getPurchaseOrder(process.company_id, process.order_id);
+    document = await jasmin.getPurchaseOrder(process.ic_id, process.order_id);
   } else if (process.type === 'sale') {
-    document = await jasmin.getSalesOrder(process.company_id, process.order_id);
+    document = await jasmin.getSalesOrder(process.ic_id, process.order_id);
   }
 
   return res.json({
@@ -42,7 +42,7 @@ exports.getTransportation = async (req, res) => {
   if (process.type === 'purchase') {
     document = { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' };
   } else if (process.type === 'sale') {
-    document = await jasmin.getSalesDelivery(process.company_id, process.delivery_id);
+    document = await jasmin.getSalesDelivery(process.ic_id, process.delivery_id);
   }
 
   return res.json({
@@ -58,9 +58,9 @@ exports.getInvoice = async (req, res) => {
 
   let document;
   if (process.type === 'purchase') {
-    document = await jasmin.getPurchaseInvoice(process.company_id, process.invoice_id);
+    document = await jasmin.getPurchaseInvoice(process.ic_id, process.invoice_id);
   } else if (process.type === 'sale') {
-    document = await jasmin.getSalesInvoice(process.company_id, process.invoice_id);
+    document = await jasmin.getSalesInvoice(process.ic_id, process.invoice_id);
   }
 
   return res.json({
@@ -76,9 +76,9 @@ exports.getFinancial = async (req, res) => {
 
   let document;
   if (process.type === 'purchase') {
-    document = await jasmin.getPurchaseFinancial(process.company_id, process.payment_id);
+    document = await jasmin.getPurchaseFinancial(process.ic_id, process.payment_id);
   } else if (process.type === 'sale') {
-    document = await jasmin.getSalesFinancial(process.company_id, process.payment_id);
+    document = await jasmin.getSalesFinancial(process.ic_id, process.payment_id);
   }
 
   return res.json({

@@ -12,7 +12,7 @@ async function processMiddleware(req, res, next) {
     return;
   }
 
-  if (process.company_id !== req.company.id) {
+  if (process.ic_id !== req.company.id) {
     res.status(403).json({ status: 403 });
     return;
   }
