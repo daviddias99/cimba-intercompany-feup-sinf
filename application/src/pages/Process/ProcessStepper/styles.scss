@@ -10,10 +10,12 @@
 
   .button {
     font-size: 0.8em;
-
+    
+    
     &.is-disabled {
       background-color: #bbb;
-
+      cursor: grab;
+      
       &:hover {
         background-color: #bbb;
       }
