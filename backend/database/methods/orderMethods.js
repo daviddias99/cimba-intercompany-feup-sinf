@@ -43,3 +43,4 @@ exports.addInvoiceToSalesOrder = async (icId, orderId, invoiceId) => db('orders'
 exports.addInvoiceToPurchaseOrder = async (icId, orderId, invoiceId) => db('orders').where({
   ic_id: icId, order_id: orderId, type: 'purchase', invoice_id: null,
 }).update({ invoice_id: invoiceId });
+exports.getInvoicesNoPayment = async (icId) => db('orders').select('invoice_id').where({ ic_id: icId, type: 'purchase', payment_id: null });

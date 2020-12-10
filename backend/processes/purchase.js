@@ -60,3 +60,7 @@ exports.newDeliveryNote = async (companyId, delivery) => {
     console.log(error.message);
   }
 };
+
+exports.newPayment = async (companyId, payment) => {
+  console.log(`Detect new payment ${payment.id} from company ${companyId}`);
+};
