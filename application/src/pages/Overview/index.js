@@ -40,7 +40,7 @@ const Overview = () => {
             <Card title='Overview'>
               <DataTable
                 defaultSortAsc={false}
-                defaultSortField='jasmin_created_on'
+                defaultSortField='created_on'
                 className="table-display"
                 columns={companyTableColumns}
                 data={data}

@@ -7,7 +7,7 @@ import {dateTimeFormat} from './utilFuncs'
 const overviewTableColumns = [
     {
         name: 'Date',
-        cell: (row) => dateTimeFormat(row.jasmin_created_on)
+        cell: (row) => dateTimeFormat(row.created_on)
     },
     {
         name: 'Type',
