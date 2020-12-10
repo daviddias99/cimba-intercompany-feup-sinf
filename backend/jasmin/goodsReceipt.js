@@ -6,25 +6,25 @@ const { addGoodsReceiptToOrder } = require('../database/methods/orderMethods');
 const { getOrderById } = require('./orders');
 
 exports.createGoodsReceipt = async (
-  companyIdBuyer, // party
-  companyIdSuplier,
+  jasminIdBuyer, // party
+  icIdSuplier,
   documentLines,
 ) => {
-  // Getting universal id of buyer
-  const universalIdBuyer = await mapLocalCompanyId(companyIdSuplier, companyIdBuyer);
-  if (universalIdBuyer == null) throw new ReferenceError(`Cannot Map Buyer ${companyIdBuyer} in Suplier`);
+  // Getting intercompany id of buyer
+  const icIdBuyer = await mapLocalCompanyId(icIdSuplier, jasminIdBuyer);
+  if (icIdBuyer == null) throw new ReferenceError(`Cannot Map Buyer ${jasminIdBuyer} in Suplier`);
 
-  // Getting local id of suplier in buyer
-  const localIdSuplier = await mapUniversalCompanyId(universalIdBuyer, companyIdSuplier);
-  if (localIdSuplier == null) throw new ReferenceError(`Cannot Map Suplier ${companyIdSuplier} in Buyer`);
+  // Getting jasmin id of suplier in buyer
+  const jasminIdSuplier = await mapUniversalCompanyId(icIdBuyer, icIdSuplier);
+  if (jasminIdSuplier == null) throw new ReferenceError(`Cannot Map Suplier ${icIdSuplier} in Buyer`);
 
-  const buyer = await getCompanyById(universalIdBuyer);
-  if (buyer == null) throw new ReferenceError(`Cannot Find Suplier with id ${universalIdBuyer}`);
+  const buyer = await getCompanyById(icIdBuyer);
+  if (buyer == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdBuyer}`);
 
   // Translate documentLines
   let mapPromises = [];
   documentLines.forEach((element) => mapPromises.push(
-    getMapOfDocSalesOrder(element.sourceDocId, companyIdSuplier),
+    getMapOfDocSalesOrder(element.sourceDocId, icIdSuplier),
   ));
 
   mapPromises = await Promise.all(mapPromises);
@@ -37,7 +37,7 @@ exports.createGoodsReceipt = async (
     if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
     // eslint-disable-next-line no-await-in-loop
-    const orderBuyer = await getOrderById(universalIdBuyer, elementPromise);
+    const orderBuyer = await getOrderById(icIdBuyer, elementPromise);
 
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
@@ -60,10 +60,10 @@ exports.createGoodsReceipt = async (
 
   const buyerOrderId = new Set(mapPromises);
   buyerOrderId.forEach(
-    (sourceDocId) => addGoodsReceiptToOrder(universalIdBuyer, sourceDocId, goodsReceipt.data),
+    (sourceDocId) => addGoodsReceiptToOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
   );
 
-  console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${universalIdBuyer}`);
+  console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${icIdBuyer}`);
 
   return goodsReceipt;
 };
