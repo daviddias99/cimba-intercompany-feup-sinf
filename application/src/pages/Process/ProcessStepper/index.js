@@ -94,10 +94,10 @@ export default function OverviewTooltipStepper({ activeStp, maxStep, handlers })
         </Stepper>
       </div>
       <div className='control-buttons'>
-        <Button onClick={handleBack}>
+        <Button disabled={activeStp === 0} onClick={handleBack}>
           Back
         </Button>
-        <Button onClick={handleNext} >
+        <Button disabled={activeStp === maxStep} onClick={handleNext} >
           Next
       </Button>
       </div>

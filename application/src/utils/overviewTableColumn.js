@@ -10,6 +10,10 @@ const overviewTableColumns = [
         cell: (row) => dateTimeFormat(row.jasmin_created_on)
     },
     {
+        name: 'Type',
+        cell: (row) => `${row.type === 'purchase' ? 'Purchase' : 'Sale'}`
+    },
+    {
         name: 'Process',
         cell: (row) => `${row.type === 'purchase' ? 'Purchase' : 'Sales'} process ${row.id}`
     },

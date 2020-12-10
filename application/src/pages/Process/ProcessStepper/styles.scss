@@ -10,6 +10,14 @@
 
   .button {
     font-size: 0.8em;
+
+    &.is-disabled {
+      background-color: #bbb;
+
+      &:hover {
+        background-color: #bbb;
+      }
+    }
   }
 
   .card-content .stepperWrapper {

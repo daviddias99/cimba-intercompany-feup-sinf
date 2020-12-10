@@ -4,6 +4,10 @@ import React from 'react';
 
 import './styles.scss';
 
+function getSteps() {
+  return {purchase: ['Order', 'Transp.', 'Invoice', 'Payment',], sale: ['Order', 'Invoice', 'Receipt']};
+}
+
 const OverviewOrderStatus = ({ row }) => {
 
   const colorFromStatyus = {
@@ -24,14 +28,14 @@ const OverviewOrderStatus = ({ row }) => {
       <LightTooltip
         title={
           <React.Fragment>
-            <OverviewTooltipStepper activeStp={row.state} />
+            <OverviewTooltipStepper activeStp={row.state} type={row.type} steps={getSteps()[row.type]}/>
           </React.Fragment>
         }
         placement="top"
       >
         <div className='overviewStatusCellContent'>
           <i style={style} className="overviewStatusIcon fas fa-circle"></i>
-          <p>{row.state}</p>
+          <p>{getSteps()[row.type][row.state]}</p>
         </div>
 
       </LightTooltip>

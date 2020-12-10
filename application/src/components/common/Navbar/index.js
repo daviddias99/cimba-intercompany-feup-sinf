@@ -35,11 +35,11 @@ const Navbar = () => {
           <p>You're logged in as {username}</p>
         </div>
 
-        <div className="navbar-button-wrapper">
+        {/* <div className="navbar-button-wrapper">
           <div className="notif-icon">
             <img src={icons.notificationIcon} alt="Notification icon" />
           </div>
-        </div>
+        </div> */}
         <div className="navbar-button-wrapper" onClick={logout}>
           <div className="logout-icon">
             <img src={icons.exitIcon} alt="Logout icon" />

@@ -13,47 +13,34 @@ const Overview = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
-  const [data, setData] = useState([
-    {
-      id: 1,
-      company_id: 1,
-      order_id: '099d60a4-1033-4179-8f53-98fcd3d4fdf9',
-      other_company_name: 'Vem Pro Futji',
-      jasmin_created_on: '2020-12-05T15:05:16.759Z',
-      type: 'purchase',
-      invoice_id: null,
-      delivery_id: null,
-      payment_id: null,
-      state: 0
-    },
-  ]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
     const callback = (res) => {
       if (res.status === 200) {
         setData(res.data)
-        setIsLoading(false)
       }
       else {
         setRedirect(true);
-        setIsLoading(false);
-        return;
       }
+      setIsLoading(false)
     };
 
     api.getProcesses(callback);
-  }, [isLoading, ]);
+  }, []);
 
   return (
     <Layout title='Overview'>
-      {redirect ? <Redirect to="/overview" /> : ""}
+      {redirect ? <Redirect to="/settings" /> : ""}
       {
         isLoading ?
           <LoadingScreen /> :
           <div className='overview-content-card'>
-            <Card title='Process Overview'>
+            <Card title='Overview'>
               <DataTable
+                defaultSortAsc={false}
+                defaultSortField='jasmin_created_on'
                 className="table-display"
                 columns={companyTableColumns}
                 data={data}
