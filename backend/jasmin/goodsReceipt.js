@@ -2,8 +2,29 @@ const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
-const { addGoodsReceiptToOrder } = require('../database/methods/orderMethods');
+const { addGoodsReceiptToPurchaseOrder } = require('../database/methods/orderMethods');
 const { getOrderById } = require('./orders');
+
+async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
+  const documentLinesMapped = [];
+  for (let i = 0; i < purchaseOrderIds.length && i < documentLines.length; i += 1) {
+    const elementPromise = purchaseOrderIds[i];
+    const docLines = documentLines[i];
+
+    if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
+
+    // eslint-disable-next-line no-await-in-loop
+    const orderBuyer = await getOrderById(icIdBuyer, elementPromise);
+
+    documentLinesMapped.push({
+      sourceDocLineNumber: docLines.sourceDocLine,
+      quantity: docLines.quantity,
+      sourceDocKey: `${orderBuyer.data.documentType}.${orderBuyer.data.serie}.${orderBuyer.data.seriesNumber}`,
+    });
+  }
+
+  return documentLinesMapped;
+}
 
 exports.createGoodsReceipt = async (
   jasminIdBuyer, // party
@@ -22,29 +43,16 @@ exports.createGoodsReceipt = async (
   if (buyer == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdBuyer}`);
 
   // Translate documentLines
-  let mapPromises = [];
-  documentLines.forEach((element) => mapPromises.push(
+  let purchaseOrderIds = [];
+  documentLines.forEach((element) => purchaseOrderIds.push(
     getMapOfDocSalesOrder(element.sourceDocId, icIdSuplier),
   ));
 
-  mapPromises = await Promise.all(mapPromises);
+  purchaseOrderIds = await Promise.all(purchaseOrderIds);
 
-  const documentLinesMapped = [];
-  for (let i = 0; i < mapPromises.length && i < documentLines.length; i += 1) {
-    const elementPromise = mapPromises[i];
-    const docLines = documentLines[i];
-
-    if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
-
-    // eslint-disable-next-line no-await-in-loop
-    const orderBuyer = await getOrderById(icIdBuyer, elementPromise);
-
-    documentLinesMapped.push({
-      sourceDocLineNumber: docLines.sourceDocLine,
-      quantity: docLines.quantity,
-      sourceDocKey: `${orderBuyer.data.documentType}.${orderBuyer.data.serie}.${orderBuyer.data.seriesNumber}`,
-    });
-  }
+  const documentLinesMapped = await getDocumentLinesMapped(
+    purchaseOrderIds, documentLines, icIdBuyer,
+  );
 
   const goodsReceipt = await makeRequest(
     `goodsReceipt/processOrders/${buyer.company_key}`,
@@ -58,9 +66,9 @@ exports.createGoodsReceipt = async (
     return goodsReceipt;
   }
 
-  const buyerOrderId = new Set(mapPromises);
+  const buyerOrderId = new Set(purchaseOrderIds);
   buyerOrderId.forEach(
-    (sourceDocId) => addGoodsReceiptToOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
+    (sourceDocId) => addGoodsReceiptToPurchaseOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
   );
 
   console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${icIdBuyer}`);
