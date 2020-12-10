@@ -2,19 +2,20 @@ import { Button } from 'components/common/Button';
 import OverviewOrderStatus from 'components/common/OverviewOrderStatus';
 import { Link } from 'react-router-dom';
 import routes from 'routes';
+import {dateTimeFormat} from './utilFuncs'
 
 const overviewTableColumns = [
     {
         name: 'Date',
-        selector: 'date',
+        cell: (row) => dateTimeFormat(row.jasmin_created_on)
     },
     {
         name: 'Process',
-        selector: 'processId',
+        cell: (row) => `${row.type === 'purchase' ? 'Purchase' : 'Sales'} process ${row.id}`
     },
     {
         name: 'Company',
-        selector: 'companyName',
+        selector: 'other_company_name',
     },
     {
         name: 'Status',

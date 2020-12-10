@@ -18,6 +18,7 @@ const routes = {
   getTransportation: (processId) => (`/process/${processId}/transportation`),
   getInvoice: (processId) => (`/process/${processId}/invoice`),
   getFinancial: (processId) => (`/process/${processId}/financial`),
+  getProcesses: '/process',
 };
 
 /**
@@ -97,6 +98,9 @@ const api = {
   getFinancial: (processId, callback) => {
     request(routes.getFinancial(processId), 'get', null, callback)
   },
+  getProcesses: (callback) => {
+    request(routes.getProcesses, 'get', null, callback)
+  }
 
 };
 

@@ -24,14 +24,14 @@ const OverviewOrderStatus = ({ row }) => {
       <LightTooltip
         title={
           <React.Fragment>
-            <OverviewTooltipStepper activeStp={row.currentStep} />
+            <OverviewTooltipStepper activeStp={row.state} />
           </React.Fragment>
         }
         placement="top"
       >
         <div className='overviewStatusCellContent'>
           <i style={style} className="overviewStatusIcon fas fa-circle"></i>
-          <p>{row.status}</p>
+          <p>{row.state}</p>
         </div>
 
       </LightTooltip>
