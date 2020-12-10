@@ -1,0 +1,21 @@
+.notFound {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+
+  div:nth-child(2){
+    p {
+      text-align: center;
+      &:nth-child(1){
+        font-size: 5em;
+      }
+      &:nth-child(2){
+        font-size: 2em;
+      }
+    }
+  }
+  div:nth-child(1){
+    font-size: 15em;
+  }
+}

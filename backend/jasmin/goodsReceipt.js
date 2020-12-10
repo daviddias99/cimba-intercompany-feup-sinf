@@ -3,7 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addGoodsReceiptToOrder } = require('../database/methods/orderMethods');
-const { getOrderById } = require('./orders');
+const { getPurchaseOrder } = require('./orders');
 
 exports.createGoodsReceipt = async (
   jasminIdBuyer, // party
@@ -37,7 +37,7 @@ exports.createGoodsReceipt = async (
     if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
     // eslint-disable-next-line no-await-in-loop
-    const orderBuyer = await getOrderById(icIdBuyer, elementPromise);
+    const orderBuyer = await getPurchaseOrder(icIdBuyer, elementPromise);
 
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,

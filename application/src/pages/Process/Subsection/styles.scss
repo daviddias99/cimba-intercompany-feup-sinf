@@ -1,0 +1,31 @@
+@import "assets/styles/bulma.scss";
+
+.commercialItems {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.subsectionItems {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.subsec {
+  margin-bottom: 1em;
+}
+
+.subsectionHeader{
+  margin-bottom: 1em;
+  font-size: 1.5em;
+  color: $cimba-dark-background;
+}
+
+.subsection-item-wrapper{
+  width: 100%;
+}
+
+.fieldGroup h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 0.4em;
+}

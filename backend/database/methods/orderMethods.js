@@ -1,5 +1,15 @@
 const db = require('../knex');
 
+exports.getAllProcesses = async (companyId, page = null, pageSize = null) => {
+  let query = db('orders').where({ company_id: companyId });
+
+  if (page != null && pageSize != null) query = query.offset(page * pageSize).limit(pageSize);
+
+  return query.orderBy([{ column: 'created_on', order: 'desc' }]).select();
+};
+
+exports.getProcess = async (processId) => db('orders').where({ id: processId }).first();
+
 exports.addOrder = async (icId, orderId, type, createdOn = null) => {
   const order = {
     ic_id: icId,
@@ -8,7 +18,7 @@ exports.addOrder = async (icId, orderId, type, createdOn = null) => {
   };
 
   if (createdOn != null) {
-    order.jasmin_created_on = createdOn;
+    order.created_on = createdOn;
   }
 
   return db('orders').insert(order);

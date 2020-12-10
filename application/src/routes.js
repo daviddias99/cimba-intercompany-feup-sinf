@@ -13,6 +13,10 @@ const routes = {
   settings: route('/settings',),
   logs: route('/logs',),
   support: route('/support',),
+  process: route(
+    '/process/:processId',
+    (processId) => `process/${processId}/`
+  ),
 };
 
 export default routes;

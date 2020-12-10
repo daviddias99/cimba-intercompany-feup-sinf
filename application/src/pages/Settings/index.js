@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { setSettings } from 'actions/userActions';
+import React, {useState } from 'react';
 import Layout from 'components/common/Layout';
 import Card from 'components/common/Card';
 import { Button, BtnType } from 'components/common/Button';

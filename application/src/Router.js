@@ -12,15 +12,23 @@ import Mapping from 'pages/Mapping';
 import Logs from 'pages/Logs';
 import NotFound from 'pages/NotFound';
 import Login from 'pages/Login';
+import Process from 'pages/Process';
 
 const PrivateRoute = ({ children, ...rest }) => {
 
   const loggedIn = useSelector(state => state.user.loggedIn);
 
   return (
-    <Route {...rest} render={() => {
+    <Route {...rest} render={(props) => {
+      const childrenWithProps = React.Children.map(children, child => {
+        // checking isValidElement is the safe way and avoids a typescript error too
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, props);
+        }
+        return child;
+      });
       return loggedIn
-        ? children
+        ? childrenWithProps
         : <Redirect to="/login" />;
     }}
     />
@@ -59,6 +67,9 @@ const Router = () => {
         </PrivateRoute>
         <PrivateRoute exact path={routes.support.def}>
           <Overview />
+        </PrivateRoute>
+        <PrivateRoute exact path={routes.process.def}>
+          <Process />
         </PrivateRoute>
         <Route>
           <NotFound />
