@@ -1,4 +1,5 @@
 const jasmin = require('../jasmin/orders');
+const { getAllProcesses } = require('../database/methods/orderMethods');
 
 const getProcessState = (process) => {
   if (process.delivery_id == null) return 0;
@@ -85,4 +86,11 @@ exports.getFinancial = async (req, res) => {
     processState: getProcessState(process),
     documentState: 3,
   });
+};
+
+exports.getAllProcesses = async (req, res) => {
+  let processes = await getAllProcesses(req.company.id);
+  processes = processes.map((process) => ({ ...process, state: getProcessState(process), other_company_name: 'OTHER_COMP' }));
+
+  res.json(processes);
 };
