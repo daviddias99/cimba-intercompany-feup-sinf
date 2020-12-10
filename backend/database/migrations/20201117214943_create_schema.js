@@ -54,7 +54,7 @@ exports.up = function (knex) {
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.string('order_id').notNullable();
       table.unique('order_id');
-      table.timestamp('jasmin_created_on').defaultTo(knex.fn.now());
+      table.timestamp('created_on').defaultTo(knex.fn.now());
       table.enu('type', ['purchase', 'sale'], { useNative: true, enumName: 'order_type' }).notNullable();
       table.string('invoice_id');
       table.string('delivery_id');
