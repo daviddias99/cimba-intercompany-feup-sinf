@@ -1,8 +1,8 @@
 module.exports = {
   additionalProperties: false,
-  required: ['company_key', 'local_id'],
+  required: ['map_company_id', 'local_id'],
   properties: {
-    company_key: {
+    map_company_id: {
       type: 'string',
     },
     local_id: {

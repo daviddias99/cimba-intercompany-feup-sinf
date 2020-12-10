@@ -54,24 +54,22 @@ const deleteItemButton = (actionFunction) => {
         </Button>
 }
 
-// TODO: change URL to connect with backend
-const itemTableURL = "item"
 const itemTableColumns = (actioncell) => [
     {
         cell: actioncell,
     },
     {
         name: 'Company',
-        selector: 'company',
+        selector: 'map_company_local_id',
     },
     {
         name: 'Local ID',
-        selector: 'localID',
+        selector: 'local_id',
         sortable: true,
     },
     {
         name: 'Item ID',
-        selector: 'itemID',
+        selector: 'item_id',
     },
     {
         name: 'Description',
@@ -113,7 +111,6 @@ const itemTableColumns = (actioncell) => [
 ]
 
 export {
-    itemTableURL,
     itemTableColumns,
     deleteItemButton,
     insertItemForm

@@ -29,8 +29,9 @@ exports.up = function (knex) {
       table.foreign('map_company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
-
-      table.unique(['local_id', 'map_company_id', 'company_id'], 'items_map_unique');
+      
+      table.unique(['local_id', 'company_id'], 'item_map_local_unique');
+      table.unique(['item_id', 'company_id', 'map_company_id'], 'item_map_item_unique');
     })
     .createTable('company_maps', (table) => {
       table.increments();
@@ -40,7 +41,8 @@ exports.up = function (knex) {
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
 
-      table.unique(['local_id', 'company_id'], 'company_map_unique');
+      table.unique(['local_id', 'company_id'], 'company_map_local_unique');
+      table.unique(['company_id', 'map_company_id'], 'company_map_unique');
     })
     .createTable('sessions', (table) => {
       table.increments();

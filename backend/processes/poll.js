@@ -18,7 +18,11 @@ const pollOrdersCompany = async (companyId) => {
 
 exports.pollPurchaseOrders = async () => {
   const companies = await getCompanies();
-  companies.forEach((company) => pollOrdersCompany(company.id));
+  companies.forEach((company) => {
+    if (!company.company_key.startsWith("MOCK")) {
+      pollOrdersCompany(company.id)
+    }
+  });
 };
 
 const pollInvoiceCompany = async (companyId) => {
@@ -27,6 +31,7 @@ const pollInvoiceCompany = async (companyId) => {
 
   const invoices = await getInvoices(companyId);
 
+  // TODO: UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'filter' of undefined
   const newInvoices = invoices.filter((invoice) => {
     const orderId = invoice.documentLines[0].sourceDocId;
     return salesOrdersId.has(orderId);
@@ -37,7 +42,11 @@ const pollInvoiceCompany = async (companyId) => {
 
 exports.pollInvoice = async () => {
   const companies = await getCompanies();
-  companies.forEach((company) => pollInvoiceCompany(company.id));
+  companies.forEach((company) => {
+    if (!company.company_key.startsWith("MOCK")) {
+      pollInvoiceCompany(company.id)
+    }
+  })
 };
 
 const pollDeliveryCompany = async (companyId) => {
@@ -56,5 +65,9 @@ const pollDeliveryCompany = async (companyId) => {
 
 exports.pollDelivery = async () => {
   const companies = await getCompanies();
-  companies.forEach((company) => pollDeliveryCompany(company.id));
+  companies.forEach((company) => {
+    if (!company.company_key.startsWith("MOCK")) {
+      pollDeliveryCompany(company.id)
+    }
+  })
 };

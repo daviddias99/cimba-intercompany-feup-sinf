@@ -26,19 +26,17 @@ const deleteCompanyButton = (actionFunction) => {
         </Button>
 }
 
-// TODO: change URL to connect with backend
-const companyTableURL = "company"
 const companyTableColumns = (actioncell) => [
     {
       cell: actioncell,  
     },
     {
         name: 'Local ID',
-        selector: 'localID',
+        selector: 'local_id',
     },
     {
         name: 'Company ID',
-        selector: 'companyID',
+        selector: 'map_company_id',
     },
     {
         name: 'Name',
@@ -51,7 +49,6 @@ const companyTableColumns = (actioncell) => [
 ]
 
 export {
-    companyTableURL,
     companyTableColumns,
     deleteCompanyButton,
     insertCompanyForm

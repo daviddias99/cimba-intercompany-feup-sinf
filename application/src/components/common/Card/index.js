@@ -4,13 +4,18 @@ import PropTypes from 'prop-types';
 import './styles.scss';
 
 const Card = ({ title, children, footer }) => {
+  const header = title ? 
+    <header className="card-header">
+      <p className="card-header-title">
+        {title}
+      </p>
+    </header>
+    :
+    null
+
   return (
     <div className="card">
-      <header className="card-header">
-        <p className="card-header-title">
-          {title}
-        </p>
-      </header>
+      {header}
       <div className="card-content">
         <div className="content">
           {children}

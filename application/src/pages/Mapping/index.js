@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {itemTableURL, itemTableColumns, deleteItemButton, insertItemForm,
-  companyTableURL, companyTableColumns, deleteCompanyButton, insertCompanyForm} from 'utils';
+import React, {useState} from 'react';
+import {itemTableColumns, deleteItemButton, insertItemForm, 
+  companyTableColumns, deleteCompanyButton, insertCompanyForm} from 'utils';
 
 import Layout from 'components/common/Layout';
 import Tabs from 'components/common/Tabs';
@@ -8,294 +8,116 @@ import Tab from 'components/common/Tab';
 import Table from 'components/common/Table';
 import Toast from 'components/common/Toast';
 import FormModal from 'components/common/FormModal';
+import Card from 'components/common/Card';
 
 import api from 'services/api';
 import 'react-responsive-modal/styles.css';
+
+let toastID = 1
 
 const Mapping = () => {
 
   const [toastInfo, setToastInfo] = useState(false)
   const [toastList, setToastList] = useState([])
+  
   const [itemModalVisible, setItemModalVisible] = useState(false)
   const [companyModalVisible, setCompanyModalVisible] = useState(false)
-
+  
   const [itemData, setItemData] = useState([])
   const [companyData, setCompanyData] = useState([])
 
-  // TODO: fazer API call ao backend aqui, de modo a poder chamar quando se muda de tab
+  const [itemDataLoading, setItemDataLoading] = useState(false)
+  const [companyDataLoading, setCompanyDataLoading] = useState(false)
+
+  const userCompany = JSON.parse(localStorage.getItem('CIMBA_COMPANY'))
+
   const fetchItemData = () => {
-    console.log("Chamada a API para ir buscar items")
-    setItemData([
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50001,
-          localID: 21321123,
-          itemID: "31123321-1",
-          description: "German Flour Type 55",
-          warehouse: "213213213-1",
-          unit: "UN",
-          unit_price_1: "40,213€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      },
-      {
-          company: 50002,
-          localID: 62931413,
-          itemID: "31165721-1",
-          description: "Chefs Puff Pastry",
-          warehouse: "92334941-2",
-          unit: "UN",
-          unit_price_1: "55,41€",
-          vat_type_1: "CONT 23%",
-          unit_price_2: null,
-          vat_type_2: null,
-      }
-  ])}
+    if (userCompany && userCompany.id) {
+      setItemDataLoading(true)
+      api.getItemMaps(userCompany.id,
+        async (res) => {
+          let error_flag = false
+          if (res.status === 200) {
+            for(let i = 0; i < res.data.length; i++) {
+              let res_map = await api.getSingleCompanyMapAsync(userCompany.id, {map_company_id: res.data[i].map_company_id})
+              if (res_map.status === 200) {
+                res.data[i] = {
+                  ...res.data[i],
+                  map_company_local_id: res_map.data.local_id,
+                }
+              }
+              else {
+                error_flag = true
+                break
+              }
+            }
+          }
+          else {
+            error_flag = true
+          }
 
-  // TODO: fazer API call ao backend aqui, de modo a poder chamar quando se muda de tab
-  const fetchCompanyData = () => {
-    console.log("Chamada a API para ir buscar companies")
-    setCompanyData([
-      {
-          localID: 50001,
-          companyID: "21321123-002",
-          name: "Paniminho, Produtos de Pastelaria, LDA",
-      },
-      {
-          localID: 50002,
-          companyID: "18490289-00005",
-          name: "Leopoldo Bakery Ingredients, LDA",
-      },
-      {
-          localID: 50003,
-          companyID: "176689-00006",
-          name: "Sousa & Morgado, LDA",
-      },
-      {
-          localID: 50001,
-          companyID: "21321123-002",
-          name: "Paniminho, Produtos de Pastelaria, LDA",
-      },
-      {
-          localID: 50002,
-          companyID: "18490289-00005",
-          name: "Leopoldo Bakery Ingredients, LDA",
-      },
-      {
-          localID: 50003,
-          companyID: "176689-00006",
-          name: "Sousa & Morgado, LDA",
-      },
-      {
-          localID: 50001,
-          companyID: "21321123-002",
-          name: "Paniminho, Produtos de Pastelaria, LDA",
-      },
-      {
-          localID: 50002,
-          companyID: "18490289-00005",
-          name: "Leopoldo Bakery Ingredients, LDA",
-      },
-      {
-          localID: 50003,
-          companyID: "176689-00006",
-          name: "Sousa & Morgado, LDA",
-      },
-      {
-          localID: 50001,
-          companyID: "21321123-002",
-          name: "Paniminho, Produtos de Pastelaria, LDA",
-      },
-      {
-          localID: 50002,
-          companyID: "18490289-00005",
-          name: "Leopoldo Bakery Ingredients, LDA Ingredients",
-      },
-      {
-          localID: 50003,
-          companyID: "176689-00006",
-          name: "Sousa & Morgado, LDA",
-      },
-  ])}
+          if (error_flag) {
+            console.log(res)
+            setItemData([])
+            setItemDataLoading(false)
+            addNewToast({
+              id: toastID++,
+              title: 'ERROR',
+              description: `An error ocurred when fetching data. Please try again later.`,
+              color: 'danger',
+            })
+          }
+          else {
+            setItemData(res.data)
+            setItemDataLoading(false)
+          }
+      })
+    }
+  }
 
-  // useEffect(() => {
-  //   api.getItemMaps(1,
-  //     (res) => {
-  //       if (res.status === 200) {
-  //         console.log(res.data)
-  //       } else {
-  //         console.log(res)
-  //       }
-  //     })
-  // }, [])
+  const fetchCompanyData = async () => {
+    if (userCompany && userCompany.id) {
+      setCompanyDataLoading(true)
+      api.getCompanyMaps(userCompany.id,
+        async (res) => {
+          let error_flag = false
+          if (res.status === 200) {
+            for(let i = 0; i < res.data.length; i++) {
+              let res_comp = await api.getCompanyAsync(res.data[i].map_company_id)
+              if (res_comp.status === 200) {
+                res.data[i] = {
+                  ...res.data[i],
+                  name: res_comp.data.name,
+                }
+              }
+              else {
+                error_flag = true
+                break
+              }
+            }
+          }
+          else {
+            error_flag = true
+          }
+
+          if (error_flag) {
+            console.log(res)
+            setCompanyData([])
+            setCompanyDataLoading(false)
+            addNewToast({
+              id: toastID++,
+              title: 'ERROR',
+              description: `An error ocurred when fetching data. Please try again later.`,
+              color: 'danger',
+            })
+          }
+          else {
+            setCompanyData(res.data)
+            setCompanyDataLoading(false)
+          }
+      })
+    }
+  }
 
   const displayToasts = () => {
     if (toastInfo) {
@@ -320,7 +142,7 @@ const Mapping = () => {
     newItemData.splice(index, 1)
     setItemData(newItemData)
     addNewToast({
-        id: row.localID,
+        id: toastID++,
         title: 'Row Deleted',
         description: `Row "${row.description}" was deleted.`,
         color: 'info',
@@ -332,7 +154,7 @@ const Mapping = () => {
     newCompanyData.splice(index, 1)
     setItemData(newCompanyData)
     addNewToast({
-        id: row.localID,
+        id: toastID++,
         title: 'Row Deleted',
         description: `Row "${row.name}" was deleted.`,
         color: 'info',
@@ -345,7 +167,7 @@ const Mapping = () => {
     newItemData.unshift(data)
     setItemData(newItemData)
     addNewToast({
-      id: data.localID,
+      id: toastID++,
       title: 'Row Inserted',
       description: `Row "${data.description}" was inserted.`,
       color: 'info',
@@ -358,7 +180,7 @@ const Mapping = () => {
     newCompanyData.unshift(data)
     setCompanyData(newCompanyData)
     addNewToast({
-      id: data.localID,
+      id: toastID++,
       title: 'Row Inserted',
       description: `Row "${data.name}" was inserted.`,
       color: 'info',
@@ -368,22 +190,26 @@ const Mapping = () => {
   return (
     <>
       <Layout title='Mapping'>
-        <Tabs>
-          <Tab label="Items" switchfunc={fetchItemData} btntext="New Item Mapping" btnfunc={() => setItemModalVisible(true)}>
-            <Table 
-              columns={itemTableColumns(deleteItemButton(deleteItemRow))} 
-              data={itemData}
-              selecrows={true}
-            />
-          </Tab>
-          <Tab label="Companies" switchfunc={fetchCompanyData} btntext="New Company Mapping" btnfunc={() => setCompanyModalVisible(true)}>
-            <Table 
-              columns={companyTableColumns(deleteCompanyButton(deleteCompanyRow))} 
-              data={companyData}
-              selecrows={true}
-            />
-          </Tab>
-        </Tabs>
+        <Card>
+          <Tabs>
+            <Tab label="Items" switchfunc={fetchItemData} btntext="New Item Mapping" btnfunc={() => setItemModalVisible(true)}>
+              <Table 
+                loading={itemDataLoading}
+                columns={itemTableColumns(deleteItemButton(deleteItemRow))} 
+                data={itemData}
+                selecrows={true}
+              />
+            </Tab>
+            <Tab label="Companies" switchfunc={fetchCompanyData} btntext="New Company Mapping" btnfunc={() => setCompanyModalVisible(true)}>
+              <Table 
+                loading={companyDataLoading}
+                columns={companyTableColumns(deleteCompanyButton(deleteCompanyRow))} 
+                data={companyData}
+                selecrows={true}
+              />
+            </Tab>
+          </Tabs>
+        </Card>
       </Layout>
 
       <FormModal 

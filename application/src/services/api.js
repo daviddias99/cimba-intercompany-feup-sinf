@@ -3,7 +3,7 @@ import axios from 'axios';
 /**
  * Constant variables
  */
-const API_URL = process.env.REACT_APP_API_URI ? process.env.REACT_APP_API_URI : 'http://localhost:8001';
+const API_URL = process.env.REACT_APP_API_URI ? process.env.REACT_APP_API_URI : 'http://localhost:8080';
 const JTW_TOKEN_KEY = 'JWT_TOKEN';
 
 /**
@@ -12,12 +12,12 @@ const JTW_TOKEN_KEY = 'JWT_TOKEN';
 const routes = {
   login: '/login',
   logout: '/logout',
+  company: (companyId) => `/companies/${companyId}`,
   itemMaps: (companyId) => `/companies/${companyId}/itemMaps`,
   singleItemMap : (companyId, mapId) => `/companies/${companyId}/itemMaps/${mapId}`,
   companyMaps: (companyId) => `/companies/${companyId}/companyMaps`,
   singleCompanyMap: (companyId, mapId) => `/companies/${companyId}/companyMaps/${mapId}`,
-  getSettings: (userId) => (`/users/${userId}/company`),
-  setSettings: (userId) => (`/users/${userId}/company`),
+  settings: (userId) => (`/users/${userId}/company`),
   getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
   getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
 };
@@ -42,8 +42,6 @@ const request = (path, method, data, callback) => {
   if (!path.endsWith('/')) {
     path = path + '/';
   }
-
-  console.log(path)
 
   const headers = {};
 
@@ -70,6 +68,29 @@ const request = (path, method, data, callback) => {
   }
 };
 
+const asyncRequest = async (path, method, data) => {
+  if (!path.startsWith('/')) {
+    path = '/' + path;
+  }
+  if (!path.endsWith('/')) {
+    path = path + '/';
+  }
+
+  const headers = {};
+
+  // Add authorization header
+  const token = getToken();
+  if (token) {
+    headers.Authorization = 'Bearer ' + token;
+  }
+
+  if (method.toLowerCase() === 'get') {
+    return await axios.get(API_URL + path, { headers, params: data })
+  } else if (method.toLowerCase() === 'post') {
+    return await axios.post(API_URL + path, data, { headers })
+  }
+}
+
 /**
  * Main API controller.
  *
@@ -83,11 +104,17 @@ const api = {
   logout: (callback) => {
     request(routes.logout, 'post', null, callback);
   },
+  getCompany: (companyId, callback) => {
+    request(routes.company(companyId), 'get', null, callback);
+  },
+  getCompanyAsync: async (companyId) => {
+    return await asyncRequest(routes.company(companyId), 'get', null);
+  },
   getSettings: (userId, callback) => {
-    request(routes.getSettings(userId), 'get', null, callback);
+    request(routes.settings(userId), 'get', null, callback);
   },
   setSettings: (userId, data, callback) => {
-    request(routes.setSettings(userId), 'post', data, callback);
+    request(routes.settings(userId), 'post', data, callback);
   },
   getItemMaps: (companyId, callback) => {
     request(routes.itemMaps(companyId), 'get', null, callback);
@@ -106,6 +133,9 @@ const api = {
   },
   deleteCompanyMap: (companyId, mapId, callback) => {
     request(routes.singleCompanyMap(companyId, mapId), 'delete', null, callback);
+  },
+  getSingleCompanyMapAsync: async (companyId, queryParams) => {
+    return await asyncRequest(routes.companyMaps(companyId), 'get', queryParams);
   },
 };
 
