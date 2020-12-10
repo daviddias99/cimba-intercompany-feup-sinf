@@ -148,6 +148,7 @@ const Mapping = () => {
             description: `The row was successfully deleted.`,
             color: 'info',
           })
+          fetchItemData()
         }
         else {
           addNewToast({
@@ -157,8 +158,6 @@ const Mapping = () => {
             color: 'danger',
           })
         }
-
-        fetchItemData()
       }
     )
   }
@@ -174,6 +173,7 @@ const Mapping = () => {
             description: `The row was successfully deleted.`,
             color: 'info',
           })
+          fetchCompanyData()
         }
         else {
           addNewToast({
@@ -183,36 +183,65 @@ const Mapping = () => {
             color: 'danger',
           })
         }
-
-        fetchCompanyData()
       }
     )
   }
 
   const insertItemAction = data => {
-    console.log("Chamada a API para meter item")
-    const newItemData = itemData.slice()
-    newItemData.unshift(data)
-    setItemData(newItemData)
-    addNewToast({
-      id: toastID++,
-      title: 'Row Inserted',
-      description: `Row "${data.description}" was inserted.`,
-      color: 'info',
-    })
+    api.addItemMap(userCompany.id, data,
+      (res) => {
+        if (res.status === 201) {
+          addNewToast({
+            id: toastID++,
+            title: 'Row Inserted',
+            description: `The new row was successfully inserted.`,
+            color: 'info',
+          })
+          fetchItemData()
+        }
+        else {
+          console.log(res)
+          const errorMsg = res.data.error.response.data['type'] === 'validator' ? 
+            'The data in the form was invalid.'
+            :
+            res.data.error.response.data
+
+          addNewToast({
+            id: toastID++,
+            title: 'ERROR',
+            description: errorMsg,
+            color: 'danger',
+          })
+        }
+      })
   }
 
   const insertCompanyAction = data => {
-    console.log("Chamada a API para meter company")
-    const newCompanyData = companyData.slice()
-    newCompanyData.unshift(data)
-    setCompanyData(newCompanyData)
-    addNewToast({
-      id: toastID++,
-      title: 'Row Inserted',
-      description: `Row "${data.name}" was inserted.`,
-      color: 'info',
-    })
+    api.addCompanyMap(userCompany.id, data,
+      (res) => {
+        if (res.status === 201) {
+          addNewToast({
+            id: toastID++,
+            title: 'Row Inserted',
+            description: `The new row was successfully inserted.`,
+            color: 'info',
+          })
+          fetchCompanyData()
+        }
+        else {
+          const errorMsg = res.data.error.response.data['type'] === 'validator' ? 
+            'The data in the form was invalid.'
+            :
+            res.data.error.response.data
+
+          addNewToast({
+            id: toastID++,
+            title: 'ERROR',
+            description: errorMsg,
+            color: 'danger',
+          })
+        }
+      })
   }
 
   return (

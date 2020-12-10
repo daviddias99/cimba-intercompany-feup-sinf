@@ -16,6 +16,11 @@ exports.newCompanyMap = async (req, res) => {
     return res.status(400).json(`Cannot create a mapping to the same company!`);
   }
 
+  // check if map_company_id is a valid integer
+  if (!(!isNaN(req.body.map_company_id) && Number.isInteger(parseFloat(req.body.map_company_id)))) {
+    return res.status(400).json(`Company ID is not a valid number!`);
+  }
+
   // check if company exists
   const ownerCompany = await req.app.db('companies').where({ id: req.params.id }).first();
   if (!ownerCompany) {
@@ -25,7 +30,7 @@ exports.newCompanyMap = async (req, res) => {
   // check if other company exists
   const mapCompany = await req.app.db('companies').where({ id: req.body.map_company_id }).first();
   if (!mapCompany) {
-    return res.status(400).json(`Company with ID (${req.params.id}) does not exist!`);
+    return res.status(400).json(`Company with ID (${req.body.map_company_id}) does not exist!`);
   }
 
   // check if mapping already exists
@@ -37,7 +42,7 @@ exports.newCompanyMap = async (req, res) => {
   // check if local ID already exists for that company
   const mapsForTheSameLocalID = await req.app.db('company_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
   if (mapsForTheSameLocalID.length) {
-    return res.status(400).json(`There is already a company mapping for local_id ${req.body.local_id} in this company!`);
+    return res.status(400).json(`There is already a company mapping for Local ID ${req.body.local_id} in this company!`);
   }
 
   try {

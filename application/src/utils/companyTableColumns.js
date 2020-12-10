@@ -3,17 +3,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const insertCompanyForm = [
     {
-        title: "Local ID",
-        id: "localID"
+        title: "Company Local ID",
+        id: "local_id"
     },
     {
         title: "Company ID",
-        id: "companyID"
+        id: "map_company_id"
     },
-    {
-        title: "Name",
-        id: "name"
-    }
 ]
 
 const deleteCompanyButton = (actionFunction) => {

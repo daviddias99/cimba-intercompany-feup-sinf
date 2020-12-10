@@ -13,6 +13,7 @@ const validate = (schema) => (req, res, next) => {
   if (isValid === false) {
     return res.status(400).json({
       status: 400,
+      type: 'validator',
       errors: validator.errors[0].message,
     });
   }

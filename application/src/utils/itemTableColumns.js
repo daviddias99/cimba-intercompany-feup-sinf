@@ -3,44 +3,16 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const insertItemForm = [
     {
-        title: "Company",
-        id: "company"
+        title: "Item Local ID",
+        id: "local_id"
     },
     {
-        title: "Local ID",
-        id: "localID"
+        title: "Company ID",
+        id: "map_company_id"
     },
     {
-        title: "Item ID",
-        id: "itemID"
-    },
-    {
-        title: "Description",
-        id: "description"
-    },
-    {
-        title: "Warehouse",
-        id: "warehouse"
-    },
-    {
-        title: "Unit",
-        id: "unit"
-    },
-    {
-        title: "Unit Price 1",
-        id: "unit_price_1"
-    },
-    {
-        title: "VAT Type 1",
-        id: "vat_type_1"
-    },
-    {
-        title: "Unit Price 2",
-        id: "unit_price_2"
-    },
-    {
-        title: "VAT Type 2",
-        id: "vat_type_2"
+        title: "Item ID (on other company)",
+        id: "item_id"
     }
 ]
 
