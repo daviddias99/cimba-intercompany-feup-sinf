@@ -55,7 +55,7 @@ exports.createGoodsReceipt = async (
   );
 
   if (goodsReceipt.status !== 201) {
-    return new Error({ status: goodsReceipt.status, data: goodsReceipt.data });
+    return goodsReceipt;
   }
 
   const buyerOrderId = new Set(mapPromises);
