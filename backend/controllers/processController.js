@@ -1,5 +1,6 @@
 const jasmin = require('../jasmin/orders');
 const { getAllProcesses } = require('../database/methods/orderMethods');
+const regexNum = require('../helper/regexNum');
 
 const getProcessState = (process) => {
   if (process.delivery_id == null) return 0;
@@ -89,7 +90,23 @@ exports.getFinancial = async (req, res) => {
 };
 
 exports.getAllProcesses = async (req, res) => {
-  let processes = await getAllProcesses(req.company.id);
+  let { page, pageSize } = req.query;
+
+  const regex = new RegExp(regexNum);
+
+  if (page && pageSize) {
+    if (!(regex.test(page) && regex.test(pageSize))) {
+      res.status(400).json({ status: 400 });
+      return;
+    }
+    page = parseInt(page, 10);
+    pageSize = parseInt(pageSize, 10);
+  } else {
+    page = null;
+    pageSize = null;
+  }
+
+  let processes = await getAllProcesses(req.company.id, page, pageSize);
   processes = processes.map((process) => ({ ...process, state: getProcessState(process), other_company_name: 'OTHER_COMP' }));
 
   res.json(processes);

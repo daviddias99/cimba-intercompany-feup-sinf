@@ -1,6 +1,12 @@
 const db = require('../knex');
 
-exports.getAllProcesses = async (companyId) => db('orders').where({ company_id: companyId }).select();
+exports.getAllProcesses = async (companyId, page = null, pageSize = null) => {
+  let query = db('orders').where({ company_id: companyId });
+
+  if (page != null && pageSize != null) query = query.offset(page * pageSize).limit(pageSize);
+
+  return query.select();
+};
 
 exports.getProcess = async (processId) => db('orders').where({ id: processId }).first();
 
