@@ -4,10 +4,10 @@ const MOST_RECENT_ORDER_TRIGGER_UP = `
     DECLARE
         previous_most_recent timestamp with time zone;
     BEGIN
-        SELECT most_recent_order INTO previous_most_recent FROM "companies" WHERE id = NEW.company_id FOR UPDATE;
+        SELECT most_recent_order INTO previous_most_recent FROM "companies" WHERE id = NEW.ic_id FOR UPDATE;
 
         IF NEW.jasmin_created_on > previous_most_recent THEN
-            UPDATE "companies" SET most_recent_order = NEW.jasmin_created_on WHERE id = NEW.company_id;
+            UPDATE "companies" SET most_recent_order = NEW.jasmin_created_on WHERE id = NEW.ic_id;
         END IF;
 
         RETURN NEW;

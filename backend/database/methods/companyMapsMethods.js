@@ -1,12 +1,12 @@
 const db = require('../knex');
 
-exports.mapLocalCompanyId = async (companyId, localId) => {
-  const company = await db('company_maps').where({ local_id: localId, company_id: companyId }).first();
-  return company == null ? null : company.map_company_id;
+exports.jasminToIcId = async (icId, jasminId) => {
+  const company = await db('company_maps').where({ jasmin_id: jasminId, ic_id: icId }).first();
+  return company == null ? null : company.map_ic_id;
 };
 
-exports.mapUniversalCompanyId = async (companyId, mapCompanyId) => {
-  const company = await db('company_maps').where({ map_company_id: mapCompanyId, company_id: companyId }).first();
+exports.icToJasminId = async (icId, mapicId) => {
+  const company = await db('company_maps').where({ map_ic_id: mapicId, ic_id: icId }).first();
 
-  return company == null ? null : company.local_id;
+  return company == null ? null : company.jasmin_id;
 };
