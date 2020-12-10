@@ -30,7 +30,7 @@ const orderTableColumns = [
     {
         name: 'Total',
         // selector: 'grossValue.amount',
-        cell: (row) => `${row.grossValue.amount.toFixed(2)} ${row.grossValue.symbol} `
+        cell: (row) => `${row.lineExtensionAmount.amount.toFixed(2)} ${row.lineExtensionAmount.symbol} `
     },
 ]
 

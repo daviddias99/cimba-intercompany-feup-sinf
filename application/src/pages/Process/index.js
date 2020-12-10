@@ -10,8 +10,10 @@ import Payment from './Documents/Buyer/Payment';
 import Receipt from './Documents/Seller/Receipt';
 import BuyerInvoice from './Documents/Buyer/Invoice';
 import SellerInvoice from './Documents/Seller/Invoice';
+import BuyerCreditNote from './Documents/Buyer/CreditNote';
+import SellerCreditNote from './Documents/Seller/CreditNote';
 import ProcessStepper from './ProcessStepper';
-import { purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice, receipt, payment } from './stubData';
+import { purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice, receipt, payment, buyerCredit, sellerCredit } from './stubData';
 
 import api from 'services/api';
 import './styles.scss';
@@ -104,7 +106,7 @@ const Process = (props) => {
   const [shownCard, setShownCard] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [redirect, setRedirect] = useState(false);
-  
+
   useEffect(() => {
     setIsLoading(true);
     const endpoint = apiRequests(shownStep, type);
@@ -151,8 +153,11 @@ const Process = (props) => {
       {/* <SellerOrder orderData={exampleProp.data.order} title='Sales Order Details' />
       <Delivery delivery={exampleProp.data.delivery} title='Delivery Details' />
       <SellerInvoice invoice={exampleProp.data.invoice} title='Invoice Details' />
-      <Receipt receipt={exampleProp.data.payment} title='Receipt Details' /> */}
+      <Receipt receipt={exampleProp.data.payment} title='Receipt Details' /> 
+      <BuyerCreditNote creditNote={buyerCredit}/>*/
+      }
 
+      {/* <SellerCreditNote creditNote={sellerCredit} /> */}
       {/* <BuyerOrder orderData={exampleProp.data.order} title='Purchase Order Details' />
       <BuyerInvoice invoice={exampleProp.data.invoice} title='Invoice Details' />
       <Payment payment={exampleProp.data.payment} title='Payment Details' /> */}

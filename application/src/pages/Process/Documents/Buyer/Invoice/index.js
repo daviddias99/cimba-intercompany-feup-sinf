@@ -26,7 +26,7 @@ const BuyerInvoice = (props) => {
     { id: 4, fieldSize: 'small', label: 'Supplier', value: invoiceData.sellerSupplierPartyName },
     { id: 5, fieldSize: 'small', label: 'Payment Term', value: invoiceData.paymentTermDescription },
     { id: 8, fieldSize: 'small', label: 'Payment Method', value: invoiceData.paymentMethodDescription },
-    { id: 6, fieldSize: 'small', label: 'Discount', value: invoiceData.discountInValueAmountAmount.toFixed(2) + "%" },
+    { id: 6, fieldSize: 'small', label: 'Discount', value: invoiceData.discount.toFixed(2) + "%" },
   ];
 
   const postingDateStr = dateFormat(invoiceData.postingDate);
@@ -46,78 +46,76 @@ const BuyerInvoice = (props) => {
     <Card title={`Invoice ${invoiceData.naturalKey}`}>
 
       <Subsection sectionId='baseFields'>
-        <Subsection sectionId='baseFields'>
-          {overviewFields.map((field) => (
-            <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
-          ))}
-        </Subsection>
+        {overviewFields.map((field) => (
+          <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
+        ))}
+      </Subsection>
 
-        <Subsection sectionId='goodsAndServices' flexDirection='column' title={goodsAndServicesTitle}>
-          <div className='subsection-item-wrapper'>
-            <DataTable
-              className="table-display"
-              columns={invoiceTableColumns}
-              data={invoiceData.documentLines}
-              highlightOnHover={true}
-              noHeader={true}
-              pagination={true}
-            />
-            <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${invoiceData.payableAmount.amount.toFixed(2)} ${invoiceData.payableAmount.symbol}`}</h2>
-          </div>
-        </Subsection>
-        <hr />
+      <Subsection sectionId='goodsAndServices' flexDirection='column' title={goodsAndServicesTitle}>
+        <div className='subsection-item-wrapper'>
+          <DataTable
+            className="table-display"
+            columns={invoiceTableColumns}
+            data={invoiceData.documentLines}
+            highlightOnHover={true}
+            noHeader={true}
+            pagination={true}
+          />
+          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${invoiceData.payableAmount.amount.toFixed(2)} ${invoiceData.payableAmount.symbol}`}</h2>
+        </div>
+      </Subsection>
+      <hr />
 
-        <Subsection sectionId='commercial' title='Commercial'>
-          <LargeField label={'Note do Recipient'} value={invoiceData.noteToRecipient} />
-          <div>
-            <BasicField label={'Delivery Term'} value={invoiceData.deliveryTermDescription} />
-            <BasicField label={'Suplier'} value={invoiceData.supplierPartyDescription} />
-          </div>
+      <Subsection sectionId='commercial' title='Commercial'>
+        <LargeField label={'Note do Recipient'} value={invoiceData.noteToRecipient} />
+        <div>
+          <BasicField label={'Delivery Term'} value={invoiceData.deliveryTermDescription} />
+          <BasicField label={'Suplier'} value={invoiceData.supplierPartyDescription} />
+        </div>
 
-          <LargeField label={'Supplier Address'} value={invoiceData.buyerCustomerPartyAddress} />
-        </Subsection>
-        <hr />
+        <LargeField label={'Supplier Address'} value={invoiceData.buyerCustomerPartyAddress} />
+      </Subsection>
+      <hr />
 
-        <Subsection sectionId='cashInvoice' title='Cash Invoice'>
-          <BasicField label={'Cash Flow Item'} value={invoiceData.cashFlowItemDescription} />
-          <BasicField label={'Financial Account'} value={invoiceData.financialAccountDescription} />
-          <BasicField label={'Outgoing Check Lot'} value={invoiceData.outgoingCheckLotDescription} />
-          <BasicField label={'Check Number'} value={invoiceData.checkDescription} />
-        </Subsection>
-        <hr />
+      <Subsection sectionId='cashInvoice' title='Cash Invoice'>
+        <BasicField label={'Cash Flow Item'} value={invoiceData.cashFlowItemDescription} />
+        <BasicField label={'Financial Account'} value={invoiceData.financialAccountDescription} />
+        <BasicField label={'Outgoing Check Lot'} value={invoiceData.outgoingCheckLotDescription} />
+        <BasicField label={'Check Number'} value={invoiceData.checkDescription} />
+      </Subsection>
+      <hr />
 
-        <Subsection sectionId='financial' title='Financial'>
-          {financialFields.map((field) => (
-            <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
-          ))}
-          <BasicField label={'Billing Name'} value={invoiceData.accountingPartyName} />
-          <BasicField label={'Billing Tax ID'} value={invoiceData.accountingPartyTaxId} />
-          <LargeField label={'Billing Address'} value={invoiceData.accountingPartyAddress} />
-        </Subsection>
-        <hr />
+      <Subsection sectionId='financial' title='Financial'>
+        {financialFields.map((field) => (
+          <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
+        ))}
+        <BasicField label={'Billing Name'} value={invoiceData.accountingPartyName} />
+        <BasicField label={'Billing Tax ID'} value={invoiceData.accountingPartyTaxId} />
+        <LargeField label={'Billing Address'} value={invoiceData.accountingPartyAddress} />
+      </Subsection>
+      <hr />
 
-        <Subsection sectionId='delivery' title='Delivery'>
-          <div className='fieldGroup'>
-            <h3>Loading</h3>
-            <BasicField fieldSize='large' label={'Point'} value={invoiceData.loadingPoint} />
-            <LargeField label={'Address'} value={invoiceData.loadingPointAddress} />
-            <BasicField fieldSize='large' label={'Country'} value={invoiceData.loadingCountryDescription} />
-            <BasicField fieldSize='large' label={'Date/Time'} value={loadingTimeStr} />
-          </div>
+      <Subsection sectionId='delivery' title='Delivery'>
+        <div className='fieldGroup'>
+          <h3>Loading</h3>
+          <BasicField fieldSize='large' label={'Point'} value={invoiceData.loadingPoint} />
+          <LargeField label={'Address'} value={invoiceData.loadingPointAddress} />
+          <BasicField fieldSize='large' label={'Country'} value={invoiceData.loadingCountryDescription} />
+          <BasicField fieldSize='large' label={'Date/Time'} value={loadingTimeStr} />
+        </div>
 
-          <div className='fieldGroup'>
-            <h3>Unloading</h3>
-            <BasicField fieldSize='large' label={'Point'} value={invoiceData.unloadingPoint} />
-            <LargeField label={'Address'} value={invoiceData.unloadingPointAddress} />
-            <BasicField fieldSize='large' label={'Country'} value={invoiceData.loadingCountryDescription} />
-            <BasicField fieldSize='large' label={'Date/Time'} value={unloadingTimeStr} />
-          </div>
+        <div className='fieldGroup'>
+          <h3>Unloading</h3>
+          <BasicField fieldSize='large' label={'Point'} value={invoiceData.unloadingPoint} />
+          <LargeField label={'Address'} value={invoiceData.unloadingPointAddress} />
+          <BasicField fieldSize='large' label={'Country'} value={invoiceData.loadingCountryDescription} />
+          <BasicField fieldSize='large' label={'Date/Time'} value={unloadingTimeStr} />
+        </div>
 
-          <div className='fieldGroup'>
-            <h3>Other</h3>
-            <BasicField fieldSize='small' label={'License Plate'} value={invoiceData.vehiclePlateNumber} />
-          </div>
-        </Subsection>
+        <div className='fieldGroup'>
+          <h3>Other</h3>
+          <BasicField fieldSize='small' label={'License Plate'} value={invoiceData.vehiclePlateNumber} />
+        </div>
       </Subsection>
       <hr />
 

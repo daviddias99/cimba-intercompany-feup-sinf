@@ -45,70 +45,66 @@ const Delivery = (props) => {
     <Card title={`Delivery ${deliveryData.naturalKey}`}>
 
       <Subsection sectionId='baseFields'>
-        <Subsection sectionId='baseFields'>
-          {overviewFields.map((field) => (
-            <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
-          ))}
-        </Subsection>
+        {overviewFields.map((field) => (
+          <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
+        ))}
+      </Subsection>
 
-        <Subsection sectionId='goods' flexDirection='column' title={goodsTitle}>
-          <div className='subsection-item-wrapper'>
-            <DataTable
-              className="table-display"
-              columns={deliverTableColumns}
-              data={deliveryData.documentLines}
-              highlightOnHover={true}
-              noHeader={true}
-              pagination={true}
-            />
-            <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${deliveryData.grossValue.amount} ${deliveryData.grossValue.symbol}`}</h2>
-          </div>
-        </Subsection>
-        <hr />
-
-        <Subsection sectionId='commercial' title='Commercial'>
-          <LargeField label={'Note do Recipient'} value={deliveryData.noteToRecipient} />
-          <div>
-            <BasicField label={'Supplier Name'} value={deliveryData.logisticsPartyName} />
-            <BasicField label={'PriceList'} value={deliveryData.priceListDescription} />
-          </div>
-          <LargeField label={'Address'} value={deliveryData.logisticsPartyAddress} />
-        </Subsection>
-        <hr />
-
-        <Subsection sectionId='financial' title='Financial'>
-          {financialFields.map((field) => (
-            <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
-          ))}
-          <LargeField label={'Billing Address'} value={deliveryData.accountingPartyAddress} />
-        </Subsection>
-        <hr />
-
-        <Subsection sectionId='delivery' title='Delivery'>
-          <div className='fieldGroup'>
-            <h3>Loading</h3>
-            <BasicField fieldSize='large' label={'Warehouse'} value={deliveryData.warehouse}/>
-            <BasicField fieldSize='large' label={'Point'} value={deliveryData.loadingPoint}/>
-            <LargeField label={'Address'} value={deliveryData.loadingPointAddress} />
-            <BasicField fieldSize='large' label={'Country'} value={deliveryData.loadingCountryDescription}/>
-          </div>
-
-          <div className='fieldGroup'>
-            <h3>Unloading</h3>
-            <BasicField fieldSize='large' label={'Vehicle License Plate'} value={deliveryData.vehiclePlateNumber}/>
-            <BasicField fieldSize='large' label={'Point'} value={deliveryData.unloadingPoint}/>
-            <LargeField label={'Address'} value={deliveryData.unloadingPointAddress} />
-            <BasicField fieldSize='large' label={'Country'} value={deliveryData.loadingCountryDescription}/>
-          </div>
-
-          <div className='fieldGroup'>
-            <h3>Other</h3>
-            <BasicField fieldSize='small' label={'AT Code'} value={deliveryData.aTDocCodeID}/>
-          </div>
-        </Subsection>
+      <Subsection sectionId='goods' flexDirection='column' title={goodsTitle}>
+        <div className='subsection-item-wrapper'>
+          <DataTable
+            className="table-display"
+            columns={deliverTableColumns}
+            data={deliveryData.documentLines}
+            highlightOnHover={true}
+            noHeader={true}
+            pagination={true}
+          />
+          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${deliveryData.grossValue.amount} ${deliveryData.grossValue.symbol}`}</h2>
+        </div>
       </Subsection>
       <hr />
 
+      <Subsection sectionId='commercial' title='Commercial'>
+        <LargeField label={'Note do Recipient'} value={deliveryData.noteToRecipient} />
+        <div>
+          <BasicField label={'Supplier Name'} value={deliveryData.logisticsPartyName} />
+          <BasicField label={'PriceList'} value={deliveryData.priceListDescription} />
+        </div>
+        <LargeField label={'Address'} value={deliveryData.logisticsPartyAddress} />
+      </Subsection>
+      <hr />
+
+      <Subsection sectionId='financial' title='Financial'>
+        {financialFields.map((field) => (
+          <BasicField fieldSize={field.fieldSize} key={field.id} label={field.label} value={field.value} />
+        ))}
+        <LargeField label={'Billing Address'} value={deliveryData.accountingPartyAddress} />
+      </Subsection>
+      <hr />
+
+      <Subsection sectionId='delivery' title='Delivery'>
+        <div className='fieldGroup'>
+          <h3>Loading</h3>
+          <BasicField fieldSize='large' label={'Warehouse'} value={deliveryData.warehouse} />
+          <BasicField fieldSize='large' label={'Point'} value={deliveryData.loadingPoint} />
+          <LargeField label={'Address'} value={deliveryData.loadingPointAddress} />
+          <BasicField fieldSize='large' label={'Country'} value={deliveryData.loadingCountryDescription} />
+        </div>
+
+        <div className='fieldGroup'>
+          <h3>Unloading</h3>
+          <BasicField fieldSize='large' label={'Vehicle License Plate'} value={deliveryData.vehiclePlateNumber} />
+          <BasicField fieldSize='large' label={'Point'} value={deliveryData.unloadingPoint} />
+          <LargeField label={'Address'} value={deliveryData.unloadingPointAddress} />
+          <BasicField fieldSize='large' label={'Country'} value={deliveryData.loadingCountryDescription} />
+        </div>
+
+        <div className='fieldGroup'>
+          <h3>Other</h3>
+          <BasicField fieldSize='small' label={'AT Code'} value={deliveryData.aTDocCodeID} />
+        </div>
+      </Subsection>
     </Card>
   );
 }
