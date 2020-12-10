@@ -12,6 +12,11 @@ async function processMiddleware(req, res, next) {
     return;
   }
 
+  if (process.company_id !== req.company.id) {
+    res.status(403).json({ status: 403 });
+    return;
+  }
+
   req.process = process;
   next();
 }
@@ -28,5 +33,7 @@ router.get(`/:id(${regexNum})/invoice`, processController.getInvoice);
 router.get(`/:id(${regexNum})/financial`, processController.getFinancial);
 
 router.get(`/:id(${regexNum})`, processController.getProcess);
+
+router.get('/', processController.getAllProcesses);
 
 module.exports = router;
