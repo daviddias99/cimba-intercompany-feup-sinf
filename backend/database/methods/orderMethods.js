@@ -5,7 +5,7 @@ exports.getAllProcesses = async (companyId, page = null, pageSize = null) => {
 
   if (page != null && pageSize != null) query = query.offset(page * pageSize).limit(pageSize);
 
-  return query.select();
+  return query.orderBy([{ column: 'jasmin_created_on', order: 'desc' }]).select();
 };
 
 exports.getProcess = async (processId) => db('orders').where({ id: processId }).first();
