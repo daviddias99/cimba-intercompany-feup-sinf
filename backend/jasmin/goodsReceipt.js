@@ -1,5 +1,5 @@
 const { makeRequest } = require('./makeRequest');
-const { mapLocalCompanyId, mapUniversalCompanyId } = require('../database/methods/companyMapsMethods');
+const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addGoodsReceiptToOrder } = require('../database/methods/orderMethods');
@@ -11,11 +11,11 @@ exports.createGoodsReceipt = async (
   documentLines,
 ) => {
   // Getting intercompany id of buyer
-  const icIdBuyer = await mapLocalCompanyId(icIdSuplier, jasminIdBuyer);
+  const icIdBuyer = await jasminToIcId(icIdSuplier, jasminIdBuyer);
   if (icIdBuyer == null) throw new ReferenceError(`Cannot Map Buyer ${jasminIdBuyer} in Suplier`);
 
-  // Getting jasmin id of suplier in buyer
-  const jasminIdSuplier = await mapUniversalCompanyId(icIdBuyer, icIdSuplier);
+  // Getting local id of suplier in buyer
+  const jasminIdSuplier = await icToJasminId(icIdBuyer, icIdSuplier);
   if (jasminIdSuplier == null) throw new ReferenceError(`Cannot Map Suplier ${icIdSuplier} in Buyer`);
 
   const buyer = await getCompanyById(icIdBuyer);
