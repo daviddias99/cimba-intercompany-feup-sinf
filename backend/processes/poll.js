@@ -9,8 +9,8 @@ const pollOrdersCompany = async (companyId) => {
   const mostRecentOrderTime = new Date(company.most_recent_order).getTime();
 
   const newOrders = orders.data.filter((order) => {
-    const orderDate = new Date(order.createdOn);
-    return order.documentType === 'ECF' && orderDate.getTime() > mostRecentOrderTime;
+    const time = new Date(order.createdOn);
+    return !order.autoCreated && order.orderNature === 1 && time.getTime() > mostRecentOrderTime;
   });
 
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
@@ -27,10 +27,10 @@ const pollInvoiceCompany = async (companyId) => {
 
   const invoices = await getInvoices(companyId);
 
-  const newInvoices = invoices.filter((invoice) => {
-    const orderId = invoice.documentLines[0].sourceDocId;
+  const newInvoices = invoices.filter((invoice) => invoice.documentLines.some((line) => {
+    const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
-  });
+  }));
 
   newInvoices.forEach((invoice) => newInvoice(companyId, invoice));
 };
@@ -46,10 +46,10 @@ const pollDeliveryCompany = async (companyId) => {
 
   const deliveries = await getDeliveries(companyId);
 
-  const newDeliveries = deliveries.filter((delivery) => {
-    const orderId = delivery.documentLines[0].sourceDocId;
+  const newDeliveries = deliveries.filter((delivery) => delivery.documentLines.some((line) => {
+    const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
-  });
+  }));
 
   newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery));
 };
