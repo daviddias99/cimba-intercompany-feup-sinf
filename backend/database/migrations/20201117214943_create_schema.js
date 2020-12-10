@@ -59,6 +59,12 @@ exports.up = function (knex) {
       table.string('delivery_id');
       table.string('payment_id');
     })
+    .createTable('orders_maps', (table) => {
+      table.string('sales_order_id').notNullable();
+      table.foreign('sales_order_id').references('orders.order_id').onUpdate('CASCADE').onDelete('CASCADE');
+      table.string('purchase_order_id').notNullable();
+      table.foreign('purchase_order_id').references('orders.order_id').onUpdate('CASCADE').onDelete('CASCADE');
+    })
     .then(() => triggersUp.forEach(async (elem) => {
       await knex.schema.raw(elem);
     }));
@@ -66,11 +72,13 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
   return knex.schema
+    .dropTable('orders_maps')
+    .dropTable('orders')
+    .dropTable('sessions')
     .dropTable('item_maps')
     .dropTable('company_maps')
     .dropTable('users')
     .dropTable('companies')
-    .dropTable('orders')
     .then(() => triggersDown.forEach(async (elem) => {
       await knex.raw(elem);
     }));
