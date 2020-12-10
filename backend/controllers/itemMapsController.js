@@ -40,4 +40,9 @@ exports.newItemMap = async (req, res) => {
   catch (error) {
     return res.status(400).json(error);
   }
-};
+}
+
+exports.deleteItemMap = async (req, res) => {
+  await req.app.db('item_maps').where({ company_id: req.params.id, local_id: req.params.local_id}).delete();
+  return res.status(200).json(`Item map has been deleted`);
+}

@@ -14,9 +14,9 @@ const routes = {
   logout: '/logout',
   company: (companyId) => `/companies/${companyId}`,
   itemMaps: (companyId) => `/companies/${companyId}/itemMaps`,
-  singleItemMap : (companyId, mapId) => `/companies/${companyId}/itemMaps/${mapId}`,
+  singleItemMap : (companyId, localId) => `/companies/${companyId}/itemMaps/${localId}`,
   companyMaps: (companyId) => `/companies/${companyId}/companyMaps`,
-  singleCompanyMap: (companyId, mapId) => `/companies/${companyId}/companyMaps/${mapId}`,
+  singleCompanyMap: (companyId, localId) => `/companies/${companyId}/companyMaps/${localId}`,
   settings: (userId) => (`/users/${userId}/company`),
   getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
   getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
@@ -65,6 +65,8 @@ const request = (path, method, data, callback) => {
     axios.get(API_URL + path, { headers }).then(callback).catch(errorHandler);
   } else if (method.toLowerCase() === 'post') {
     axios.post(API_URL + path, data, { headers }).then(callback).catch(errorHandler);
+  } else if (method.toLowerCase() === 'delete') {
+    axios.delete(API_URL + path, { headers }).then(callback).catch(errorHandler);
   }
 };
 
@@ -122,8 +124,8 @@ const api = {
   addItemMap: (companyId, data, callback) => {
     request(routes.itemMaps(companyId), 'post', data, callback);
   },
-  deleteItemMap: (companyId, mapId, callback) => {
-    request(routes.singleItemMap(companyId, mapId), 'delete', null, callback);
+  deleteItemMap: (companyId, localId, callback) => {
+    request(routes.singleItemMap(companyId, localId), 'delete', null, callback);
   },
   getCompanyMaps: (companyId, callback) => {
     request(routes.companyMaps(companyId), 'get', null, callback);
@@ -131,8 +133,8 @@ const api = {
   addCompanyMap: (companyId, data, callback) => {
     request(routes.companyMaps(companyId), 'post', data, callback);
   },
-  deleteCompanyMap: (companyId, mapId, callback) => {
-    request(routes.singleCompanyMap(companyId, mapId), 'delete', null, callback);
+  deleteCompanyMap: (companyId, localId, callback) => {
+    request(routes.singleCompanyMap(companyId, localId), 'delete', null, callback);
   },
   getSingleCompanyMapAsync: async (companyId, queryParams) => {
     return await asyncRequest(routes.companyMaps(companyId), 'get', queryParams);

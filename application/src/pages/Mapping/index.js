@@ -138,27 +138,55 @@ const Mapping = () => {
   }
 
   const deleteItemRow = (row, index) => {
-    const newItemData = itemData.slice()
-    newItemData.splice(index, 1)
-    setItemData(newItemData)
-    addNewToast({
-        id: toastID++,
-        title: 'Row Deleted',
-        description: `Row "${row.description}" was deleted.`,
-        color: 'info',
-    })
+    setItemDataLoading(true)
+    api.deleteItemMap(userCompany.id, row.local_id,
+      (res) => {
+        if (res.status === 200) {
+          addNewToast({
+            id: toastID++,
+            title: 'Row Deleted',
+            description: `The row was successfully deleted.`,
+            color: 'info',
+          })
+        }
+        else {
+          addNewToast({
+            id: toastID++,
+            title: 'ERROR',
+            description: `An error ocurred when deleting the row. Please try again later.`,
+            color: 'danger',
+          })
+        }
+
+        fetchItemData()
+      }
+    )
   }
 
   const deleteCompanyRow = (row, index) => {
-    const newCompanyData = companyData.slice()
-    newCompanyData.splice(index, 1)
-    setItemData(newCompanyData)
-    addNewToast({
-        id: toastID++,
-        title: 'Row Deleted',
-        description: `Row "${row.name}" was deleted.`,
-        color: 'info',
-    })
+    setCompanyDataLoading(true)
+    api.deleteCompanyMap(userCompany.id, row.local_id,
+      (res) => {
+        if (res.status === 200) {
+          addNewToast({
+            id: toastID++,
+            title: 'Row Deleted',
+            description: `The row was successfully deleted.`,
+            color: 'info',
+          })
+        }
+        else {
+          addNewToast({
+            id: toastID++,
+            title: 'ERROR',
+            description: `An error ocurred when deleting the row. Please try again later.`,
+            color: 'danger',
+          })
+        }
+
+        fetchCompanyData()
+      }
+    )
   }
 
   const insertItemAction = data => {

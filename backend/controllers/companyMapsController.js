@@ -53,3 +53,8 @@ exports.newCompanyMap = async (req, res) => {
     return res.status(400).json(error);
   }
 }
+
+exports.deleteCompanyMap = async (req, res) => {
+  await req.app.db('company_maps').where({ company_id: req.params.id, local_id: req.params.local_id }).delete();
+  return res.status(200).json(`Company map has been deleted`);
+}
