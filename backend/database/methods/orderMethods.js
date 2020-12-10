@@ -43,4 +43,15 @@ exports.addInvoiceToSalesOrder = async (icId, orderId, invoiceId) => db('orders'
 exports.addInvoiceToPurchaseOrder = async (icId, orderId, invoiceId) => db('orders').where({
   ic_id: icId, order_id: orderId, type: 'purchase', invoice_id: null,
 }).update({ invoice_id: invoiceId });
+
+exports.addSalesReceiptToOrder = async (icId, orderId, receiptId) => db('orders').where({
+  ic_id: icId, order_id: orderId, type: 'sale', payment_id: null,
+}).update({ payment_id: receiptId });
+
 exports.getInvoicesNoPayment = async (icId) => db('orders').select('invoice_id').where({ ic_id: icId, type: 'purchase', payment_id: null });
+
+exports.addPaymentToOrder = async (icId, invoiceId, paymentId) => db('orders').where({
+  ic_id: icId, invoice_id: invoiceId, type: 'purchase', payment_id: null,
+}).update({ payment_id: paymentId });
+
+exports.getInvoiceOfOrder = async (icId, orderId, type) => db('orders').select('invoice_id').where({ ic_id: icId, order_id: orderId, type }).first();

@@ -1,6 +1,8 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
 const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment } = require('../database/methods/orderMethods');
-const { getOrders, getInvoices, getDeliveries, getPayments } = require('../jasmin/orders');
+const {
+  getOrders, getInvoices, getDeliveries, getPayments,
+} = require('../jasmin/orders');
 const {
   newPurchaseOrder,
   newInvoice,
