@@ -2,7 +2,7 @@ const { makeRequest } = require('../jasmin/makeRequest');
 
 exports.allItemMaps = async (req, res) => {
   // extract all item maps
-  const itemMaps = await req.app.db('item_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'item_id', 'map_company_id']);
+  const itemMaps = await req.app.db('item_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'item_id', 'map_company_id', 'item_quant']);
   
   // for each one, extract info from local company
   for (let i = 0; i < itemMaps.length; i++) {
@@ -50,11 +50,14 @@ exports.newItemMap = async (req, res) => {
     return res.status(400).json(`Company ID is not a valid number!`);
   }
 
-  // check if item_quant is a valid decimal number
-  if (!(!isNaN(req.body.item_quant) && parseFloat(req.body.item_quant))) {
-    return res.status(400).json(`Company ID is not a valid number!`);
+  // check if item_quant is a valid input
+  if (!(!isNaN(req.body.item_quant) && /^\d+(\.\d{1,2})?$/.test(req.body.item_quant))) {
+    return res.status(400).json(`The input for item quantity is invalid!`);
   }
-
+  const itemQuantLocal = parseFloat(req.body.item_quant)
+  if (itemQuantLocal <= 0) {
+    return res.status(400).json(`The input for item quantity is invalid!`);
+  }
 
   // check if company mapping exists
   const companyMapping = await req.app.db('item_maps').where({ company_id: req.params.id, map_company_id: req.body.map_company_id });
@@ -84,7 +87,10 @@ exports.newItemMap = async (req, res) => {
   const itemInOtherCompany = await makeRequest(`businessCore/items/${req.body.item_id}`, 'get', req.body.map_company_id, null, null)
   if (itemInOtherCompany.status !== 200) {
     return res.status(400).json(`Item with ID ${req.body.item_id} does not exist in the other company!`);
-  }
+  }  
+
+  const itemQuantOther = +((1 / itemQuantLocal).toFixed(2));
+  console.log(itemQuantOther)
 
   // create new item mappings
   try {
@@ -94,6 +100,7 @@ exports.newItemMap = async (req, res) => {
       local_id: req.body.item_id,
       item_id: req.body.local_id,
       map_company_id: req.params.id,
+      item_quant: itemQuantOther,
     }]);
 
     // create mapping for this company
@@ -102,6 +109,7 @@ exports.newItemMap = async (req, res) => {
       local_id: req.body.local_id,
       item_id: req.body.item_id,
       map_company_id: req.body.map_company_id,
+      item_quant: itemQuantLocal,
     }], ['id', 'company_id', 'local_id', 'item_id', 'map_company_id']);
 
     return res.status(201).json(itemMap);

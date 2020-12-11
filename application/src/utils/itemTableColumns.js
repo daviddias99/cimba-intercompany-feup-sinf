@@ -16,7 +16,7 @@ const insertItemForm = [
         id: "item_id"
     },
     {
-        title: "Item Quantity",
+        title: "Item Quantity (positive number w/ max 2 decimal places)",
         id: "item_quant"
     }
 ]

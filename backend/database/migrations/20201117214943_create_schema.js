@@ -29,9 +29,7 @@ exports.up = function (knex) {
       table.foreign('map_company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('company_id').unsigned();
       table.foreign('company_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
-      
-      // TODO: campo aqui na tabela para fazer a conversao entre unidades
-      // table.float('item_id').notNullable();
+      table.float('item_quant');
 
       table.unique(['local_id', 'company_id'], 'item_map_local_unique');
       table.unique(['item_id', 'company_id', 'map_company_id'], 'item_map_item_unique');
