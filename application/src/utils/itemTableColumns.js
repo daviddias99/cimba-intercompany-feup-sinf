@@ -45,7 +45,15 @@ const itemTableColumns = (actioncell) => [
         selector: 'item_id',
     },
     {
-        name: 'Description',
+        name: 'Local Item Description',
+        selector: 'local_description',
+        grow: 2,
+        style: {
+            fontWeight: "bold",
+        },
+    },
+    {
+        name: 'Item Description',
         selector: 'description',
         grow: 2,
         style: {
@@ -53,8 +61,9 @@ const itemTableColumns = (actioncell) => [
         },
     },
     {
-        name: 'Warehouse',
-        selector: 'warehouse',
+        name: 'Local Unit',
+        selector: 'local_unit',
+        center: true,
     },
     {
         name: 'Unit',
@@ -62,23 +71,8 @@ const itemTableColumns = (actioncell) => [
         center: true,
     },
     {
-        name: 'Unit Price 1',
-        selector: 'unit_price_1',
-        right: true,
-    },
-    {
-        name: 'VAT Type 1',
-        selector: 'vat_type_1',
-        center: true,
-    },
-    {
-        name: 'Unit Price 2',
-        selector: 'unit_price_2',
-        right: true,
-    },
-    {
-        name: 'VAT Type 2',
-        selector: 'vat_type_2',
+        name: 'Item Quant.',
+        selector: 'item_quant',
         center: true,
     },
 ]

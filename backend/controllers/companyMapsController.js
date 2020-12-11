@@ -28,9 +28,9 @@ exports.newCompanyMap = async (req, res) => {
   }
 
   // check if other company exists
-  const mapCompany = await req.app.db('companies').where({ id: req.body.map_company_id }).first();
+  const mapCompany = await req.app.db('companies').where({ id: req.body.map_company_id, company_key: req.body.local_id }).first();
   if (!mapCompany) {
-    return res.status(400).json(`Company with ID (${req.body.map_company_id}) does not exist!`);
+    return res.status(400).json(`There is no registered company with those IDs!`);
   }
 
   // check if mapping already exists
@@ -45,8 +45,9 @@ exports.newCompanyMap = async (req, res) => {
     return res.status(400).json(`There is already a company mapping for Local ID ${req.body.local_id} in this company!`);
   }
 
+  // create company mappings
   try {
-    // create new company mapping
+    // create new company mapping for this company
     const companyMap = await req.app.db('company_maps').insert([{
       company_id: req.params.id,
       local_id: req.body.local_id,
