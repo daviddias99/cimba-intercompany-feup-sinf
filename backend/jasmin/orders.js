@@ -90,3 +90,5 @@ exports.getSalesInvoice = async (companyId, invoiceId) => (await makeRequest(`bi
 exports.getSalesDelivery = async (companyId, deliveryId) => (await makeRequest(`shipping/deliveries/${deliveryId}`, 'get', companyId)).data;
 
 exports.getSalesFinancial = async (companyId, id) => (await makeRequest(`/accountsReceivable/receipts/${id}`, 'get', companyId)).data;
+
+exports.getPayments = async (companyId) => (await makeRequest('accountsPayable/payments', 'get', companyId)).data;

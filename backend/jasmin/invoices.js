@@ -3,7 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addInvoiceToOrder } = require('../database/methods/orderMethods');
-const { getOrderById } = require('./orders');
+const { getPurchaseOrder } = require('./orders');
 
 async function getAvailableLinesForInvoice(buyer, index, numLines) {
   return (await makeRequest(
@@ -24,10 +24,10 @@ async function getOrdersKeyAndLines(orderIds, lines, icIdBuyer) {
     if (docId == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
     // eslint-disable-next-line no-await-in-loop
-    const orderBuyer = await getOrderById(icIdBuyer, docId);
+    const orderBuyer = await getPurchaseOrder(icIdBuyer, docId);
 
     orderKeysAndLines.push({
-      key: `${orderBuyer.data.documentType}.${orderBuyer.data.serie}.${orderBuyer.data.seriesNumber}`,
+      key: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,
       line: lines[i],
     });
   }
@@ -65,11 +65,12 @@ exports.createInvoice = async (
   const orderKeysAndLines = await getOrdersKeyAndLines(purchaseOrderIds, lines, icIdBuyer);
 
   // Filter the available lines with the lines sent by the suplier
-  const availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
+  let availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
 
-  availableLinesForInvoice.filter((element) => orderKeysAndLines.includes(
-    { key: element.orderKey, line: element.orderLineNumber },
-  ));
+  availableLinesForInvoice = availableLinesForInvoice.filter(
+    (element) => orderKeysAndLines.some((match) => match.key === element.orderKey
+                                              && match.line === element.orderLineNumber),
+  );
 
   const invoices = await makeRequest(
     `invoiceReceipt/processOrders/${buyer.company_key}`,

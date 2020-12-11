@@ -1,8 +1,11 @@
-const { addOrder, addDeliveryToOrder, addInvoiceToOrder } = require('../database/methods/orderMethods');
+const {
+  addOrder, addDeliveryToOrder, addInvoiceToOrder, addPaymentToOrder,
+} = require('../database/methods/orderMethods');
 const { createOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');
 const { createInvoice } = require('../jasmin/invoices');
 const { isStandardOrder } = require('../jasmin/utils');
+const { createSalesReceipt } = require('../jasmin/salesReceipt');
 
 exports.newOrder = async (companyId, order) => {
   console.log(`Start process for order ${order.id} from company ${companyId}`);
@@ -58,6 +61,24 @@ exports.newDeliveryNote = async (companyId, delivery) => {
       delivery.party,
       companyId,
       delivery.documentLines,
+    );
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.newPayment = async (companyId, payment) => {
+  console.log(`Detect new payment ${payment.id} from company ${companyId}`);
+
+  payment.documentLines.forEach(
+    (line) => addPaymentToOrder(companyId, line.sourceDocId, payment.id),
+  );
+
+  try {
+    await createSalesReceipt(
+      payment.accountingParty,
+      companyId,
+      payment.documentLines,
     );
   } catch (error) {
     console.log(error.message);
