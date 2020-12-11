@@ -1,6 +1,7 @@
-const { addOrder, addGoodsReceiptToOrder } = require('../database/methods/orderMethods');
+const { addOrder, addDeliveryToSalesOrder, addInvoiceToSalesOrder } = require('../database/methods/orderMethods');
 const { createSalesOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');
+const { createInvoice } = require('../jasmin/invoices');
 
 exports.newPurchaseOrder = async (companyId, order) => {
   console.log(`Start process for order ${order.id} from company ${companyId}`);
@@ -22,6 +23,21 @@ exports.newPurchaseOrder = async (companyId, order) => {
 
 exports.newInvoice = async (companyId, invoice) => {
   console.log(`Detect new invoice ${invoice.id} from company ${companyId}`);
+
+  const salesOrdersId = new Set(invoice.documentLines.map(
+    (documentLines) => documentLines.sourceDocId,
+  ));
+  salesOrdersId.forEach(
+    (sourceDocId) => addInvoiceToSalesOrder(companyId, sourceDocId, invoice.id),
+  );
+
+  try {
+    await createInvoice(invoice.buyerCustomerParty,
+      companyId,
+      invoice.documentLines);
+  } catch (error) {
+    console.log(error.message);
+  }
 };
 
 exports.newDeliveryNote = async (companyId, delivery) => {
@@ -31,7 +47,7 @@ exports.newDeliveryNote = async (companyId, delivery) => {
     (documentLines) => documentLines.sourceDocId,
   ));
   salesOrdersId.forEach(
-    (sourceDocId) => addGoodsReceiptToOrder(companyId, sourceDocId, delivery.id),
+    (sourceDocId) => addDeliveryToSalesOrder(companyId, sourceDocId, delivery.id),
   );
 
   try {
