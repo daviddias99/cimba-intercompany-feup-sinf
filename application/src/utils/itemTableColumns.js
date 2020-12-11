@@ -14,6 +14,10 @@ const insertItemForm = [
     {
         title: "Item ID (on other company)",
         id: "item_id"
+    },
+    {
+        title: "Item Quantity",
+        id: "item_quant"
     }
 ]
 

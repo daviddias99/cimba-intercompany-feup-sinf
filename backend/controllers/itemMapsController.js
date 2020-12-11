@@ -50,6 +50,12 @@ exports.newItemMap = async (req, res) => {
     return res.status(400).json(`Company ID is not a valid number!`);
   }
 
+  // check if item_quant is a valid decimal number
+  if (!(!isNaN(req.body.item_quant) && parseFloat(req.body.item_quant))) {
+    return res.status(400).json(`Company ID is not a valid number!`);
+  }
+
+
   // check if company mapping exists
   const companyMapping = await req.app.db('item_maps').where({ company_id: req.params.id, map_company_id: req.body.map_company_id });
   if (!companyMapping.length) {

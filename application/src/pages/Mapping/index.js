@@ -202,7 +202,7 @@ const Mapping = () => {
         else {
           console.log(res)
           const errorMsg = res.data.error.response.data['type'] === 'validator' ? 
-            'The data in the form was invalid.'
+            'The data in the form was invalid or incomplete.'
             :
             res.data.error.response.data
 
@@ -230,7 +230,7 @@ const Mapping = () => {
         }
         else {
           const errorMsg = res.data.error.response.data['type'] === 'validator' ? 
-            'The data in the form was invalid.'
+            'The data in the form was invalid or incomplete.'
             :
             res.data.error.response.data
 

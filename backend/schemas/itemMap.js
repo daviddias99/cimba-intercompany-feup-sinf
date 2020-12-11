@@ -11,5 +11,8 @@ module.exports = {
     map_company_id: {
       type: 'string',
     },
+    item_quant: {
+      type: 'string',
+    },
   },
 };
