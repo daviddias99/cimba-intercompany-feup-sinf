@@ -1,25 +1,25 @@
 exports.allCompanyMaps = async (req, res) => {
-  const companyMaps = await req.app.db('company_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'company_key']);
+  const companyMaps = await req.app.db('company_maps').where({ ic_id: req.params.id }).select(['id', 'ic_id', 'jasmin_id', 'map_ic_id']);
   return res.json(companyMaps);
 };
 
 exports.newCompanyMap = async (req, res) => {
   const ownerCompany = await req.app.db('companies').where({ id: req.params.id }).first();
 
-  if (ownerCompany.company_key === req.body.company_key) {
-    return res.status(400).json(`Owner's Company ID should be different from CompanyMaps Company Key (${req.body.company_key})!`);
+  if (ownerCompany.map_ic_id === req.body.map_ic_id) {
+    return res.status(400).json(`Owner's Company ID should be different from mapped IC ID(${req.body.map_ic_id})!`);
   }
 
-  const mapsForTheSameLocalID = await req.app.db('company_maps').where({ company_id: req.params.id, local_id: req.body.local_id });
+  const mapsForTheSameLocalID = await req.app.db('company_maps').where({ ic_id: req.params.id, jasmin_id: req.body.jasmin_id });
 
   if (mapsForTheSameLocalID.length) {
-    return res.status(400).json(`There is already a map for local_id ${req.body.local_id} in company ${req.params.id} !`);
+    return res.status(400).json(`There is already a map for jasmin_id ${req.body.jasmin_id} in company ${req.params.id} !`);
   }
 
   const companyMap = await req.app.db('company_maps').insert([{
-    company_id: req.params.id,
-    local_id: req.body.local_id,
-    company_key: req.body.company_key,
-  }], ['id', 'company_id', 'local_id', 'company_key']);
+    ic_id: req.params.id,
+    jasmin_id: req.body.jasmin_id,
+    map_ic_id: req.body.map_ic_id,
+  }], ['id', 'ic_id', 'jasmin_id', 'map_ic_id']);
   return res.status(201).json(companyMap);
 };

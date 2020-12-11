@@ -10,6 +10,9 @@
 
   .navbar-button-wrapper {
 
+    display: flex;
+    align-items: center;
+
     img {
       padding-left: 1em;
       padding-right: 1em;
@@ -34,4 +37,9 @@
       text-align: center;
     }
   }
+}
+
+.navbar-button-wrapper > * {
+  display: flex;
+  align-items: center;
 }
