@@ -5,12 +5,12 @@ import React from 'react';
 import './styles.scss';
 
 function getSteps() {
-  return {purchase: ['Order', 'Transp.', 'Invoice', 'Payment',], sale: ['Order', 'Invoice', 'Receipt']};
+  return {sale: ['Order', 'Transp.', 'Invoice', 'Receipt',], purchase: ['Order', 'Transp.', 'Invoice', 'Payment']};
 }
 
 const OverviewOrderStatus = ({ row }) => {
 
-  const colorFromStatyus = {
+  const colorFromStatus = {
     0: '#052423',
     1: '#0B5351',
     2: '#00A9A5',
@@ -20,9 +20,8 @@ const OverviewOrderStatus = ({ row }) => {
 
   const style = {
     opacity: 1,
-    color: colorFromStatyus[row.statusCode],
+    color: colorFromStatus[row.state],
   }
-
   return (
     <div className='overviewStatusCell'>
       <LightTooltip

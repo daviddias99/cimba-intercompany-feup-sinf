@@ -17,6 +17,7 @@ import { purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice,
 
 import api from 'services/api';
 import './styles.scss';
+import GoodsReceipt from './Documents/Buyer/GoodsReceipt';
 
 /*
  * 
@@ -36,36 +37,6 @@ import './styles.scss';
    } 
  */
 
-const buyerPropsExample = {
-  date: '12/12/2020',
-  processId: 'ECF-2',
-  companyName: 'Mister Cimba',
-  statusCode: 3,
-  status: 'Payment',
-  currentStep: 3,
-  data: {
-    order: purchaseOrder,
-    delivery: null,
-    invoice: buyerInvoice,
-    payment: payment
-  }
-}
-
-const sellerPropsExample = {
-  date: '12/12/2020',
-  processId: 'ECF-2',
-  companyName: 'Mister Cimba',
-  statusCode: 3,
-  status: 'Payment',
-  currentStep: 2,
-  data: {
-    order: salesOrder,
-    delivery: sellerDelivery,
-    invoice: sellerInvoice,
-    payment: receipt
-  }
-}
-
 const getComponent = (id, data, type) => {
   return {
     sale: [
@@ -76,6 +47,7 @@ const getComponent = (id, data, type) => {
     ],
     purchase: [
       <BuyerOrder orderData={data} title='Purchase Order Details' />,
+      <GoodsReceipt delivery={data} title='Goods Receipt details'/>,
       <BuyerInvoice invoice={data} title='Invoice Details' />,
       <Payment payment={data} title='Payment Details' />,
     ]
@@ -92,6 +64,7 @@ const apiRequests = (id, type) => {
     ],
     purchase: [
       api.getOrder,
+      api.getTransportation,
       api.getInvoice,
       api.getFinancial,
     ]
@@ -127,12 +100,6 @@ const Process = (props) => {
 
     endpoint(processId, callback);
   }, [redirect, processId, shownStep, type]);
-  // useEffect(
-  //   () => {
-  //     // Do initial API call
-  //     setShownCard(prp[shownStep])
-  //   }, [shownStep]
-  // );
 
   return (
     <Layout title={`Process ${processId}`}>
