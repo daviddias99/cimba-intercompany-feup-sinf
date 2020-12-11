@@ -5,9 +5,9 @@ const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods'
 const { addInvoiceToPurchaseOrder } = require('../database/methods/orderMethods');
 const { getOrderById } = require('./orders');
 
-async function getAvailableLinesForInvoice(buyer) {
+async function getAvailableLinesForInvoice(buyer, index, numLines) {
   return (await makeRequest(
-    'invoiceReceipt/processOrders/1/50',
+    `invoiceReceipt/processOrders/${index}/${numLines}`,
     'get',
     buyer.id,
     { company: buyer.company_key },
@@ -65,7 +65,7 @@ exports.createInvoice = async (
   const orderKeysAndLines = await getOrdersKeyAndLines(purchaseOrderIds, lines, icIdBuyer);
 
   // Filter the available lines with the lines sent by the suplier
-  const availableLinesForInvoice = await getAvailableLinesForInvoice(buyer);
+  const availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
 
   availableLinesForInvoice.filter((element) => orderKeysAndLines.includes(
     { key: element.orderKey, line: element.orderLineNumber },
