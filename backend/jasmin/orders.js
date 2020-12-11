@@ -36,7 +36,11 @@ exports.createSalesOrder = async (
   const documentLinesMapped = [];
   mapPromises.forEach((element, index) => {
     if (element == null) throw new ReferenceError(`Cannot Map Item number ${index}`);
-    documentLinesMapped.push({ salesItem: element });
+    documentLinesMapped.push({
+      salesItem: element,
+      quantity: documentLines[index].quantity,
+      unitPrice: documentLines[index].unitPrice,
+    });
   });
 
   const salesOrder = await makeRequest(
