@@ -47,7 +47,7 @@ const getComponent = (id, data, type) => {
     ],
     purchase: [
       <BuyerOrder orderData={data} title='Purchase Order Details' />,
-      <GoodsReceipt deliveryData={data} title='Goods Receipt details'/>,
+      <GoodsReceipt delivery={data} title='Goods Receipt details'/>,
       <BuyerInvoice invoice={data} title='Invoice Details' />,
       <Payment payment={data} title='Payment Details' />,
     ]

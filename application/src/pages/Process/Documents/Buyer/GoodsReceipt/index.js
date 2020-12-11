@@ -7,7 +7,7 @@ const GoodsReceipt = (props) => {
   const deliveryData = props.delivery
   return (
     <Card title={`Goods Receipt`}>
-      <p>We have received a goods receipt regarding this order ({deliveryData.deliveryId}). We can't show it right now.</p>
+      <p>We have received a goods receipt with this Jasmin ID: {deliveryData.deliveryId} . But can't show it right now :(</p>
     </Card>
   );
 }
