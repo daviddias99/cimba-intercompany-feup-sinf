@@ -40,7 +40,7 @@ exports.getTransportation = async (req, res) => {
 
   let document;
   if (process.type === 'purchase') {
-    document = { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' };
+    document = { deliveryId: process.delivery_id };
   } else if (process.type === 'sale') {
     document = await jasmin.getSalesDelivery(process.ic_id, process.delivery_id);
   }
