@@ -49,11 +49,12 @@ exports.up = function (knex) {
       table.timestamp('createdAt', { useTz: true }).defaultTo(knex.fn.now());
     })
     .createTable('orders', (table) => {
+      table.increments();
       table.integer('ic_id').unsigned();
       table.foreign('ic_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.string('order_id').notNullable();
       table.unique('order_id');
-      table.timestamp('jasmin_created_on').defaultTo(knex.fn.now());
+      table.timestamp('created_on').defaultTo(knex.fn.now());
       table.enu('type', ['purchase', 'sale'], { useNative: true, enumName: 'order_type' }).notNullable();
       table.string('invoice_id');
       table.string('delivery_id');

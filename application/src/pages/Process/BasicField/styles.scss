@@ -1,0 +1,29 @@
+.itemField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1em;
+
+  input {
+    margin-top: 5px;
+    margin: 5px 1.2em 0em 0em;
+    height: 40px;
+    padding: 1em;
+    border: 1px solid rgba(0, 0, 0, 0.32);
+    box-sizing: border-box;
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.15);
+    border-radius: 4px 4px 4px 4px;
+
+    &.small{
+      width: 25em;
+    }
+
+    &.large{
+      width: 34em;
+    }
+  }
+
+  input:disabled {
+    background: #f1f1f1;
+  }
+}
+

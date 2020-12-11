@@ -14,8 +14,11 @@ const routes = {
   logout: '/logout',
   getSettings: (userId) => (`/users/${userId}/company`),
   setSettings: (userId) => (`/users/${userId}/company`),
-  getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
-  getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
+  getOrder: (processId) => (`/process/${processId}/order`),
+  getTransportation: (processId) => (`/process/${processId}/transportation`),
+  getInvoice: (processId) => (`/process/${processId}/invoice`),
+  getFinancial: (processId) => (`/process/${processId}/financial`),
+  getProcesses: '/process',
 };
 
 /**
@@ -83,6 +86,22 @@ const api = {
   setSettings: (userId, data, callback) => {
     request(routes.setSettings(userId), 'post', data, callback);
   },
+  getOrder: (processId, callback) => {
+    request(routes.getOrder(processId), 'get', null, callback)
+  },
+  getTransportation: (processId, callback) => {
+    request(routes.getTransportation(processId), 'get', null, callback)
+  },
+  getInvoice: (processId, callback) => {
+    request(routes.getInvoice(processId), 'get', null, callback)
+  },
+  getFinancial: (processId, callback) => {
+    request(routes.getFinancial(processId), 'get', null, callback)
+  },
+  getProcesses: (callback) => {
+    request(routes.getProcesses, 'get', null, callback)
+  }
+
 };
 
 export default api;

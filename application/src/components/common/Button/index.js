@@ -10,12 +10,12 @@ const BtnType = {
   text: 'text'
 };
 
-const Button = ({ color = 'primary', btnType, type = BtnType.filled, disabled = false, loading = false, fullwidth = false, onClick, children }) => {
+const Button = ({ color = 'primary', btnType, isUppercase=true, type = BtnType.filled, disabled = false, loading = false, fullwidth = false, onClick, children }) => {
   return (
     <button
       type={btnType}
       onClick={onClick}
-      className={cx('button', 'is-uppercase',
+      className={cx('button', isUppercase ? 'is-uppercase' : '',
         type !== BtnType.text ? `is-${color}` : '',
         type === BtnType.text ? `has-text-${color}` : '', {
           'is-outlined': type === BtnType.outlined,

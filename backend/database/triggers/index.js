@@ -6,8 +6,8 @@ const MOST_RECENT_ORDER_TRIGGER_UP = `
     BEGIN
         SELECT most_recent_order INTO previous_most_recent FROM "companies" WHERE id = NEW.ic_id FOR UPDATE;
 
-        IF NEW.jasmin_created_on > previous_most_recent THEN
-            UPDATE "companies" SET most_recent_order = NEW.jasmin_created_on WHERE id = NEW.ic_id;
+        IF NEW.created_on > previous_most_recent THEN
+            UPDATE "companies" SET most_recent_order = NEW.created_on WHERE id = NEW.ic_id;
         END IF;
 
         RETURN NEW;
