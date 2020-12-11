@@ -1,5 +1,5 @@
 const {
-  addOrder, addDeliveryToSalesOrder, addInvoiceToSalesOrder, addPaymentToOrder
+  addOrder, addDeliveryToSalesOrder, addInvoiceToSalesOrder, addPaymentToOrder,
 } = require('../database/methods/orderMethods');
 const { createSalesOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');

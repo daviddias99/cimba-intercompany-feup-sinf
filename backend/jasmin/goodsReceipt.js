@@ -3,7 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addDeliveryToPurchaseOrder } = require('../database/methods/orderMethods');
-const { getOrderById } = require('./orders');
+const { getPurchaseOrder } = require('./orders');
 
 async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
   const documentLinesMapped = [];
@@ -14,12 +14,12 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer
     if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
     // eslint-disable-next-line no-await-in-loop
-    const orderBuyer = await getOrderById(icIdBuyer, elementPromise);
+    const orderBuyer = await getPurchaseOrder(icIdBuyer, elementPromise);
 
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
       quantity: docLines.quantity,
-      sourceDocKey: `${orderBuyer.data.documentType}.${orderBuyer.data.serie}.${orderBuyer.data.seriesNumber}`,
+      sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,
     });
   }
 
