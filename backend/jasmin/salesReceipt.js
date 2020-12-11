@@ -1,8 +1,8 @@
 const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
-const { getMapOfDocPurchaseOrder } = require('../database/methods/orderMapsMethods');
-const { addSalesReceiptToOrder, getInvoiceOfOrder } = require('../database/methods/orderMethods');
+const { getCorrespondingSalesInvoice } = require('../database/methods/orderMapsMethods');
+const { addSalesReceiptToOrder } = require('../database/methods/orderMethods');
 
 exports.createSalesReceipt = async (
   jasminIdSupplier, // party
@@ -23,18 +23,26 @@ exports.createSalesReceipt = async (
   const salesOrderIds = [];
 
   const promises = documentLines.map(async (line) => {
-    const salesOrderId = await getMapOfDocPurchaseOrder();
-    salesOrderIds.push(salesOrderId);
+    console.log(line);
+    const purchaseInvoiceId = line.sourceDocId;
 
-    const invoice = await getInvoiceOfOrder(supplier.id, salesOrderId, 'sale');
+    const salesOrder = await getCorrespondingSalesInvoice(purchaseInvoiceId);
+
+    console.log(salesOrder);
+
+    salesOrderIds.push(salesOrder.order_id);
 
     const jasminInvoice = await makeRequest(
-      `billing/invoices/${invoice.invoice_id}`,
+      `billing/invoices/${salesOrder.invoice_id}`,
       'get',
       supplier.id,
     );
 
-    return { sourceDoc: jasminInvoice.naturalKey, settled: line.settledAmount.amount };
+    const newLine = { sourceDoc: jasminInvoice.naturalKey, settled: line.settledAmount.amount };
+
+    console.log(newLine);
+
+    return newLine;
   });
 
   const lines = await Promise.all(promises);
