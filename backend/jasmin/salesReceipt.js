@@ -38,7 +38,12 @@ exports.createSalesReceipt = async (
       supplier.id,
     );
 
-    const newLine = { sourceDoc: jasminInvoice.naturalKey, settled: line.settledAmount.amount };
+    console.log(jasminInvoice);
+
+    const newLine = {
+      sourceDoc: jasminInvoice.data.naturalKey,
+      settled: jasminInvoice.payableAmount.amount,
+    };
 
     console.log(newLine);
 
@@ -63,7 +68,7 @@ exports.createSalesReceipt = async (
     (id) => addSalesReceiptToOrder(icIdSupplier, id, salesReceipt.data),
   );
 
-  console.log(`Created goods Receipt order ${salesReceipt.data} for company ${icIdSupplier}`);
+  console.log(`Created receipt ${salesReceipt.data} for company ${icIdSupplier}`);
 
   return salesReceipt;
 };

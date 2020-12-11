@@ -17,7 +17,7 @@ exports.getMapOfDocSalesOrder = async (salesOrderDocId) => {
 exports.getCorrespondingSalesInvoice = async (purchaseInvoiceId) => {
   const invoices = await db('orders AS po')
     .join('orders_maps', 'po.order_id', 'orders_maps.purchase_order_id')
-    .join('orders AS so', 'so.order_id', 'orders_maps.sales_oredr_id')
+    .join('orders AS so', 'so.order_id', 'orders_maps.sales_order_id')
     .select('so.invoice_id ', 'so.order_id')
     .where({ 'po.invoice_id': purchaseInvoiceId })
     .first();
