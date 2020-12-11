@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button } from "components/common/Button"
 import DeleteIcon from '@material-ui/icons/Delete';
 

@@ -1,5 +1,24 @@
+const { makeRequest } = require('../jasmin/makeRequest');
+
 exports.allItemMaps = async (req, res) => {
+  // extract all item maps
   const itemMaps = await req.app.db('item_maps').where({ company_id: req.params.id }).select(['id', 'company_id', 'local_id', 'item_id', 'map_company_id']);
+  
+  // for each one, extract unit key
+  for (let i = 0; i < itemMaps.length; i++) {
+    let entry = itemMaps[i];
+    const itemInCompany = await makeRequest(`businessCore/items/${entry.item_id}`, 'get', entry.map_company_id, null, null)
+    if (itemInCompany.status === 200) {
+      itemMaps[i] = {
+        ...entry,
+        unit: itemInCompany.data.baseUnit,
+      }
+    }
+    else {
+      return res.status(400).json(`Could not extract base unit for one or more items.`);
+    }
+  }
+
   return res.json(itemMaps);
 };
 
