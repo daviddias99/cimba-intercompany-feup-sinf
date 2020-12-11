@@ -89,8 +89,7 @@ exports.newItemMap = async (req, res) => {
     return res.status(400).json(`Item with ID ${req.body.item_id} does not exist in the other company!`);
   }  
 
-  const itemQuantOther = +((1 / itemQuantLocal).toFixed(2));
-  console.log(itemQuantOther)
+  const itemQuantOther = +((1 / itemQuantLocal).toFixed(2))
 
   // create new item mappings
   try {
