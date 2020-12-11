@@ -17,6 +17,7 @@ import Process from 'pages/Process';
 const PrivateRoute = ({ children, ...rest }) => {
 
   const loggedIn = useSelector(state => state.user.loggedIn);
+  const companyInfo = window.localStorage.getItem('CIMBA_COMPANY');
 
   return (
     <Route {...rest} render={(props) => {
@@ -28,7 +29,7 @@ const PrivateRoute = ({ children, ...rest }) => {
         return child;
       });
       return loggedIn
-        ? childrenWithProps
+        ? (companyInfo === "\"\"" && rest.path!=='/settings'? <Redirect to="/settings" /> : childrenWithProps)
         : <Redirect to="/login" />;
     }}
     />
