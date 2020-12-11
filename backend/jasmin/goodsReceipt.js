@@ -1,11 +1,11 @@
 const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
-const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
+const { getMapOfDocSalesOrder, getMapOfDocPurchaseOrder } = require('../database/methods/orderMapsMethods');
 const { addDeliveryToOrder } = require('../database/methods/orderMethods');
-const { getPurchaseOrder } = require('./orders');
+const { getPurchaseOrder, getSalesOrder } = require('./orders');
 
-async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
+async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer, isDefault) {
   const documentLinesMapped = [];
   for (let i = 0; i < purchaseOrderIds.length && i < documentLines.length; i += 1) {
     const elementPromise = purchaseOrderIds[i];
@@ -14,8 +14,11 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer
     if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
     // TODO: if return delivery getSalesOrder
-    // eslint-disable-next-line no-await-in-loop
-    const orderBuyer = await getPurchaseOrder(icIdBuyer, elementPromise);
+    const orderBuyer = isDefault
+      // eslint-disable-next-line no-await-in-loop
+      ? await getPurchaseOrder(icIdBuyer, elementPromise)
+      // eslint-disable-next-line no-await-in-loop
+      : await getSalesOrder(icIdBuyer, elementPromise);
 
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
@@ -31,6 +34,7 @@ exports.createGoodsReceipt = async (
   jasminIdBuyer, // party
   icIdSuplier,
   documentLines,
+  isDefault,
 ) => {
   // Getting intercompany id of buyer
   const icIdBuyer = await jasminToIcId(icIdSuplier, jasminIdBuyer);
@@ -45,14 +49,16 @@ exports.createGoodsReceipt = async (
 
   // Translate documentLines
   let purchaseOrderIds = [];
-  documentLines.forEach((element) => purchaseOrderIds.push(
-    getMapOfDocSalesOrder(element.sourceDocId, icIdSuplier),
-  ));
+  documentLines.forEach((element) => {
+    purchaseOrderIds.push(isDefault
+      ? getMapOfDocSalesOrder(element.sourceDocId, icIdSuplier)
+      : getMapOfDocPurchaseOrder(element.sourceDocId, icIdSuplier));
+  });
 
   purchaseOrderIds = await Promise.all(purchaseOrderIds);
 
   const documentLinesMapped = await getDocumentLinesMapped(
-    purchaseOrderIds, documentLines, icIdBuyer,
+    purchaseOrderIds, documentLines, icIdBuyer, isDefault,
   );
 
   const goodsReceipt = await makeRequest(
@@ -69,7 +75,10 @@ exports.createGoodsReceipt = async (
 
   const buyerOrderId = new Set(purchaseOrderIds);
   buyerOrderId.forEach(
-    (sourceDocId) => addDeliveryToOrder(icIdBuyer, sourceDocId, goodsReceipt.data, 'purchase'),
+    (sourceDocId) => {
+      const orderType = isDefault ? 'purchase' : 'return_sale';
+      addDeliveryToOrder(icIdBuyer, sourceDocId, goodsReceipt.data, orderType);
+    },
   );
 
   console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${icIdBuyer}`);

@@ -10,7 +10,9 @@ const { createSalesReceipt } = require('../jasmin/salesReceipt');
 exports.newOrder = async (companyId, order) => {
   console.log(`Start process for order ${order.id} from company ${companyId}`);
 
-  const orderType = isStandardOrder(order.orderNature) ? 'purchase' : 'return_purchase';
+  const isStandard = isStandardOrder(order.orderNature);
+  const orderType = isStandard ? 'purchase' : 'return_purchase';
+
   await addOrder(companyId, order.id, orderType, order.createdOn);
 
   try {
@@ -20,7 +22,7 @@ exports.newOrder = async (companyId, order) => {
       order.deliveryTerm,
       order.documentLines,
       order.id,
-      order.orderNature,
+      isStandard,
     );
   } catch (error) {
     console.log(error.message);
@@ -46,14 +48,18 @@ exports.newInvoice = async (companyId, invoice) => {
   }
 };
 
-exports.newDeliveryNote = async (companyId, delivery) => {
+exports.newDeliveryNote = async (companyId, delivery, isDefault) => {
+  console.log(`DELIVERY ${isDefault}`);
   console.log(`Detect new delivery note ${delivery.id} from company ${companyId}`);
 
   const salesOrdersId = new Set(delivery.documentLines.map(
     (documentLines) => documentLines.sourceDocId,
   ));
   salesOrdersId.forEach(
-    (sourceDocId) => addDeliveryToOrder(companyId, sourceDocId, delivery.id, 'sale'),
+    (sourceDocId) => {
+      const orderType = isDefault ? 'sale' : 'return_purchase';
+      addDeliveryToOrder(companyId, sourceDocId, delivery.id, orderType);
+    },
   );
 
   try {
@@ -61,6 +67,7 @@ exports.newDeliveryNote = async (companyId, delivery) => {
       delivery.party,
       companyId,
       delivery.documentLines,
+      isDefault,
     );
   } catch (error) {
     console.log(error.message);

@@ -19,7 +19,7 @@ const MOST_RECENT_ORDER_TRIGGER_UP = `
     DROP TRIGGER IF EXISTS update_most_recent_order ON orders;
     CREATE TRIGGER update_most_recent_order
         BEFORE INSERT ON orders
-        FOR EACH ROW WHEN (NEW.type = 'purchase')
+        FOR EACH ROW WHEN (NEW.type = 'purchase' or NEW.type = 'return_purchase')
         EXECUTE PROCEDURE update_most_recent_order_proc();
 `;
 const MOST_RECENT_ORDER_TRIGGER_DOWN = `

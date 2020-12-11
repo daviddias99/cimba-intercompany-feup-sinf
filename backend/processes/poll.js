@@ -1,5 +1,8 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
-const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment } = require('../database/methods/orderMethods');
+const {
+  getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment,
+  getReturnOrdersNoDelivery,
+} = require('../database/methods/orderMethods');
 const {
   getOrders, getInvoices, getDeliveries, getPayments,
 } = require('../jasmin/orders');
@@ -49,6 +52,9 @@ const pollDeliveryCompany = async (companyId) => {
   const salesOrders = await getSalesOrdersNoDelivery(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
 
+  const returnOrders = await getReturnOrdersNoDelivery(companyId);
+  const returnOrdersId = new Set(returnOrders.map((order) => order.order_id));
+
   const deliveries = await getDeliveries(companyId);
 
   const newDeliveries = deliveries.filter((delivery) => delivery.documentLines.some((line) => {
@@ -56,7 +62,15 @@ const pollDeliveryCompany = async (companyId) => {
     return salesOrdersId.has(orderId);
   }));
 
-  newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery));
+  const newReturnDeliveries = deliveries.filter((delivery) => delivery.documentLines.some(
+    (line) => {
+      const orderId = line.sourceDocId;
+      return returnOrdersId.has(orderId);
+    },
+  ));
+
+  newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, false));
+  newReturnDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, true));
 };
 
 exports.pollDelivery = async () => {

@@ -28,6 +28,8 @@ exports.getSalesOrdersNoInvoice = async (icId) => db('orders').select('order_id'
 
 exports.getSalesOrdersNoDelivery = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'sale', delivery_id: null });
 
+exports.getReturnOrdersNoDelivery = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'return_purchase', delivery_id: null });
+
 exports.addDeliveryToOrder = async (icId, orderId, goodsReceiptId, type) => db('orders').where({
   ic_id: icId, order_id: orderId, type, delivery_id: null,
 }).update({ delivery_id: goodsReceiptId });

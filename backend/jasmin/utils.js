@@ -1,1 +1,1 @@
-exports.isStandardOrder = async (orderNature) => orderNature === 1;
+exports.isStandardOrder = (orderNature) => orderNature === 1;
