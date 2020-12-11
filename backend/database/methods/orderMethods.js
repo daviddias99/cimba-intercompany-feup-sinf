@@ -28,18 +28,10 @@ exports.getSalesOrdersNoInvoice = async (icId) => db('orders').select('order_id'
 
 exports.getSalesOrdersNoDelivery = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'sale', delivery_id: null });
 
-exports.addDeliveryToSalesOrder = async (icId, orderId, goodsReceiptId) => db('orders').where({
-  ic_id: icId, order_id: orderId, type: 'sale', delivery_id: null,
+exports.addDeliveryToOrder = async (icId, orderId, goodsReceiptId, type) => db('orders').where({
+  ic_id: icId, order_id: orderId, type, delivery_id: null,
 }).update({ delivery_id: goodsReceiptId });
 
-exports.addDeliveryToPurchaseOrder = async (icId, orderId, goodsReceiptId) => db('orders').where({
-  ic_id: icId, order_id: orderId, type: 'purchase', delivery_id: null,
-}).update({ delivery_id: goodsReceiptId });
-
-exports.addInvoiceToSalesOrder = async (icId, orderId, invoiceId) => db('orders').where({
-  ic_id: icId, order_id: orderId, type: 'sale', invoice_id: null,
-}).update({ invoice_id: invoiceId });
-
-exports.addInvoiceToPurchaseOrder = async (icId, orderId, invoiceId) => db('orders').where({
-  ic_id: icId, order_id: orderId, type: 'purchase', invoice_id: null,
+exports.addInvoiceToOrder = async (icId, orderId, invoiceId, type) => db('orders').where({
+  ic_id: icId, order_id: orderId, type, invoice_id: null,
 }).update({ invoice_id: invoiceId });

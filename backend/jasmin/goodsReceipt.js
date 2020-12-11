@@ -2,7 +2,7 @@ const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
-const { addDeliveryToPurchaseOrder } = require('../database/methods/orderMethods');
+const { addDeliveryToOrder } = require('../database/methods/orderMethods');
 const { getOrderById } = require('./orders');
 
 async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
@@ -13,6 +13,7 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer
 
     if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
+    // TODO: if return delivery getSalesOrder
     // eslint-disable-next-line no-await-in-loop
     const orderBuyer = await getOrderById(icIdBuyer, elementPromise);
 
@@ -68,7 +69,7 @@ exports.createGoodsReceipt = async (
 
   const buyerOrderId = new Set(purchaseOrderIds);
   buyerOrderId.forEach(
-    (sourceDocId) => addDeliveryToPurchaseOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
+    (sourceDocId) => addDeliveryToOrder(icIdBuyer, sourceDocId, goodsReceipt.data, 'purchase'),
   );
 
   console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${icIdBuyer}`);

@@ -2,7 +2,7 @@ const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
-const { addInvoiceToPurchaseOrder } = require('../database/methods/orderMethods');
+const { addInvoiceToOrder } = require('../database/methods/orderMethods');
 const { getOrderById } = require('./orders');
 
 async function getAvailableLinesForInvoice(buyer, index, numLines) {
@@ -85,7 +85,7 @@ exports.createInvoice = async (
 
   const buyerOrderIds = new Set(purchaseOrderIds);
   buyerOrderIds.forEach(
-    (sourceDocId) => addInvoiceToPurchaseOrder(icIdBuyer, sourceDocId, invoices.data),
+    (sourceDocId) => addInvoiceToOrder(icIdBuyer, sourceDocId, invoices.data, 'purchase'),
   );
 
   console.log(`Created Invoice ${invoices.data} for company ${icIdBuyer}`);
