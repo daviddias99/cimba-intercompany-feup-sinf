@@ -55,7 +55,7 @@ exports.up = function (knex) {
       table.string('order_id').notNullable();
       table.unique('order_id');
       table.timestamp('created_on').defaultTo(knex.fn.now());
-      table.enu('type', ['purchase', 'sale'], { useNative: true, enumName: 'order_type' }).notNullable();
+      table.enu('type', ['purchase', 'sale', 'return_purchase', 'return_sale'], { useNative: true, enumName: 'order_type' }).notNullable();
       table.string('invoice_id');
       table.string('delivery_id');
       table.string('payment_id');

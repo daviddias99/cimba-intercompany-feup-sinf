@@ -4,15 +4,17 @@ const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
+const { isStandardOrder } = require('./utils');
 
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
-exports.createSalesOrder = async (
+exports.createOrder = async (
   icIdBuyer,
   jasminIdSuplier,
   deliveryTerm,
   documentLines,
   purchaseOrderId,
+  orderNature,
 ) => {
   // Getting ic id of suplier
   const icIdSuplier = await jasminToIcId(icIdBuyer, jasminIdSuplier);
@@ -43,12 +45,15 @@ exports.createSalesOrder = async (
     });
   });
 
+  const documentType = isStandardOrder(orderNature) ? 'DEV' : undefined;
+
   const salesOrder = await makeRequest(
     'sales/orders',
     'post',
     suplier.id,
     {},
     {
+      documentType,
       company: suplier.company_key,
       buyerCustomerParty: jasminIdBuyer,
       deliveryTerm,
@@ -56,7 +61,12 @@ exports.createSalesOrder = async (
     },
   );
 
-  await addOrder(icIdSuplier, salesOrder.data, 'sale');
+  if (salesOrder.status !== 201) {
+    return salesOrder;
+  }
+
+  const orderType = isStandardOrder(orderNature) ? 'sale' : 'return_sale';
+  await addOrder(icIdSuplier, salesOrder.data, orderType);
   await addOrderMaps(purchaseOrderId, salesOrder.data);
   console.log(`Created sales order ${salesOrder.data} for company ${icIdSuplier}`);
 

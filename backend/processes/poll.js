@@ -1,7 +1,7 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
 const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery } = require('../database/methods/orderMethods');
 const { getOrders, getInvoices, getDeliveries } = require('../jasmin/orders');
-const { newPurchaseOrder, newInvoice, newDeliveryNote } = require('./purchase');
+const { newOrder, newInvoice, newDeliveryNote } = require('./purchase');
 
 const pollOrdersCompany = async (companyId) => {
   const orders = await getOrders(companyId);
@@ -10,10 +10,11 @@ const pollOrdersCompany = async (companyId) => {
 
   const newOrders = orders.data.filter((order) => {
     const time = new Date(order.createdOn);
-    return !order.autoCreated && order.orderNature === 1 && time.getTime() > mostRecentOrderTime;
+
+    return !order.autoCreated && time.getTime() > mostRecentOrderTime;
   });
 
-  newOrders.forEach((order) => newPurchaseOrder(companyId, order));
+  newOrders.forEach((order) => newOrder(companyId, order));
 };
 
 exports.pollPurchaseOrders = async () => {
