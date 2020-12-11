@@ -65,12 +65,14 @@ exports.createInvoice = async (
   const orderKeysAndLines = await getOrdersKeyAndLines(purchaseOrderIds, lines, icIdBuyer);
 
   // Filter the available lines with the lines sent by the suplier
-  const availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
+  let availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
 
-  availableLinesForInvoice.filter((element) => orderKeysAndLines.includes(
-    { key: element.orderKey, line: element.orderLineNumber },
-  ));
+  availableLinesForInvoice = availableLinesForInvoice.filter(
+    (element) => orderKeysAndLines.some((match) => match.key === element.orderKey
+                                              && match.line === element.orderLineNumber),
+  );
 
+  
   const invoices = await makeRequest(
     `invoiceReceipt/processOrders/${buyer.company_key}`,
     'post',
