@@ -81,20 +81,27 @@ const Login = () => {
 
     api.login({ username, password },
       (res) => {
-        setLoading(false);
-        if (res.data.status === 200) {
-          dispatch(loadUser({token: res.data.token, data: res.data.data}));
-        } else {
-          setError(true);
-          setToastList([
-            ...toastList, {
-              id: numErrors++,
-              title: 'Wrong Credentials',
-              description: 'Form data does not match our records.',
-              color: 'danger',
-            }
-          ]);
-        }
+
+        api.getSettings(res.data.data.id, (response) => {
+
+          setLoading(false);
+          if (res.data.status === 200) {
+            window.localStorage.setItem('CIMBA_COMPANY', JSON.stringify(response.data));
+
+            dispatch(loadUser({ token: res.data.token, data: res.data.data }));
+          } else {
+            setError(true);
+            setToastList([
+              ...toastList, {
+                id: numErrors++,
+                title: 'Wrong Credentials',
+                description: 'Form data does not match our records.',
+                color: 'danger',
+              }
+            ]);
+          }
+        });
+
       },
       (error) => {
         console.log(`login error: ${error}`);
@@ -128,22 +135,22 @@ const Login = () => {
         <div className="hero-body container columns is-centered has-text-centered my-0">
           <div className="login-card card py-5">
             <Logo large alt />
-              <div className="card-content">
-                <form onSubmit={onSubmit}>
-                  <div className="field">
-                    <div className="control">
-                      <input className="input" name="username" placeholder="Username" onChange={handleUserNameChange} />
-                    </div>
+            <div className="card-content">
+              <form onSubmit={onSubmit}>
+                <div className="field">
+                  <div className="control">
+                    <input className="input" name="username" placeholder="Username" onChange={handleUserNameChange} />
                   </div>
-                  <div className="field">
-                    <div className="control">
-                      <input className="input" name="password" type="password" placeholder="Password" onChange={handlePasswordChange} />
-                    </div>
+                </div>
+                <div className="field">
+                  <div className="control">
+                    <input className="input" name="password" type="password" placeholder="Password" onChange={handlePasswordChange} />
                   </div>
-                  <Button fullwidth loading={loading}>login</Button>
-                </form>
-              </div>
+                </div>
+                <Button fullwidth loading={loading}>login</Button>
+              </form>
             </div>
+          </div>
         </div>
       </div >
       {getErrorToast()}

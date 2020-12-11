@@ -11,8 +11,8 @@ import Toast from 'components/common/Toast';
 let numToasts = 0;
 
 const Settings = () => {
-
-  const [data, setData] = useState(JSON.parse(window.localStorage.getItem('CIMBA_COMPANY')));
+  const initData = JSON.parse(window.localStorage.getItem('CIMBA_COMPANY'));
+  const [data, setData] = useState(initData? initData : {});
   const [toastUp, setToastUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [toastList, setToastList] = useState([]);
