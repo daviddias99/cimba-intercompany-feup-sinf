@@ -18,11 +18,11 @@ exports.getSalesOrdersNoInvoice = async (icId) => db('orders').select('order_id'
 
 exports.getSalesOrdersNoDelivery = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'sale', delivery_id: null });
 
-exports.addGoodsReceiptToSalesOrder = async (icId, orderId, goodsReceiptId) => db('orders').where({
+exports.addDeliveryToSalesOrder = async (icId, orderId, goodsReceiptId) => db('orders').where({
   ic_id: icId, order_id: orderId, type: 'sale', delivery_id: null,
 }).update({ delivery_id: goodsReceiptId });
 
-exports.addGoodsReceiptToPurchaseOrder = async (icId, orderId, goodsReceiptId) => db('orders').where({
+exports.addDeliveryToPurchaseOrder = async (icId, orderId, goodsReceiptId) => db('orders').where({
   ic_id: icId, order_id: orderId, type: 'purchase', delivery_id: null,
 }).update({ delivery_id: goodsReceiptId });
 

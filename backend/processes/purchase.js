@@ -1,4 +1,4 @@
-const { addOrder, addGoodsReceiptToSalesOrder, addInvoiceToSalesOrder } = require('../database/methods/orderMethods');
+const { addOrder, addDeliveryToSalesOrder, addInvoiceToSalesOrder } = require('../database/methods/orderMethods');
 const { createSalesOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');
 const { createInvoice } = require('../jasmin/invoices');
@@ -47,7 +47,7 @@ exports.newDeliveryNote = async (companyId, delivery) => {
     (documentLines) => documentLines.sourceDocId,
   ));
   salesOrdersId.forEach(
-    (sourceDocId) => addGoodsReceiptToSalesOrder(companyId, sourceDocId, delivery.id),
+    (sourceDocId) => addDeliveryToSalesOrder(companyId, sourceDocId, delivery.id),
   );
 
   try {

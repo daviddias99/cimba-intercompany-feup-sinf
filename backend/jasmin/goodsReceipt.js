@@ -2,7 +2,7 @@ const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
-const { addGoodsReceiptToPurchaseOrder } = require('../database/methods/orderMethods');
+const { addDeliveryToPurchaseOrder } = require('../database/methods/orderMethods');
 const { getOrderById } = require('./orders');
 
 async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
@@ -68,7 +68,7 @@ exports.createGoodsReceipt = async (
 
   const buyerOrderId = new Set(purchaseOrderIds);
   buyerOrderId.forEach(
-    (sourceDocId) => addGoodsReceiptToPurchaseOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
+    (sourceDocId) => addDeliveryToPurchaseOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
   );
 
   console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${icIdBuyer}`);
