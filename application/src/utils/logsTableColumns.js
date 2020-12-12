@@ -1,5 +1,7 @@
 import {dateTimeFormat} from './utilFuncs'
-
+import { Button } from 'components/common/Button';
+import { Link } from 'react-router-dom';
+import routes from 'routes';
 
 const docTypes = {
     purchase: {
@@ -24,16 +26,13 @@ const logsTableColumns = [
         cell: (row) => dateTimeFormat(row.created_on)
     },
     {
-        name: 'ProcessID',
-        cell: (row) => row.process_id
-    },
-    {
         name: 'Log type',
         cell: (row) => `${row.log_type === 'detect' ? 'Detect' : 'Create'}`
     },
     {
         name: 'DocumentID',
         selector: 'doc_id',
+        grow: 2,
     },
     {
         name: 'Doc. Type',
@@ -41,6 +40,22 @@ const logsTableColumns = [
             return docTypes[row.process_type][row.doc_type]
         },
     },
+    {
+        name: '',
+        cell: (row) =>
+            <Link
+                to={
+                    {
+                        pathname: routes.process.ref(row.process_id),
+                    }}
+            >
+                <Button isUppercase={false}>Go to process</Button>
+            </Link>
+        ,
+        ignoreRowClick: true,
+        allowOverflow: true,
+        button: true
+    }
 ]
 
 export default logsTableColumns;

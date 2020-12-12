@@ -10,8 +10,8 @@ const { createSalesReceipt } = require('../jasmin/salesReceipt');
 exports.newPurchaseOrder = async (companyId, order) => {
   console.log(`Start process for order ${order.id} from company ${companyId}`);
 
-  const processId = await addOrder(companyId, order.id, 'purchase', order.createdOn);
-  await addLog(processId, 'detect', order.id, 'purchase');
+  const processId = (await addOrder(companyId, order.id, 'purchase', order.createdOn))[0];
+  await addLog(processId, 'detect', order.id, 'order');
 
   try {
     await createSalesOrder(
