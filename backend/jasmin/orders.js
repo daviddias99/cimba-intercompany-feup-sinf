@@ -67,7 +67,8 @@ exports.createSalesOrder = async (
     },
   );
 
-  await addOrder(icIdSuplier, salesOrder.data, 'sale', buyer.name);
+  const salesProcessId = (await addOrder(icIdSuplier, salesOrder.data, 'sale', buyer.name))[0];
+  await addLog(salesProcessId, 'create', salesOrder.data, 'order');
   await addOrderMaps(purchaseOrderId, salesOrder.data);
   console.log(`Created sales order ${salesOrder.data} for company ${icIdSuplier}`);
 
