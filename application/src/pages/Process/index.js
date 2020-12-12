@@ -13,7 +13,7 @@ import SellerInvoice from './Documents/Seller/Invoice';
 import BuyerCreditNote from './Documents/Buyer/CreditNote';
 import SellerCreditNote from './Documents/Seller/CreditNote';
 import ProcessStepper from './ProcessStepper';
-import { purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice, receipt, payment, buyerCredit, sellerCredit } from './stubData';
+// import { purchaseOrder, salesOrder, sellerDelivery, sellerInvoice, buyerInvoice, receipt, payment, buyerCredit, sellerCredit } from './stubData';
 
 import api from 'services/api';
 import './styles.scss';

@@ -1,8 +1,8 @@
 const router = require('express').Router();
-const authenticate = require('../middlewares/authenticate');
 const regexNum = require('../helper/regexNum');
 const processController = require('../controllers/processController');
 const { getProcess } = require('../database/methods/orderMethods');
+const { associateCompany, authenticate } = require('../middlewares');
 
 async function processMiddleware(req, res, next) {
   const process = await getProcess(req.params.id);
@@ -22,6 +22,7 @@ async function processMiddleware(req, res, next) {
 }
 
 router.use(authenticate);
+router.use(associateCompany);
 router.use(`/:id(${regexNum})`, processMiddleware);
 
 router.get(`/:id(${regexNum})/order`, processController.getOrder);

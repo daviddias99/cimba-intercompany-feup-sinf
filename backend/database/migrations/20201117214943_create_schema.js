@@ -66,6 +66,15 @@ exports.up = function (knex) {
       table.string('purchase_order_id').notNullable();
       table.foreign('purchase_order_id').references('orders.order_id').onUpdate('CASCADE').onDelete('CASCADE');
     })
+    .createTable('logs', (table) => {
+      table.increments();
+      table.integer('process_id').unsigned().notNullable();
+      table.foreign('process_id').references('orders.id').onUpdate('CASCADE').onDelete('CASCADE');
+      table.enu('log_type', ['detect', 'create'], { useNative: true, enumName: 'log_type' }).notNullable();
+      table.enu('doc_type', ['order', 'delivery', 'invoice', 'payment'], { useNative: true, enumName: 'doc_type' }).notNullable();
+      table.timestamp('created_on').defaultTo(knex.fn.now());
+      table.string('doc_id').notNullable();
+    })
     .then(() => triggersUp.forEach(async (elem) => {
       await knex.schema.raw(elem);
     }));
@@ -80,6 +89,7 @@ exports.down = function (knex) {
     .dropTable('company_maps')
     .dropTable('users')
     .dropTable('companies')
+    .dropTable('logs')
     .then(() => triggersDown.forEach(async (elem) => {
       await knex.raw(elem);
     }));

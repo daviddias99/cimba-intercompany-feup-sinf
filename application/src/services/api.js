@@ -19,6 +19,7 @@ const routes = {
   getInvoice: (processId) => (`/process/${processId}/invoice`),
   getFinancial: (processId) => (`/process/${processId}/financial`),
   getProcesses: '/process',
+  getLogs: '/logs',
 };
 
 /**
@@ -100,6 +101,9 @@ const api = {
   },
   getProcesses: (callback) => {
     request(routes.getProcesses, 'get', null, callback)
+  },
+  getLogs: (callback) => {
+    request(routes.getLogs, 'get', null, callback)
   }
 
 };
