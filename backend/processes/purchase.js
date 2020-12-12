@@ -20,9 +20,8 @@ exports.newOrder = async (companyId, order) => {
     await createOrder(
       companyId,
       order.sellerSupplierParty,
-      order.deliveryTerm,
-      order.documentLines,
       order.id,
+      order,
       isStandard,
     );
   } catch (error) {

@@ -10,9 +10,8 @@ exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', 
 exports.createOrder = async (
   icIdBuyer,
   jasminIdSuplier,
-  deliveryTerm,
-  documentLines,
   purchaseOrderId,
+  order,
   isStandard,
 ) => {
   // Getting ic id of suplier
@@ -25,6 +24,8 @@ exports.createOrder = async (
 
   const suplier = await getCompanyById(icIdSuplier);
   if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdSuplier}`);
+
+  const { documentLines } = order;
 
   // Translate documentLines
   let mapPromises = [];
@@ -41,6 +42,9 @@ exports.createOrder = async (
       salesItem: element,
       quantity: documentLines[index].quantity,
       unitPrice: documentLines[index].unitPrice,
+      discount1: documentLines[index].discount1,
+      discount2: documentLines[index].discount2,
+      discount3: documentLines[index].discount3,
     });
   });
 
@@ -55,8 +59,31 @@ exports.createOrder = async (
       documentType,
       company: suplier.company_key,
       buyerCustomerParty: jasminIdBuyer,
-      deliveryTerm,
       documentLines: documentLinesMapped,
+      discount: order.discount,
+      deliveryTerm: order.deliveryTerm,
+      paymentMethod: order.paymentMethod,
+      noteToRecipient: order.noteToRecipient,
+      note: order.note,
+      remarks: order.remarks,
+      salesChannel: order.salesChannel,
+      currency: order.currency,
+      loadingPoint: order.loadingPoint,
+      loadingPointAddress: order.loadingPointAddress,
+      loadingStreetName: order.loadingStreetName,
+      loadingBuildingNumber: order.loadingBuildingNumber,
+      loadingPostalZone: order.loadingPostalZone,
+      loadingCityName: order.loadingCityName,
+      loadingDateTime: order.loadingDateTime,
+      loadingCountry: order.loadingCountry,
+      unloadingPoint: order.unloadingPoint,
+      unloadingPointAddress: order.unloadingPointAddress,
+      unloadingStreetName: order.unloadingStreetName,
+      unloadingBuildingNumber: order.unloadingBuildingNumber,
+      unloadingPostalZone: order.unloadingPostalZone,
+      unloadingCityName: order.unloadingCityName,
+      unloadingDateTime: order.unloadingDateTime,
+      unloadingCountry: order.unloadingCountry,
     },
   );
 
