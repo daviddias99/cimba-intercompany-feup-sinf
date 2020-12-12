@@ -72,7 +72,6 @@ exports.createInvoice = async (
                                               && match.line === element.orderLineNumber),
   );
 
-  
   const invoices = await makeRequest(
     `invoiceReceipt/processOrders/${buyer.company_key}`,
     'post',

@@ -4,6 +4,7 @@ const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
+const { addLog } = require('../database/methods/logsMethods');
 
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
