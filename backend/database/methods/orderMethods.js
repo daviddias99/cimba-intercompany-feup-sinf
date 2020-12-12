@@ -21,7 +21,7 @@ exports.addOrder = async (icId, orderId, type, createdOn = null) => {
     order.created_on = createdOn;
   }
 
-  return db('orders').insert(order);
+  return db('orders').insert(order).returning('id')[0];
 };
 
 exports.getSalesOrdersNoInvoice = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'sale', invoice_id: null });

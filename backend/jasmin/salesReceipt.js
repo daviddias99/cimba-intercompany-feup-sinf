@@ -42,7 +42,7 @@ exports.createSalesReceipt = async (
 
     const newLine = {
       sourceDoc: jasminInvoice.data.naturalKey,
-      settled: jasminInvoice.payableAmount.amount,
+      settled: line.amount.amount,
     };
 
     console.log(newLine);
@@ -53,7 +53,7 @@ exports.createSalesReceipt = async (
   const lines = await Promise.all(promises);
 
   const salesReceipt = await makeRequest(
-    `goodsReceipt/processOrders/${supplier.company_key}`,
+    `accountsReceivable/processOpenItems/${supplier.company_key}`,
     'post',
     supplier.id,
     {},
