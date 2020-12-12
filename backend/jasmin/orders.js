@@ -14,6 +14,7 @@ exports.createSalesOrder = async (
   deliveryTerm,
   documentLines,
   purchaseOrderId,
+  createdOn,
 ) => {
   // Getting ic id of suplier
   const icIdSuplier = await jasminToIcId(icIdBuyer, jasminIdSuplier);
@@ -25,6 +26,15 @@ exports.createSalesOrder = async (
 
   const suplier = await getCompanyById(icIdSuplier);
   if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdSuplier}`);
+
+  const buyer = await getCompanyById(icIdBuyer);
+  if (buyer == null) throw new ReferenceError(`Cannot Find Buyer with id ${icIdSuplier}`);
+
+  console.log(`Start process for order ${purchaseOrderId} from company ${icIdBuyer}`);
+
+  const processId = (await addOrder(icIdBuyer, purchaseOrderId, 'purchase', suplier.name, createdOn))[0];
+
+  await addLog(processId, 'detect', purchaseOrderId, 'order');
 
   // Translate documentLines
   let mapPromises = [];
@@ -57,7 +67,7 @@ exports.createSalesOrder = async (
     },
   );
 
-  await addOrder(icIdSuplier, salesOrder.data, 'sale');
+  await addOrder(icIdSuplier, salesOrder.data, 'sale', buyer.name);
   await addOrderMaps(purchaseOrderId, salesOrder.data);
   console.log(`Created sales order ${salesOrder.data} for company ${icIdSuplier}`);
 

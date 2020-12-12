@@ -10,11 +10,12 @@ exports.getAllProcesses = async (icId, page = null, pageSize = null) => {
 
 exports.getProcess = async (processId) => db('orders').where({ id: processId }).first();
 
-exports.addOrder = async (icId, orderId, type, createdOn = null) => {
+exports.addOrder = async (icId, orderId, type, otherCompanyName, createdOn = null) => {
   const order = {
     ic_id: icId,
     order_id: orderId,
     type,
+    other_company_name: otherCompanyName,
   };
 
   if (createdOn != null) {

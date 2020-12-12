@@ -23,12 +23,9 @@ exports.createSalesReceipt = async (
   const salesOrderIds = [];
 
   const promises = documentLines.map(async (line) => {
-    console.log(line);
     const purchaseInvoiceId = line.sourceDocId;
 
     const salesOrder = await getCorrespondingSalesInvoice(purchaseInvoiceId);
-
-    console.log(salesOrder);
 
     salesOrderIds.push(salesOrder.order_id);
 
@@ -38,14 +35,10 @@ exports.createSalesReceipt = async (
       supplier.id,
     );
 
-    console.log(jasminInvoice);
-
     const newLine = {
       sourceDoc: jasminInvoice.data.naturalKey,
       settled: line.amount.amount,
     };
-
-    console.log(newLine);
 
     return newLine;
   });
