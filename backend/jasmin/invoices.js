@@ -3,7 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addInvoiceToOrder } = require('../database/methods/orderMethods');
-const { getOrdersKeyAndLines } = require('./utils');
+const { getOrdersKeyAndLines, filterAvailableLines } = require('./utils');
 
 async function getAvailableLinesForInvoice(buyer, index, numLines) {
   return (await makeRequest(
@@ -47,9 +47,8 @@ exports.createInvoice = async (
   // Filter the available lines with the lines sent by the suplier
   let availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
 
-  availableLinesForInvoice = availableLinesForInvoice.filter(
-    (element) => orderKeysAndLines.some((match) => match.key === element.orderKey
-                                              && match.line === element.orderLineNumber),
+  availableLinesForInvoice = filterAvailableLines(
+    availableLinesForInvoice, orderKeysAndLines,
   );
 
   const invoices = await makeRequest(

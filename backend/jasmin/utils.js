@@ -21,3 +21,8 @@ exports.getOrdersKeyAndLines = async (orderIds, lines, icIdBuyer) => {
 
   return orderKeysAndLines;
 };
+
+exports.filterAvailableLines = (availableLines, keysAndLines) => availableLines.filter(
+  (element) => keysAndLines.some((match) => match.key === element.orderKey
+                                              && match.line === element.orderLineNumber),
+);

@@ -3,7 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addInvoiceToOrder } = require('../database/methods/orderMethods');
-const { getOrdersKeyAndLines } = require('./utils');
+const { getOrdersKeyAndLines, filterAvailableLines } = require('./utils');
 
 // TODO this request doesn't work
 
@@ -49,9 +49,8 @@ exports.createCreditNote = async (
   // Filter the available lines with the lines sent by the suplier
   let availableLinesForCreditNote = await getAvailableLinesForCreditNote(buyer, 1, 50);
 
-  availableLinesForCreditNote = availableLinesForCreditNote.filter(
-    (element) => orderKeysAndLines.some((match) => match.key === element.orderKey
-                                              && match.line === element.orderLineNumber),
+  availableLinesForCreditNote = filterAvailableLines(
+    availableLinesForCreditNote, orderKeysAndLines,
   );
 
   const creditNote = await makeRequest(
