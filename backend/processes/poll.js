@@ -1,13 +1,13 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
 const {
   getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment,
-  getReturnOrdersNoDelivery,
+  getReturnOrdersNoDelivery, getReturnOrdersNoInvoice,
 } = require('../database/methods/orderMethods');
 const {
-  getOrders, getInvoices, getDeliveries, getPayments,
+  getOrders, getInvoices, getDeliveries, getPayments, getCreditNotes,
 } = require('../jasmin/orders');
 const {
-  newOrder, newInvoice, newDeliveryNote, newPayment,
+  newOrder, newInvoice, newDeliveryNote, newPayment, newCreditNote,
 } = require('./purchase');
 
 const pollOrdersCompany = async (companyId) => {
@@ -48,6 +48,25 @@ exports.pollInvoice = async () => {
   companies.forEach((company) => pollInvoiceCompany(company.id));
 };
 
+const pollCreditNoteCompany = async (companyId) => {
+  const salesOrders = await getReturnOrdersNoInvoice(companyId);
+  const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
+
+  const invoices = await getCreditNotes(companyId);
+
+  const newInvoices = invoices.filter((invoice) => invoice.documentLines.some((line) => {
+    const orderId = line.sourceDocId;
+    return salesOrdersId.has(orderId);
+  }));
+
+  newInvoices.forEach((invoice) => newCreditNote(companyId, invoice));
+};
+
+exports.pollCreditNote = async () => {
+  const companies = await getCompanies();
+  companies.forEach((company) => pollCreditNoteCompany(company.id));
+};
+
 const pollDeliveryCompany = async (companyId) => {
   const salesOrders = await getSalesOrdersNoDelivery(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
@@ -69,8 +88,8 @@ const pollDeliveryCompany = async (companyId) => {
     },
   ));
 
-  newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, false));
-  newReturnDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, true));
+  newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, true));
+  newReturnDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, false));
 };
 
 exports.pollDelivery = async () => {

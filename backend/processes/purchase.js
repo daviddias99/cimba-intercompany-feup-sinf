@@ -4,6 +4,7 @@ const {
 const { createOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');
 const { createInvoice } = require('../jasmin/invoices');
+const { createCreditNote } = require('../jasmin/creditNote');
 const { isStandardOrder } = require('../jasmin/utils');
 const { createSalesReceipt } = require('../jasmin/salesReceipt');
 
@@ -48,8 +49,26 @@ exports.newInvoice = async (companyId, invoice) => {
   }
 };
 
+exports.newCreditNote = async (companyId, invoice) => {
+  console.log(`Detect new credit note ${invoice.id} from company ${companyId}`);
+
+  const salesOrdersId = new Set(invoice.documentLines.map(
+    (documentLines) => documentLines.sourceDocId,
+  ));
+  salesOrdersId.forEach(
+    (sourceDocId) => addInvoiceToOrder(companyId, sourceDocId, invoice.id, 'return_sale'),
+  );
+
+  try {
+    await createCreditNote(invoice.buyerCustomerParty,
+      companyId,
+      invoice.documentLines);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
 exports.newDeliveryNote = async (companyId, delivery, isDefault) => {
-  console.log(`DELIVERY ${isDefault}`);
   console.log(`Detect new delivery note ${delivery.id} from company ${companyId}`);
 
   const salesOrdersId = new Set(delivery.documentLines.map(

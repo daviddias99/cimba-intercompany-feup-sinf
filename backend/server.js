@@ -5,7 +5,7 @@ const middlewares = require('./middlewares');
 const config = require('./config').express;
 const db = require('./database/knex');
 const {
-  pollPurchaseOrders, pollInvoice, pollDelivery, pollPayment,
+  pollPurchaseOrders, pollInvoice, pollDelivery, pollPayment, pollCreditNote,
 } = require('./processes/poll');
 
 const app = express();
@@ -27,6 +27,11 @@ setInterval(pollPurchaseOrders, config.pollInterval);
 setTimeout(() => {
   pollInvoice();
   setInterval(pollInvoice, config.pollInterval);
+}, config.pollInterval / 4);
+
+setTimeout(() => {
+  pollCreditNote();
+  setInterval(pollCreditNote, config.pollInterval);
 }, config.pollInterval / 4);
 
 setTimeout(() => {

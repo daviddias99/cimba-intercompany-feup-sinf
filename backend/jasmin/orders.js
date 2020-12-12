@@ -74,6 +74,8 @@ exports.createOrder = async (
 
 exports.getInvoices = async (companyId) => (await makeRequest('billing/invoices', 'get', companyId)).data;
 
+exports.getCreditNotes = async (companyId) => (await makeRequest('billing/memos', 'get', companyId)).data;
+
 exports.getDeliveries = async (companyId) => (await makeRequest('shipping/deliveries', 'get', companyId)).data;
 
 exports.getPurchaseOrder = async (companyId, orderId) => (await makeRequest(`purchases/orders/${orderId}`, 'get', companyId)).data;

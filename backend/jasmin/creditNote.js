@@ -5,9 +5,11 @@ const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods'
 const { addInvoiceToOrder } = require('../database/methods/orderMethods');
 const { getOrdersKeyAndLines } = require('./utils');
 
-async function getAvailableLinesForInvoice(buyer, index, numLines) {
+// TODO this request doesn't work
+
+async function getAvailableLinesForCreditNote(buyer, index, numLines) {
   return (await makeRequest(
-    `invoiceReceipt/processOrders/${index}/${numLines}`,
+    `invoiceReceipt/processReturnOrders/${index}/${numLines}`,
     'get',
     buyer.id,
     { company: buyer.company_key },
@@ -15,7 +17,7 @@ async function getAvailableLinesForInvoice(buyer, index, numLines) {
   )).data;
 }
 
-exports.createInvoice = async (
+exports.createCreditNote = async (
   jasminIdBuyer, // buyerCustomerParty
   icIdSuplier,
   documentLines,
@@ -45,31 +47,31 @@ exports.createInvoice = async (
   const orderKeysAndLines = await getOrdersKeyAndLines(purchaseOrderIds, lines, icIdBuyer);
 
   // Filter the available lines with the lines sent by the suplier
-  let availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
+  let availableLinesForCreditNote = await getAvailableLinesForCreditNote(buyer, 1, 50);
 
-  availableLinesForInvoice = availableLinesForInvoice.filter(
+  availableLinesForCreditNote = availableLinesForCreditNote.filter(
     (element) => orderKeysAndLines.some((match) => match.key === element.orderKey
                                               && match.line === element.orderLineNumber),
   );
 
-  const invoices = await makeRequest(
-    `invoiceReceipt/processOrders/${buyer.company_key}`,
+  const creditNote = await makeRequest(
+    `invoiceReceipt/processReturnOrders/${buyer.company_key}`,
     'post',
     buyer.id,
     {},
-    availableLinesForInvoice,
+    availableLinesForCreditNote,
   );
 
-  if (invoices.status !== 201) {
-    return invoices;
+  if (creditNote.status !== 201) {
+    return creditNote;
   }
 
   const buyerOrderIds = new Set(purchaseOrderIds);
   buyerOrderIds.forEach(
-    (sourceDocId) => addInvoiceToOrder(icIdBuyer, sourceDocId, invoices.data, 'purchase'),
+    (sourceDocId) => addInvoiceToOrder(icIdBuyer, sourceDocId, creditNote.data, 'return_purchase'),
   );
 
-  console.log(`Created Invoice ${invoices.data} for company ${icIdBuyer}`);
+  console.log(`Created Credit Note ${creditNote.data} for company ${icIdBuyer}`);
 
-  return invoices;
+  return creditNote;
 };
