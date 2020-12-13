@@ -10,8 +10,11 @@ const {
   newOrder, newInvoice, newDeliveryNote, newPayment, newCreditNote,
 } = require('./purchase');
 
-const pollOrdersCompany = async (companyId) => {
-  const orders = await getOrders(companyId);
+const pollOrdersCompany = async (companyId, page) => {
+  let currPage = page;
+  if (!page) currPage = 1;
+
+  const orders = await getOrders(companyId, currPage, 5);
   const company = await getCompanyById(companyId);
   const mostRecentOrderTime = new Date(company.most_recent_order).getTime();
 
@@ -20,6 +23,10 @@ const pollOrdersCompany = async (companyId) => {
 
     return !order.autoCreated && time.getTime() > mostRecentOrderTime;
   });
+
+  if (newOrders.length === orders.data.length && orders.nextPage !== '') {
+    pollOrdersCompany(companyId, currPage + 1);
+  }
 
   newOrders.forEach((order) => newOrder(companyId, order));
 };
@@ -31,16 +38,23 @@ exports.pollPurchaseOrders = async () => {
   });
 };
 
-const pollInvoiceCompany = async (companyId) => {
+const pollInvoiceCompany = async (companyId, page) => {
+  let currPage = page;
+  if (!page) currPage = 1;
+
   const salesOrders = await getSalesOrdersNoInvoice(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
 
-  const invoices = await getInvoices(companyId);
+  const invoices = await getInvoices(companyId, currPage, 5);
 
-  const newInvoices = invoices.filter((invoice) => invoice.documentLines.some((line) => {
+  const newInvoices = invoices.data.filter((invoice) => invoice.documentLines.some((line) => {
     const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
   }));
+
+  if (newInvoices.length === invoices.data.length && invoices.nextPage !== '') {
+    pollInvoiceCompany(companyId, currPage + 1);
+  }
 
   newInvoices.forEach((invoice) => newInvoice(companyId, invoice));
 };
@@ -71,16 +85,19 @@ exports.pollCreditNote = async () => {
   companies.forEach((company) => pollCreditNoteCompany(company.id));
 };
 
-const pollDeliveryCompany = async (companyId) => {
+const pollDeliveryCompany = async (companyId, page) => {
+  let currPage = page;
+  if (!page) currPage = 1;
+
   const salesOrders = await getSalesOrdersNoDelivery(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
 
   const returnOrders = await getReturnOrdersNoDelivery(companyId);
   const returnOrdersId = new Set(returnOrders.map((order) => order.order_id));
 
-  const deliveries = await getDeliveries(companyId);
+  const deliveries = await getDeliveries(companyId, currPage, 5);
 
-  const newDeliveries = deliveries.filter((delivery) => delivery.documentLines.some((line) => {
+  const newDeliveries = deliveries.data.filter((delivery) => delivery.documentLines.some((line) => {
     const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
   }));
@@ -91,6 +108,10 @@ const pollDeliveryCompany = async (companyId) => {
       return returnOrdersId.has(orderId);
     },
   ));
+
+  if (newDeliveries.length === deliveries.data.length && deliveries.nextPage !== '') {
+    pollDeliveryCompany(companyId, currPage + 1);
+  }
 
   newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, true));
   newReturnDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, false));
@@ -103,16 +124,23 @@ exports.pollDelivery = async () => {
   });
 };
 
-const pollPaymentCompany = async (companyId) => {
+const pollPaymentCompany = async (companyId, page) => {
+  let currPage = page;
+  if (!page) currPage = 1;
+
   const invoices = await getInvoicesNoPayment(companyId);
   const invoicesId = new Set(invoices.map((inv) => inv.invoice_id));
 
-  const payments = await getPayments(companyId);
+  const payments = await getPayments(companyId, currPage, 5);
 
-  const newPayments = payments.filter((payment) => payment.documentLines.some((line) => {
+  const newPayments = payments.data.filter((payment) => payment.documentLines.some((line) => {
     const invoiceId = line.sourceDocId;
     return invoicesId.has(invoiceId);
   }));
+
+  if (newPayments.length === payments.data.length && payments.nextPage !== '') {
+    pollPaymentCompany(companyId, currPage + 1);
+  }
 
   newPayments.forEach((payment) => newPayment(companyId, payment));
 };

@@ -116,11 +116,13 @@ exports.createOrder = async (
   return salesOrder;
 };
 
-exports.getInvoices = async (companyId) => (await makeRequest('billing/invoices', 'get', companyId)).data;
+exports.getOrders = async (companyId, page, pageSize) => (await makeRequest(`purchases/orders?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
+
+exports.getInvoices = async (companyId, page, pageSize) => (await makeRequest(`billing/invoices?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
+
+exports.getDeliveries = async (companyId, page, pageSize) => (await makeRequest(`shipping/deliveries?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
 
 exports.getCreditNotes = async (companyId) => (await makeRequest('billing/memos', 'get', companyId)).data;
-
-exports.getDeliveries = async (companyId) => (await makeRequest('shipping/deliveries', 'get', companyId)).data;
 
 exports.getPurchaseOrder = async (companyId, orderId) => (await makeRequest(`purchases/orders/${orderId}`, 'get', companyId)).data;
 
@@ -136,6 +138,6 @@ exports.getSalesDelivery = async (companyId, deliveryId) => (await makeRequest(`
 
 exports.getSalesFinancial = async (companyId, id) => (await makeRequest(`/accountsReceivable/receipts/${id}`, 'get', companyId)).data;
 
-exports.getPayments = async (companyId) => (await makeRequest('accountsPayable/payments', 'get', companyId)).data;
+exports.getPayments = async (companyId, page, pageSize) => (await makeRequest(`accountsPayable/payments?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
 
 exports.getCreditNote = async (companyId, id) => (await makeRequest(`/billing/memos/${id}`, 'get', companyId)).data;
