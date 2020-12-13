@@ -3,6 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getCorrespondingSalesInvoice } = require('../database/methods/orderMapsMethods');
 const { addSalesReceiptToOrder } = require('../database/methods/orderMethods');
+const { addLog } = require('../database/methods/logsMethods');
 
 exports.createSalesReceipt = async (
   jasminIdSupplier, // party
@@ -58,7 +59,10 @@ exports.createSalesReceipt = async (
   }
 
   salesOrderIds.forEach(
-    (id) => addSalesReceiptToOrder(icIdSupplier, id, salesReceipt.data),
+    async (id) => {
+      const processId = await addSalesReceiptToOrder(icIdSupplier, id, salesReceipt.data);
+      await addLog(processId[0], 'create', salesReceipt.data, 'payment');
+    },
   );
 
   console.log(`Created receipt ${salesReceipt.data} for company ${icIdSupplier}`);

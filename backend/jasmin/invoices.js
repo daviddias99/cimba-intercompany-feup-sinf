@@ -4,6 +4,7 @@ const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addInvoiceToPurchaseOrder } = require('../database/methods/orderMethods');
 const { getPurchaseOrder } = require('./orders');
+const { addLog } = require('../database/methods/logsMethods');
 
 async function getAvailableLinesForInvoice(buyer, index, numLines) {
   return (await makeRequest(
@@ -86,7 +87,10 @@ exports.createInvoice = async (
 
   const buyerOrderIds = new Set(purchaseOrderIds);
   buyerOrderIds.forEach(
-    (sourceDocId) => addInvoiceToPurchaseOrder(icIdBuyer, sourceDocId, invoices.data),
+    async (sourceDocId) => {
+      const id = await addInvoiceToPurchaseOrder(icIdBuyer, sourceDocId, invoices.data);
+      await addLog(id[0], 'create', invoices.data, 'invoice');
+    },
   );
 
   console.log(`Created Invoice ${invoices.data} for company ${icIdBuyer}`);
