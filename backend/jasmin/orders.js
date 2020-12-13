@@ -6,8 +6,6 @@ const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
 const { addLog } = require('../database/methods/logsMethods');
 
-exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
-
 exports.createSalesOrder = async (
   icIdBuyer,
   jasminIdSuplier,
@@ -75,7 +73,9 @@ exports.createSalesOrder = async (
   return salesOrder;
 };
 
-exports.getInvoices = async (companyId) => (await makeRequest('billing/invoices', 'get', companyId)).data;
+exports.getOrders = async (companyId, page, pageSize) => (await makeRequest(`purchases/orders?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
+
+exports.getInvoices = async (companyId, page, pageSize) => (await makeRequest(`billing/invoices?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
 
 exports.getDeliveries = async (companyId) => (await makeRequest('shipping/deliveries', 'get', companyId)).data;
 

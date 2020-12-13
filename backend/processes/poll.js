@@ -10,8 +10,11 @@ const {
   newPayment,
 } = require('./purchase');
 
-const pollOrdersCompany = async (companyId) => {
-  const orders = await getOrders(companyId);
+const pollOrdersCompany = async (companyId, page) => {
+  let currPage = page;
+  if (!page) currPage = 1;
+
+  const orders = await getOrders(companyId, currPage, 5);
   const company = await getCompanyById(companyId);
   const mostRecentOrderTime = new Date(company.most_recent_order).getTime();
 
@@ -19,6 +22,10 @@ const pollOrdersCompany = async (companyId) => {
     const time = new Date(order.createdOn);
     return !order.autoCreated && order.orderNature === 1 && time.getTime() > mostRecentOrderTime;
   });
+
+  if (newOrders.length === orders.data.length && orders.nextPage !== '') {
+    pollOrdersCompany(companyId, currPage + 1);
+  }
 
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
 };
@@ -30,16 +37,23 @@ exports.pollPurchaseOrders = async () => {
   });
 };
 
-const pollInvoiceCompany = async (companyId) => {
+const pollInvoiceCompany = async (companyId, page) => {
+  let currPage = page;
+  if (!page) currPage = 1;
+
   const salesOrders = await getSalesOrdersNoInvoice(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
 
-  const invoices = await getInvoices(companyId);
+  const invoices = await getInvoices(companyId, currPage, 5);
 
-  const newInvoices = invoices.filter((invoice) => invoice.documentLines.some((line) => {
+  const newInvoices = invoices.data.filter((invoice) => invoice.documentLines.some((line) => {
     const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
   }));
+
+  if (newInvoices.length === invoices.data.length && invoices.nextPage !== '') {
+    pollInvoiceCompany(companyId, currPage + 1);
+  }
 
   newInvoices.forEach((invoice) => newInvoice(companyId, invoice));
 };
