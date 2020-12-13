@@ -1,13 +1,13 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
-const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment } = require('../database/methods/orderMethods');
 const {
-  getOrders, getInvoices, getDeliveries, getPayments,
+  getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment,
+  getReturnOrdersNoDelivery, getReturnOrdersNoPayment,
+} = require('../database/methods/orderMethods');
+const {
+  getOrders, getInvoices, getDeliveries, getPayments, getCreditNotes,
 } = require('../jasmin/orders');
 const {
-  newPurchaseOrder,
-  newInvoice,
-  newDeliveryNote,
-  newPayment,
+  newOrder, newInvoice, newDeliveryNote, newPayment, newCreditNote,
 } = require('./purchase');
 
 const pollOrdersCompany = async (companyId) => {
@@ -17,10 +17,11 @@ const pollOrdersCompany = async (companyId) => {
 
   const newOrders = orders.data.filter((order) => {
     const time = new Date(order.createdOn);
-    return !order.autoCreated && order.orderNature === 1 && time.getTime() > mostRecentOrderTime;
+
+    return !order.autoCreated && time.getTime() > mostRecentOrderTime;
   });
 
-  newOrders.forEach((order) => newPurchaseOrder(companyId, order));
+  newOrders.forEach((order) => newOrder(companyId, order));
 };
 
 exports.pollPurchaseOrders = async () => {
@@ -51,9 +52,31 @@ exports.pollInvoice = async () => {
   });
 };
 
+const pollCreditNoteCompany = async (companyId) => {
+  const salesOrders = await getReturnOrdersNoPayment(companyId);
+  const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
+
+  const invoices = await getCreditNotes(companyId);
+
+  const newInvoices = invoices.filter((invoice) => invoice.documentLines.some((line) => {
+    const orderId = line.sourceDocId;
+    return salesOrdersId.has(orderId);
+  }));
+
+  newInvoices.forEach((invoice) => newCreditNote(companyId, invoice));
+};
+
+exports.pollCreditNote = async () => {
+  const companies = await getCompanies();
+  companies.forEach((company) => pollCreditNoteCompany(company.id));
+};
+
 const pollDeliveryCompany = async (companyId) => {
   const salesOrders = await getSalesOrdersNoDelivery(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
+
+  const returnOrders = await getReturnOrdersNoDelivery(companyId);
+  const returnOrdersId = new Set(returnOrders.map((order) => order.order_id));
 
   const deliveries = await getDeliveries(companyId);
 
@@ -62,7 +85,15 @@ const pollDeliveryCompany = async (companyId) => {
     return salesOrdersId.has(orderId);
   }));
 
-  newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery));
+  const newReturnDeliveries = deliveries.filter((delivery) => delivery.documentLines.some(
+    (line) => {
+      const orderId = line.sourceDocId;
+      return returnOrdersId.has(orderId);
+    },
+  ));
+
+  newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, true));
+  newReturnDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery, false));
 };
 
 exports.pollDelivery = async () => {

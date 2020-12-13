@@ -59,7 +59,7 @@ const SellerOrder = (props) => {
             noHeader={true}
             pagination={true}
           />
-          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${orderData.payableAmount.amount} ${orderData.payableAmount.symbol}`}</h2>
+          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${orderData.payableAmount.amount.toFixed(2)} ${orderData.payableAmount.symbol}`}</h2>
         </div>
       </Subsection>
       <hr />

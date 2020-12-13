@@ -14,6 +14,11 @@ exports.getMapOfDocSalesOrder = async (salesOrderDocId) => {
   return orderMap == null ? null : orderMap.purchase_order_id;
 };
 
+exports.getMapOfDocPurchaseOrder = async (purchaseOrderDocId) => {
+  const orderMap = await db('orders_maps').where({ purchase_order_id: purchaseOrderDocId }).first();
+  return orderMap == null ? null : orderMap.sales_order_id;
+};
+
 exports.getCorrespondingSalesInvoice = async (purchaseInvoiceId) => {
   const invoices = await db('orders AS po')
     .join('orders_maps', 'po.order_id', 'orders_maps.purchase_order_id')

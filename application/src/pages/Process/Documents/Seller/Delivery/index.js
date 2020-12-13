@@ -60,7 +60,7 @@ const Delivery = (props) => {
             noHeader={true}
             pagination={true}
           />
-          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${deliveryData.payableAmount.amount} ${deliveryData.payableAmount.symbol}`}</h2>
+          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${deliveryData.payableAmount.amount.toFixed(2)} ${deliveryData.payableAmount.symbol}`}</h2>
         </div>
       </Subsection>
       <hr />

@@ -41,7 +41,6 @@ exports.up = function (knex) {
       table.foreign('map_ic_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('ic_id').unsigned();
       table.foreign('ic_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
-      
       table.unique(['jasmin_id', 'ic_id'], 'company_map_local_unique');
       table.unique(['ic_id', 'map_ic_id'], 'company_map_unique');
     })
@@ -58,7 +57,7 @@ exports.up = function (knex) {
       table.string('order_id').notNullable();
       table.unique('order_id');
       table.timestamp('created_on').defaultTo(knex.fn.now());
-      table.enu('type', ['purchase', 'sale'], { useNative: true, enumName: 'order_type' }).notNullable();
+      table.enu('type', ['purchase', 'sale', 'return_purchase', 'return_sale'], { useNative: true, enumName: 'order_type' }).notNullable();
       table.string('invoice_id');
       table.string('delivery_id');
       table.string('payment_id');
