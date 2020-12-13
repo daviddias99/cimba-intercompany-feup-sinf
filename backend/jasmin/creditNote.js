@@ -2,13 +2,14 @@ const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
-const { addInvoiceToOrder } = require('../database/methods/orderMethods');
+const { addPaymentToOrder, addCreditNoteToOrder } = require('../database/methods/orderMethods');
 const { getOrdersKeyAndLines, filterAvailableLines } = require('./utils');
-const { addLog } = require('../database/methods/logsMethods');
 
-async function getAvailableLinesForInvoice(buyer, index, numLines) {
+// TODO this request doesn't work
+
+async function getAvailableLinesForCreditNote(buyer, index, numLines) {
   return (await makeRequest(
-    `invoiceReceipt/processOrders/${index}/${numLines}`,
+    `invoiceReceipt/processReturnOrders/${index}/${numLines}`,
     'get',
     buyer.id,
     { company: buyer.company_key },
@@ -16,7 +17,7 @@ async function getAvailableLinesForInvoice(buyer, index, numLines) {
   )).data;
 }
 
-exports.createInvoice = async (
+exports.createCreditNote = async (
   jasminIdBuyer, // buyerCustomerParty
   icIdSuplier,
   documentLines,
@@ -46,33 +47,30 @@ exports.createInvoice = async (
   const orderKeysAndLines = await getOrdersKeyAndLines(purchaseOrderIds, lines, icIdBuyer);
 
   // Filter the available lines with the lines sent by the suplier
-  let availableLinesForInvoice = await getAvailableLinesForInvoice(buyer, 1, 50);
+  let availableLinesForCreditNote = await getAvailableLinesForCreditNote(buyer, 1, 50);
 
-  availableLinesForInvoice = filterAvailableLines(
-    availableLinesForInvoice, orderKeysAndLines,
+  availableLinesForCreditNote = filterAvailableLines(
+    availableLinesForCreditNote, orderKeysAndLines,
   );
 
-  const invoices = await makeRequest(
-    `invoiceReceipt/processOrders/${buyer.company_key}`,
+  const creditNote = await makeRequest(
+    `invoiceReceipt/processReturnOrders/${buyer.company_key}`,
     'post',
     buyer.id,
     {},
-    availableLinesForInvoice,
+    availableLinesForCreditNote,
   );
 
-  if (invoices.status !== 201) {
-    return invoices;
+  if (creditNote.status !== 201) {
+    return creditNote;
   }
 
   const buyerOrderIds = new Set(purchaseOrderIds);
   buyerOrderIds.forEach(
-    async (sourceDocId) => {
-      const id = await addInvoiceToOrder(icIdBuyer, sourceDocId, invoices.data, 'purchase');
-      await addLog(id[0], 'create', invoices.data, 'invoice');
-    },
+    (sourceDocId) => addCreditNoteToOrder(icIdBuyer, sourceDocId, creditNote.data, 'return_purchase'),
   );
 
-  console.log(`Created Invoice ${invoices.data} for company ${icIdBuyer}`);
+  console.log(`Created Credit Note ${creditNote.data} for company ${icIdBuyer}`);
 
-  return invoices;
+  return creditNote;
 };

@@ -1,20 +1,20 @@
 const {
-  addDeliveryToSalesOrder, addInvoiceToSalesOrder, addPaymentToOrder,
+  addDeliveryToOrder, addInvoiceToOrder, addPaymentToOrder, addCreditNoteToOrder,
 } = require('../database/methods/orderMethods');
-const { createSalesOrder } = require('../jasmin/orders');
+const { createOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');
 const { createInvoice } = require('../jasmin/invoices');
+const { createCreditNote } = require('../jasmin/creditNote');
 const { createSalesReceipt } = require('../jasmin/salesReceipt');
 const { addLog } = require('../database/methods/logsMethods');
 
-exports.newPurchaseOrder = async (companyId, order) => {
+exports.newOrder = async (companyId, order) => {
   try {
-    await createSalesOrder(
+    await createOrder(
       companyId,
       order.sellerSupplierParty,
-      order.deliveryTerm,
-      order.documentLines,
       order.id,
+      order,
       order.createdOn,
     );
   } catch (error) {
@@ -30,7 +30,7 @@ exports.newInvoice = async (companyId, invoice) => {
   ));
   salesOrdersId.forEach(
     async (sourceDocId) => {
-      const id = await addInvoiceToSalesOrder(companyId, sourceDocId, invoice.id);
+      const id = await addInvoiceToOrder(companyId, sourceDocId, invoice.id, 'sale');
       await addLog(id[0], 'detect', invoice.id, 'invoice');
     },
   );
@@ -44,7 +44,26 @@ exports.newInvoice = async (companyId, invoice) => {
   }
 };
 
-exports.newDeliveryNote = async (companyId, delivery) => {
+exports.newCreditNote = async (companyId, invoice) => {
+  console.log(`Detect new credit note ${invoice.id} from company ${companyId}`);
+
+  const salesOrdersId = new Set(invoice.documentLines.map(
+    (documentLines) => documentLines.sourceDocId,
+  ));
+  salesOrdersId.forEach(
+    (sourceDocId) => addCreditNoteToOrder(companyId, sourceDocId, invoice.id, 'return_sale'),
+  );
+
+  try {
+    await createCreditNote(invoice.buyerCustomerParty,
+      companyId,
+      invoice.documentLines);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+exports.newDeliveryNote = async (companyId, delivery, isDefault) => {
   console.log(`Detect new delivery note ${delivery.id} from company ${companyId}`);
 
   const salesOrdersId = new Set(delivery.documentLines.map(
@@ -52,7 +71,8 @@ exports.newDeliveryNote = async (companyId, delivery) => {
   ));
   salesOrdersId.forEach(
     async (sourceDocId) => {
-      const id = await addDeliveryToSalesOrder(companyId, sourceDocId, delivery.id);
+      const orderType = isDefault ? 'sale' : 'return_purchase';
+      const id = await addDeliveryToOrder(companyId, sourceDocId, delivery.id, orderType);
       await addLog(id[0], 'detect', delivery.id, 'delivery');
     },
   );
@@ -62,6 +82,7 @@ exports.newDeliveryNote = async (companyId, delivery) => {
       delivery.party,
       companyId,
       delivery.documentLines,
+      isDefault,
     );
   } catch (error) {
     console.log(error.message);
