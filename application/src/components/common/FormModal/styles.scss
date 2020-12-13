@@ -1,0 +1,11 @@
+@import 'assets/styles/bulma';
+
+.form-modal {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-modal-title {
+    align-self: center;
+    font-size: 1.5em;
+}

@@ -22,10 +22,36 @@ const MOST_RECENT_ORDER_TRIGGER_UP = `
         FOR EACH ROW WHEN (NEW.type = 'purchase')
         EXECUTE PROCEDURE update_most_recent_order_proc();
 `;
+
+const DELETE_MAPS_FOR_COMPANY_TRIGGER_UP = `
+    CREATE OR REPLACE FUNCTION delete_maps_for_company_proc() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        DELETE FROM item_maps WHERE ic_id = OLD.ic_id AND map_ic_id = OLD.map_ic_id;
+        DELETE FROM item_maps WHERE ic_id = OLD.map_ic_id AND map_ic_id = OLD.ic_id;
+
+        RETURN NULL;
+    END
+    $BODY$
+
+    LANGUAGE plpgsql;
+
+    DROP TRIGGER IF EXISTS delete_maps_for_company ON company_maps;
+    CREATE TRIGGER delete_maps_for_company
+        AFTER DELETE ON company_maps
+        FOR EACH ROW
+        EXECUTE PROCEDURE delete_maps_for_company_proc();
+`;
+
 const MOST_RECENT_ORDER_TRIGGER_DOWN = `
     DROP FUNCTION update_most_recent_order_proc
     DROP TRIGGER IF EXISTS update_most_recent_order ON orders
 `;
 
-exports.triggersUp = [MOST_RECENT_ORDER_TRIGGER_UP];
-exports.triggersDown = [MOST_RECENT_ORDER_TRIGGER_DOWN];
+const DELETE_MAPS_FOR_COMPANY_TRIGGER_DOWN = `
+    DROP FUNCTION delete_maps_for_company_proc
+    DROP TRIGGER IF EXISTS delete_maps_for_company ON company_maps
+`;
+
+exports.triggersUp = [MOST_RECENT_ORDER_TRIGGER_UP, DELETE_MAPS_FOR_COMPANY_TRIGGER_UP];
+exports.triggersDown = [MOST_RECENT_ORDER_TRIGGER_DOWN, DELETE_MAPS_FOR_COMPANY_TRIGGER_DOWN];

@@ -1,21 +1,63 @@
-// TODO: change URL to connect with backend
-const itemTableURL = "item"
-const itemTableColumns = [
+import React from 'react';
+import { Button } from "components/common/Button"
+import DeleteIcon from '@material-ui/icons/Delete';
+
+const insertItemForm = [
     {
-        name: 'Company',
-        selector: 'company',
+        title: "Jasmin ID of the item",
+        id: "jasmin_id"
     },
     {
-        name: 'Local ID',
-        selector: 'localID',
+        title: "Mapped Company IC ID",
+        id: "map_ic_id"
+    },
+    {
+        title: "Jasmin ID of the item in the mapped company",
+        id: "item_id"
+    },
+    {
+        title: "Item Quantity (positive number w/ max 2 decimal places)",
+        id: "item_quant"
+    }
+]
+
+const deleteItemButton = (actionFunction) => {
+    return (row, index) =>         
+        <Button 
+            color={'secondary'} 
+            onClick={ () => actionFunction(row, index) }
+        >
+            <DeleteIcon />
+        </Button>
+}
+
+const itemTableColumns = (actioncell) => [
+    {
+        cell: actioncell,
+    },
+    {
+        name: 'Company Jasmin ID',
+        selector: 'map_company_jasmin_id',
+    },
+    {
+        name: 'Item Jasmin ID',
+        selector: 'jasmin_id',
         sortable: true,
     },
     {
-        name: 'Item ID',
-        selector: 'itemID',
+        name: 'Item Jasmin ID on mapped company',
+        selector: 'item_id',
     },
     {
-        name: 'Description',
+        name: 'Item Description',
+        selector: 'local_description',
+        grow: 2,
+        style: {
+            fontWeight: "bold",
+        },
+    },
+    {
+        name: 'Mapped Item Description',
         selector: 'description',
         grow: 2,
         style: {
@@ -23,37 +65,24 @@ const itemTableColumns = [
         },
     },
     {
-        name: 'Warehouse',
-        selector: 'warehouse',
+        name: 'Unit',
+        selector: 'local_unit',
+        center: true,
     },
     {
-        name: 'Unit',
+        name: 'Mapped Unit',
         selector: 'unit',
         center: true,
     },
     {
-        name: 'Unit Price 1',
-        selector: 'unit_price_1',
-        right: true,
-    },
-    {
-        name: 'VAT Type 1',
-        selector: 'vat_type_1',
-        center: true,
-    },
-    {
-        name: 'Unit Price 2',
-        selector: 'unit_price_2',
-        right: true,
-    },
-    {
-        name: 'VAT Type 2',
-        selector: 'vat_type_2',
+        name: 'Item Quant.',
+        selector: 'item_quant',
         center: true,
     },
 ]
 
 export {
-    itemTableURL,
     itemTableColumns,
+    deleteItemButton,
+    insertItemForm
 }

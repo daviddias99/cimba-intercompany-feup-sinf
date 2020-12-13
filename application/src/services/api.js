@@ -3,7 +3,7 @@ import axios from 'axios';
 /**
  * Constant variables
  */
-const API_URL = process.env.REACT_APP_API_URI ? process.env.REACT_APP_API_URI : 'http://localhost:8001';
+const API_URL = process.env.REACT_APP_API_URI ? process.env.REACT_APP_API_URI : 'http://localhost:8080';
 const JTW_TOKEN_KEY = 'JWT_TOKEN';
 
 /**
@@ -12,14 +12,18 @@ const JTW_TOKEN_KEY = 'JWT_TOKEN';
 const routes = {
   login: '/login',
   logout: '/logout',
-  getSettings: (userId) => (`/users/${userId}/company`),
-  setSettings: (userId) => (`/users/${userId}/company`),
   getOrder: (processId) => (`/process/${processId}/order`),
   getTransportation: (processId) => (`/process/${processId}/transportation`),
   getInvoice: (processId) => (`/process/${processId}/invoice`),
   getFinancial: (processId) => (`/process/${processId}/financial`),
   getProcesses: '/process',
   getLogs: '/logs',
+  company: (companyId) => `/companies/${companyId}`,
+  itemMaps: (companyId) => `/companies/${companyId}/itemMaps`,
+  singleItemMap : (companyId, localId) => `/companies/${companyId}/itemMaps/${localId}`,
+  companyMaps: (companyId) => `/companies/${companyId}/companyMaps`,
+  singleCompanyMap: (companyId, localId) => `/companies/${companyId}/companyMaps/${localId}`,
+  settings: (userId) => (`/users/${userId}/company`),
 };
 
 /**
@@ -57,7 +61,7 @@ const request = (path, method, data, callback) => {
     } else { // Other error
     }
 
-    const res = { data: { status: 'error' } };
+    const res = { data: { status: 'error', error: err } };
     callback(res);
   };
 
@@ -65,8 +69,33 @@ const request = (path, method, data, callback) => {
     axios.get(API_URL + path, { headers }).then(callback).catch(errorHandler);
   } else if (method.toLowerCase() === 'post') {
     axios.post(API_URL + path, data, { headers }).then(callback).catch(errorHandler);
+  } else if (method.toLowerCase() === 'delete') {
+    axios.delete(API_URL + path, { headers }).then(callback).catch(errorHandler);
   }
 };
+
+const asyncRequest = async (path, method, data) => {
+  if (!path.startsWith('/')) {
+    path = '/' + path;
+  }
+  if (!path.endsWith('/')) {
+    path = path + '/';
+  }
+
+  const headers = {};
+
+  // Add authorization header
+  const token = getToken();
+  if (token) {
+    headers.Authorization = 'Bearer ' + token;
+  }
+
+  if (method.toLowerCase() === 'get') {
+    return await axios.get(API_URL + path, { headers, params: data })
+  } else if (method.toLowerCase() === 'post') {
+    return await axios.post(API_URL + path, data, { headers })
+  }
+}
 
 /**
  * Main API controller.
@@ -81,11 +110,17 @@ const api = {
   logout: (callback) => {
     request(routes.logout, 'post', null, callback);
   },
+  getCompany: (companyId, callback) => {
+    request(routes.company(companyId), 'get', null, callback);
+  },
+  getCompanyAsync: async (companyId) => {
+    return await asyncRequest(routes.company(companyId), 'get', null);
+  },
   getSettings: (userId, callback) => {
-    request(routes.getSettings(userId), 'get', null, callback);
+    request(routes.settings(userId), 'get', null, callback);
   },
   setSettings: (userId, data, callback) => {
-    request(routes.setSettings(userId), 'post', data, callback);
+    request(routes.settings(userId), 'post', data, callback);
   },
   getOrder: (processId, callback) => {
     request(routes.getOrder(processId), 'get', null, callback)
@@ -104,8 +139,28 @@ const api = {
   },
   getLogs: (callback) => {
     request(routes.getLogs, 'get', null, callback)
-  }
-
+  },
+  getItemMaps: (companyId, callback) => {
+    request(routes.itemMaps(companyId), 'get', null, callback);
+  },
+  addItemMap: (companyId, data, callback) => {
+    request(routes.itemMaps(companyId), 'post', data, callback);
+  },
+  deleteItemMap: (companyId, localId, callback) => {
+    request(routes.singleItemMap(companyId, localId), 'delete', null, callback);
+  },
+  getCompanyMaps: (companyId, callback) => {
+    request(routes.companyMaps(companyId), 'get', null, callback);
+  },
+  addCompanyMap: (companyId, data, callback) => {
+    request(routes.companyMaps(companyId), 'post', data, callback);
+  },
+  deleteCompanyMap: (companyId, localId, callback) => {
+    request(routes.singleCompanyMap(companyId, localId), 'delete', null, callback);
+  },
+  getSingleCompanyMapAsync: async (companyId, queryParams) => {
+    return await asyncRequest(routes.companyMaps(companyId), 'get', queryParams);
+  },
 };
 
 export default api;

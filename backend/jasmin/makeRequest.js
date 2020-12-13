@@ -15,7 +15,7 @@ exports.makeRequest = async (
 ) => {
   let company = null;
 
-  if (companyInfo !== undefined) {
+  if (companyInfo !== undefined && companyInfo !== null) {
     company = companyInfo;
   } else {
     company = await getCompanyById(companyID);
