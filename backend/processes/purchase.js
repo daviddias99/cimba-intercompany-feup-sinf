@@ -1,29 +1,20 @@
 const {
-  addOrder, addDeliveryToOrder, addInvoiceToOrder, addPaymentToOrder,
+  addDeliveryToOrder, addInvoiceToOrder, addPaymentToOrder,
 } = require('../database/methods/orderMethods');
 const { createOrder } = require('../jasmin/orders');
 const { createGoodsReceipt } = require('../jasmin/goodsReceipt');
 const { createInvoice } = require('../jasmin/invoices');
 const { createCreditNote } = require('../jasmin/creditNote');
-const { isStandardOrder } = require('../jasmin/utils');
 const { createSalesReceipt } = require('../jasmin/salesReceipt');
 const { addLog } = require('../database/methods/logsMethods');
 
 exports.newOrder = async (companyId, order) => {
-  console.log(`Start process for order ${order.id} from company ${companyId}`);
-
-  const isStandard = isStandardOrder(order.orderNature);
-  const orderType = isStandard ? 'purchase' : 'return_purchase';
-
-  await addOrder(companyId, order.id, orderType, order.createdOn);
-
   try {
     await createOrder(
       companyId,
       order.sellerSupplierParty,
       order.id,
       order,
-      isStandard,
       order.createdOn,
     );
   } catch (error) {

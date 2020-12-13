@@ -22,11 +22,11 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
       ? await getPurchaseOrder(icIdBuyer, elementPromise)
       // eslint-disable-next-line no-await-in-loop
       : await getSalesOrder(icIdBuyer, elementPromise);
-
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
       quantity: docLines.quantity,
-      item: mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
+      // eslint-disable-next-line no-await-in-loop
+      item: await mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
       sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,
     });
   }

@@ -6,6 +6,8 @@ const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
 const { addLog } = require('../database/methods/logsMethods');
 
+const isStandardOrder = (orderNature) => orderNature === 1;
+
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
 exports.createOrder = async (
@@ -13,7 +15,6 @@ exports.createOrder = async (
   jasminIdSuplier,
   purchaseOrderId,
   order,
-  isStandard,
   createdOn,
 ) => {
   // Getting ic id of suplier
@@ -33,9 +34,11 @@ exports.createOrder = async (
 
   console.log(`Start process for order ${purchaseOrderId} from company ${icIdBuyer}`);
 
-  const processId = (await addOrder(icIdBuyer, purchaseOrderId, 'purchase', suplier.name, createdOn))[0];
+  const isStandard = isStandardOrder(order.orderNature);
+  const orderType = isStandard ? 'purchase' : 'return_purchase';
+  const processId = await addOrder(icIdBuyer, purchaseOrderId, orderType, suplier.name, createdOn);
 
-  await addLog(processId, 'detect', purchaseOrderId, 'order');
+  await addLog(processId[0], 'detect', purchaseOrderId, 'order');
 
   // Translate documentLines
   let mapPromises = [];
@@ -94,18 +97,20 @@ exports.createOrder = async (
       unloadingCityName: order.unloadingCityName,
       unloadingDateTime: order.unloadingDateTime,
       unloadingCountry: order.unloadingCountry,
+      taxIncluded: order.taxIncluded,
+      taxTotalAmount: order.taxTotalAmount,
     },
   );
 
   if (salesOrder.status !== 201) {
     return salesOrder;
   }
-  const orderType = isStandard ? 'sale' : 'return_sale';
+  const salesOrderType = isStandard ? 'sale' : 'return_sale';
 
-  const salesProcessId = (await addOrder(icIdSuplier, salesOrder.data, orderType))[0];
-  await addLog(salesProcessId, 'create', salesOrder.data, 'order');
+  const salesProcessId = await addOrder(icIdSuplier, salesOrder.data, salesOrderType, buyer.name);
+  await addLog(salesProcessId[0], 'create', salesOrder.data, 'order');
   await addOrderMaps(purchaseOrderId, salesOrder.data);
-  console.log(`Created sales order ${salesOrder.data} for company ${icIdSuplier}`);
+  console.log(`Created ${salesOrderType} order ${salesOrder.data} for company ${icIdSuplier}`);
 
   return salesOrder;
 };

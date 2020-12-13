@@ -1,7 +1,5 @@
 const { getPurchaseOrder } = require('./orders');
 
-exports.isStandardOrder = (orderNature) => orderNature === 1;
-
 exports.getOrdersKeyAndLines = async (orderIds, lines, icIdBuyer) => {
   // Getting Keys and lines For All orders
   const orderKeysAndLines = [];
