@@ -1,26 +1,25 @@
 const { makeRequest } = require('../jasmin/makeRequest');
 
 exports.allCompanyMaps = async (req, res) => {
-  let companyMaps = null
+  let companyMaps = null;
   if (req.query.map_ic_id) {
     companyMaps = await req.app.db('company_maps').where({ ic_id: req.params.id, map_ic_id: req.query.map_ic_id }).first().select(['id', 'ic_id', 'jasmin_id', 'map_ic_id']);
-  }
-  else {
+  } else {
     companyMaps = await req.app.db('company_maps').where({ ic_id: req.params.id }).select(['id', 'ic_id', 'jasmin_id', 'map_ic_id']);
   }
 
-  return companyMaps != null ? res.json(companyMaps) : null
+  return companyMaps != null ? res.json(companyMaps) : null;
 };
 
 exports.newCompanyMap = async (req, res) => {
   // check if mapping is between the same company
   if (req.params.id === req.body.map_ic_id) {
-    return res.status(400).json(`Cannot create a mapping to the same company!`);
+    return res.status(400).json('Cannot create a mapping to the same company!');
   }
 
   // check if map_ic_id is a valid integer
-  if (!(!isNaN(req.body.map_ic_id) && Number.isInteger(parseFloat(req.body.map_ic_id)))) {
-    return res.status(400).json(`Company ID is not a valid number!`);
+  if (!(!Number.isNaN(req.body.map_ic_id) && Number.isInteger(parseFloat(req.body.map_ic_id)))) {
+    return res.status(400).json('Company ID is not a valid number!');
   }
 
   // check if company exists
@@ -32,19 +31,19 @@ exports.newCompanyMap = async (req, res) => {
   // check if other company exists in IC DB
   const mapCompanyInIC = await req.app.db('companies').where({ id: req.body.map_ic_id }).first();
   if (!mapCompanyInIC) {
-    return res.status(400).json(`There is no registered company with those IDs!`);
+    return res.status(400).json('There is no registered company with those IDs!');
   }
 
   // check if other company exists in Jasmin in the same party
-  const mapCompanyInJasmin = await makeRequest(`businessCore/parties/${req.body.jasmin_id}`, 'get', req.params.id, null, null)
+  const mapCompanyInJasmin = await makeRequest(`businessCore/parties/${req.body.jasmin_id}`, 'get', req.params.id, null, null);
   if (mapCompanyInJasmin.status !== 200) {
-    return res.status(400).json(`There is no registered company with those IDs!`);
+    return res.status(400).json('There is no registered company with those IDs!');
   }
 
   // check if mapping already exists
   const mapForSameCompanies = await req.app.db('company_maps').where({ ic_id: req.params.id, map_ic_id: req.body.map_ic_id });
   if (mapForSameCompanies.length) {
-    return res.status(400).json(`There is already a mapping between these two companies!`);
+    return res.status(400).json('There is already a mapping between these two companies!');
   }
 
   // check if Jasmin ID already exists for that company
@@ -62,13 +61,12 @@ exports.newCompanyMap = async (req, res) => {
       map_ic_id: req.body.map_ic_id,
     }], ['id', 'ic_id', 'jasmin_id', 'map_ic_id']);
     return res.status(201).json(companyMap);
-  }
-  catch (error) {
+  } catch (error) {
     return res.status(400).json(error);
   }
-}
+};
 
 exports.deleteCompanyMap = async (req, res) => {
   await req.app.db('company_maps').where({ ic_id: req.params.id, jasmin_id: req.params.jasmin_id }).delete();
-  return res.status(200).json(`Company map has been deleted`);
-}
+  return res.status(200).json('Company map has been deleted');
+};
