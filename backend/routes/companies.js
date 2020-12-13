@@ -14,10 +14,14 @@ router.get(`/:id(${regexNum})/companyMaps`, require('../controllers/companyMapsC
 router.post(`/:id(${regexNum})/companyMaps`,
   validateBody(schemas.companyMap),
   require('../controllers/companyMapsController').newCompanyMap);
+router.delete(`/:id(${regexNum})/companyMaps/:jasmin_id`,
+  require('../controllers/companyMapsController').deleteCompanyMap);
 
 router.get(`/:id(${regexNum})/itemMaps`, require('../controllers/itemMapsController').allItemMaps);
 router.post(`/:id(${regexNum})/itemMaps`,
   validateBody(schemas.itemMap),
   require('../controllers/itemMapsController').newItemMap);
+router.delete(`/:id(${regexNum})/itemMaps/:jasmin_id`,
+  require('../controllers/itemMapsController').deleteItemMap);
 
 module.exports = router;

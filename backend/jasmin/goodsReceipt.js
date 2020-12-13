@@ -4,8 +4,11 @@ const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder, getMapOfDocPurchaseOrder } = require('../database/methods/orderMapsMethods');
 const { addDeliveryToOrder } = require('../database/methods/orderMethods');
 const { getPurchaseOrder, getSalesOrder } = require('./orders');
+const { addLog } = require('../database/methods/logsMethods');
+const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 
-async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer, isDefault) {
+async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
+  icIdBuyer, isDefault, icIdSuplier) {
   const documentLinesMapped = [];
   for (let i = 0; i < purchaseOrderIds.length && i < documentLines.length; i += 1) {
     const elementPromise = purchaseOrderIds[i];
@@ -23,6 +26,7 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
       quantity: docLines.quantity,
+      item: mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
       sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,
     });
   }
@@ -58,7 +62,7 @@ exports.createGoodsReceipt = async (
   purchaseOrderIds = await Promise.all(purchaseOrderIds);
 
   const documentLinesMapped = await getDocumentLinesMapped(
-    purchaseOrderIds, documentLines, icIdBuyer, isDefault,
+    purchaseOrderIds, documentLines, icIdBuyer, isDefault, icIdSuplier,
   );
 
   const goodsReceipt = await makeRequest(
@@ -75,9 +79,10 @@ exports.createGoodsReceipt = async (
 
   const buyerOrderId = new Set(purchaseOrderIds);
   buyerOrderId.forEach(
-    (sourceDocId) => {
+    async (sourceDocId) => {
       const orderType = isDefault ? 'purchase' : 'return_sale';
-      addDeliveryToOrder(icIdBuyer, sourceDocId, goodsReceipt.data, orderType);
+      const id = await addDeliveryToOrder(icIdBuyer, sourceDocId, goodsReceipt.data, orderType);
+      await addLog(id[0], 'create', goodsReceipt.data, 'delivery');
     },
   );
 

@@ -27,7 +27,7 @@ setInterval(pollPurchaseOrders, config.pollInterval);
 setTimeout(() => {
   pollInvoice();
   setInterval(pollInvoice, config.pollInterval);
-}, config.pollInterval / 4);
+}, config.pollInterval / 3);
 
 setTimeout(() => {
   pollCreditNote();
@@ -37,7 +37,7 @@ setTimeout(() => {
 setTimeout(() => {
   pollDelivery();
   setInterval(pollDelivery, config.pollInterval);
-}, (config.pollInterval * 3) / 4);
+}, (config.pollInterval * 2) / 3);
 
 setTimeout(() => {
   pollPayment();

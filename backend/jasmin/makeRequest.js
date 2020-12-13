@@ -15,7 +15,7 @@ exports.makeRequest = async (
 ) => {
   let company = null;
 
-  if (companyInfo !== undefined) {
+  if (companyInfo !== undefined && companyInfo !== null) {
     company = companyInfo;
   } else {
     company = await getCompanyById(companyID);
@@ -47,10 +47,7 @@ exports.makeRequest = async (
       params,
       companyInfo,
     }, null, 2)}`);
-    console.log({
-      status: error.response.status,
-      data: error.response.data,
-    });
+    console.log(error);
     return error;
   }
 };

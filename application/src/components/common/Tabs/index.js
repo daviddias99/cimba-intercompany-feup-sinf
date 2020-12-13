@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'components/common/Button';
 import Tab from 'components/common/Tab';
 
@@ -11,10 +11,20 @@ const Tabs = ({children}) => {
 
     const activeChild = childrenArray[activeTab]
 
+    // change tab and call tab switch function
+    const changeTab = idx => {
+        setActiveTab(idx)
+        if (childrenArray[idx].props.switchfunc) {
+            childrenArray[idx].props.switchfunc();
+        }
+    }
+
+    useEffect(() => changeTab(activeTab), [])
+
     const tabComps = childrenArray.map((child, idx) => {
         return child.type === Tab ? 
         (
-            <div key={idx} onClick={() => setActiveTab(idx)} className={idx === activeTab ? "active tab-list-elem" : "tab-list-elem"}>
+            <div key={idx} onClick={() => changeTab(idx)} className={idx === activeTab ? "active tab-list-elem" : "tab-list-elem"}>
                 {child.props.label ? child.props.label : `Tab ${idx}`}
             </div> 
         )

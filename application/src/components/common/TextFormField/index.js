@@ -2,6 +2,7 @@ import React from 'react';
 import Proptypes from 'prop-types';
 import './styles.scss';
 
+// TODO: refactor nisto por cause da cena dos controller components; ver erro na consola
 const TextFormField = ({ title, value, disabled, valueChanged, id, placeholder = title}) => {
   return (
     <div className='text-form-field'>

@@ -4,6 +4,7 @@ const timeout = require('./timeout.js');
 const error = require('./error.js');
 const bodyValidator = require('./bodyValidator.js');
 const authenticate = require('./authenticate.js');
+const associateCompany = require('./associateCompany.js');
 
 module.exports = {
   authenticate,
@@ -11,4 +12,5 @@ module.exports = {
   notFound,
   timeout,
   error,
+  associateCompany,
 };

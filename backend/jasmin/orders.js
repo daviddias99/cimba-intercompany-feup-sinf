@@ -4,6 +4,7 @@ const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
+const { addLog } = require('../database/methods/logsMethods');
 
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
@@ -13,6 +14,7 @@ exports.createOrder = async (
   purchaseOrderId,
   order,
   isStandard,
+  createdOn,
 ) => {
   // Getting ic id of suplier
   const icIdSuplier = await jasminToIcId(icIdBuyer, jasminIdSuplier);
@@ -26,6 +28,14 @@ exports.createOrder = async (
   if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdSuplier}`);
 
   const { documentLines } = order;
+  const buyer = await getCompanyById(icIdBuyer);
+  if (buyer == null) throw new ReferenceError(`Cannot Find Buyer with id ${icIdSuplier}`);
+
+  console.log(`Start process for order ${purchaseOrderId} from company ${icIdBuyer}`);
+
+  const processId = (await addOrder(icIdBuyer, purchaseOrderId, 'purchase', suplier.name, createdOn))[0];
+
+  await addLog(processId, 'detect', purchaseOrderId, 'order');
 
   // Translate documentLines
   let mapPromises = [];
@@ -90,9 +100,10 @@ exports.createOrder = async (
   if (salesOrder.status !== 201) {
     return salesOrder;
   }
-
   const orderType = isStandard ? 'sale' : 'return_sale';
-  await addOrder(icIdSuplier, salesOrder.data, orderType);
+
+  const salesProcessId = (await addOrder(icIdSuplier, salesOrder.data, orderType))[0];
+  await addLog(salesProcessId, 'create', salesOrder.data, 'order');
   await addOrderMaps(purchaseOrderId, salesOrder.data);
   console.log(`Created sales order ${salesOrder.data} for company ${icIdSuplier}`);
 

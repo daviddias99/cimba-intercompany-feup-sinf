@@ -3,6 +3,7 @@ const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsM
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getCorrespondingSalesInvoice } = require('../database/methods/orderMapsMethods');
 const { addSalesReceiptToOrder } = require('../database/methods/orderMethods');
+const { addLog } = require('../database/methods/logsMethods');
 
 exports.createSalesReceipt = async (
   jasminIdSupplier, // party
@@ -23,12 +24,9 @@ exports.createSalesReceipt = async (
   const salesOrderIds = [];
 
   const promises = documentLines.map(async (line) => {
-    console.log(line);
     const purchaseInvoiceId = line.sourceDocId;
 
     const salesOrder = await getCorrespondingSalesInvoice(purchaseInvoiceId);
-
-    console.log(salesOrder);
 
     salesOrderIds.push(salesOrder.order_id);
 
@@ -38,14 +36,10 @@ exports.createSalesReceipt = async (
       supplier.id,
     );
 
-    console.log(jasminInvoice);
-
     const newLine = {
       sourceDoc: jasminInvoice.data.naturalKey,
-      settled: jasminInvoice.payableAmount.amount,
+      settled: line.amount.amount,
     };
-
-    console.log(newLine);
 
     return newLine;
   });
@@ -53,7 +47,7 @@ exports.createSalesReceipt = async (
   const lines = await Promise.all(promises);
 
   const salesReceipt = await makeRequest(
-    `goodsReceipt/processOrders/${supplier.company_key}`,
+    `accountsReceivable/processOpenItems/${supplier.company_key}`,
     'post',
     supplier.id,
     {},
@@ -65,7 +59,10 @@ exports.createSalesReceipt = async (
   }
 
   salesOrderIds.forEach(
-    (id) => addSalesReceiptToOrder(icIdSupplier, id, salesReceipt.data),
+    async (id) => {
+      const processId = await addSalesReceiptToOrder(icIdSupplier, id, salesReceipt.data);
+      await addLog(processId[0], 'create', salesReceipt.data, 'payment');
+    },
   );
 
   console.log(`Created receipt ${salesReceipt.data} for company ${icIdSupplier}`);

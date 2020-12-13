@@ -40,7 +40,7 @@ exports.getTransportation = async (req, res) => {
 
   let document;
   if (process.type === 'purchase') {
-    document = { url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' };
+    document = { deliveryId: process.delivery_id };
   } else if (process.type === 'sale') {
     document = await jasmin.getSalesDelivery(process.ic_id, process.delivery_id);
   }
@@ -107,7 +107,7 @@ exports.getAllProcesses = async (req, res) => {
   }
 
   let processes = await getAllProcesses(req.company.id, page, pageSize);
-  processes = processes.map((process) => ({ ...process, state: getProcessState(process), other_company_name: 'OTHER_COMP' }));
+  processes = processes.map((process) => ({ ...process, state: getProcessState(process) }));
 
   res.json(processes);
 };

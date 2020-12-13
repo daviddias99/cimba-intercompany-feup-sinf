@@ -18,4 +18,4 @@ RUN npm update
 COPY . .
 
 # start app
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "start" ]

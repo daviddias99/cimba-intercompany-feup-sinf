@@ -7,6 +7,7 @@ const { createInvoice } = require('../jasmin/invoices');
 const { createCreditNote } = require('../jasmin/creditNote');
 const { isStandardOrder } = require('../jasmin/utils');
 const { createSalesReceipt } = require('../jasmin/salesReceipt');
+const { addLog } = require('../database/methods/logsMethods');
 
 exports.newOrder = async (companyId, order) => {
   console.log(`Start process for order ${order.id} from company ${companyId}`);
@@ -23,6 +24,7 @@ exports.newOrder = async (companyId, order) => {
       order.id,
       order,
       isStandard,
+      order.createdOn,
     );
   } catch (error) {
     console.log(error.message);
@@ -36,7 +38,10 @@ exports.newInvoice = async (companyId, invoice) => {
     (documentLines) => documentLines.sourceDocId,
   ));
   salesOrdersId.forEach(
-    (sourceDocId) => addInvoiceToOrder(companyId, sourceDocId, invoice.id, 'sale'),
+    async (sourceDocId) => {
+      const id = await addInvoiceToOrder(companyId, sourceDocId, invoice.id, 'sale');
+      await addLog(id[0], 'detect', invoice.id, 'invoice');
+    },
   );
 
   try {
@@ -74,9 +79,10 @@ exports.newDeliveryNote = async (companyId, delivery, isDefault) => {
     (documentLines) => documentLines.sourceDocId,
   ));
   salesOrdersId.forEach(
-    (sourceDocId) => {
+    async (sourceDocId) => {
       const orderType = isDefault ? 'sale' : 'return_purchase';
-      addDeliveryToOrder(companyId, sourceDocId, delivery.id, orderType);
+      const id = await addDeliveryToOrder(companyId, sourceDocId, delivery.id, orderType);
+      await addLog(id[0], 'detect', delivery.id, 'delivery');
     },
   );
 
@@ -95,8 +101,12 @@ exports.newDeliveryNote = async (companyId, delivery, isDefault) => {
 exports.newPayment = async (companyId, payment) => {
   console.log(`Detect new payment ${payment.id} from company ${companyId}`);
 
-  payment.documentLines.forEach(
-    (line) => addPaymentToOrder(companyId, line.sourceDocId, payment.id),
+  const sourceDocIds = new Set(payment.documentLines.map((line) => line.sourceDocId));
+  sourceDocIds.forEach(
+    async (id) => {
+      const processId = await addPaymentToOrder(companyId, id, payment.id);
+      await addLog(processId[0], 'detect', payment.id, 'payment');
+    },
   );
 
   try {
