@@ -39,11 +39,11 @@ const Mapping = () => {
           let error_flag = false
           if (res.status === 200) {
             for(let i = 0; i < res.data.length; i++) {
-              let res_map = await api.getSingleCompanyMapAsync(userCompany.id, {map_company_id: res.data[i].map_company_id})
+              let res_map = await api.getSingleCompanyMapAsync(userCompany.id, {map_ic_id: res.data[i].map_ic_id})
               if (res_map.status === 200) {
                 res.data[i] = {
                   ...res.data[i],
-                  map_company_local_id: res_map.data.local_id,
+                  map_company_jasmin_id: res_map.data.jasmin_id,
                 }
               }
               else {
@@ -83,7 +83,7 @@ const Mapping = () => {
           let error_flag = false
           if (res.status === 200) {
             for(let i = 0; i < res.data.length; i++) {
-              let res_comp = await api.getCompanyAsync(res.data[i].map_company_id)
+              let res_comp = await api.getCompanyAsync(res.data[i].map_ic_id)
               if (res_comp.status === 200) {
                 res.data[i] = {
                   ...res.data[i],
@@ -139,7 +139,7 @@ const Mapping = () => {
 
   const deleteItemRow = (row, index) => {
     setItemDataLoading(true)
-    api.deleteItemMap(userCompany.id, row.local_id,
+    api.deleteItemMap(userCompany.id, row.jasmin_id,
       (res) => {
         if (res.status === 200) {
           addNewToast({
@@ -151,6 +151,7 @@ const Mapping = () => {
           fetchItemData()
         }
         else {
+          setItemDataLoading(false)
           addNewToast({
             id: toastID++,
             title: 'ERROR',
@@ -164,7 +165,7 @@ const Mapping = () => {
 
   const deleteCompanyRow = (row, index) => {
     setCompanyDataLoading(true)
-    api.deleteCompanyMap(userCompany.id, row.local_id,
+    api.deleteCompanyMap(userCompany.id, row.jasmin_id,
       (res) => {
         if (res.status === 200) {
           addNewToast({
@@ -176,6 +177,7 @@ const Mapping = () => {
           fetchCompanyData()
         }
         else {
+          setCompanyDataLoading(false)
           addNewToast({
             id: toastID++,
             title: 'ERROR',
@@ -188,6 +190,7 @@ const Mapping = () => {
   }
 
   const insertItemAction = data => {
+    setItemDataLoading(true)
     api.addItemMap(userCompany.id, data,
       (res) => {
         if (res.status === 201) {
@@ -200,7 +203,7 @@ const Mapping = () => {
           fetchItemData()
         }
         else {
-          console.log(res)
+          setItemDataLoading(false)
           const errorMsg = res.data.error.response.data['type'] === 'validator' ? 
             'The data in the form was invalid or incomplete.'
             :
@@ -217,6 +220,7 @@ const Mapping = () => {
   }
 
   const insertCompanyAction = data => {
+    setCompanyDataLoading(true)
     api.addCompanyMap(userCompany.id, data,
       (res) => {
         if (res.status === 201) {
@@ -229,6 +233,7 @@ const Mapping = () => {
           fetchCompanyData()
         }
         else {
+          setCompanyDataLoading(false)
           const errorMsg = res.data.error.response.data['type'] === 'validator' ? 
             'The data in the form was invalid or incomplete.'
             :

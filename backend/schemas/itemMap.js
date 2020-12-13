@@ -1,14 +1,14 @@
 module.exports = {
   additionalProperties: false,
-  required: ['item_id', 'local_id', 'map_company_id'],
+  required: ['jasmin_id', 'map_ic_id', 'item_id'],
   properties: {
+    jasmin_id: {
+      type: 'string',
+    },
+    map_ic_id: {
+      type: 'string',
+    },
     item_id: {
-      type: 'string',
-    },
-    local_id: {
-      type: 'string',
-    },
-    map_company_id: {
       type: 'string',
     },
     item_quant: {

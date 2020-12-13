@@ -4,12 +4,12 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const insertCompanyForm = [
     {
-        title: "Company Local ID",
-        id: "local_id"
+        title: "Company Jasmin ID",
+        id: "jasmin_id"
     },
     {
-        title: "Company ID",
-        id: "map_company_id"
+        title: "Company IC ID",
+        id: "map_ic_id"
     },
 ]
 
@@ -28,12 +28,12 @@ const companyTableColumns = (actioncell) => [
       cell: actioncell,  
     },
     {
-        name: 'Local ID',
-        selector: 'local_id',
+        name: 'Company Jasmin ID',
+        selector: 'jasmin_id',
     },
     {
-        name: 'Company ID',
-        selector: 'map_company_id',
+        name: 'Company IC ID',
+        selector: 'map_ic_id',
     },
     {
         name: 'Name',

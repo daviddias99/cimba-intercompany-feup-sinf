@@ -1,7 +1,14 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
-const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery } = require('../database/methods/orderMethods');
-const { getOrders, getInvoices, getDeliveries } = require('../jasmin/orders');
-const { newPurchaseOrder, newInvoice, newDeliveryNote } = require('./purchase');
+const { getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment } = require('../database/methods/orderMethods');
+const {
+  getOrders, getInvoices, getDeliveries, getPayments,
+} = require('../jasmin/orders');
+const {
+  newPurchaseOrder,
+  newInvoice,
+  newDeliveryNote,
+  newPayment,
+} = require('./purchase');
 
 const pollOrdersCompany = async (companyId) => {
   const orders = await getOrders(companyId);
@@ -9,8 +16,8 @@ const pollOrdersCompany = async (companyId) => {
   const mostRecentOrderTime = new Date(company.most_recent_order).getTime();
 
   const newOrders = orders.data.filter((order) => {
-    const orderDate = new Date(order.createdOn);
-    return order.documentType === 'ECF' && orderDate.getTime() > mostRecentOrderTime;
+    const time = new Date(order.createdOn);
+    return !order.autoCreated && order.orderNature === 1 && time.getTime() > mostRecentOrderTime;
   });
 
   newOrders.forEach((order) => newPurchaseOrder(companyId, order));
@@ -31,11 +38,10 @@ const pollInvoiceCompany = async (companyId) => {
 
   const invoices = await getInvoices(companyId);
 
-  // TODO: UnhandledPromiseRejectionWarning: TypeError: Cannot read property 'filter' of undefined
-  const newInvoices = invoices.filter((invoice) => {
-    const orderId = invoice.documentLines[0].sourceDocId;
+  const newInvoices = invoices.filter((invoice) => invoice.documentLines.some((line) => {
+    const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
-  });
+  }));
 
   newInvoices.forEach((invoice) => newInvoice(companyId, invoice));
 };
@@ -55,10 +61,10 @@ const pollDeliveryCompany = async (companyId) => {
 
   const deliveries = await getDeliveries(companyId);
 
-  const newDeliveries = deliveries.filter((delivery) => {
-    const orderId = delivery.documentLines[0].sourceDocId;
+  const newDeliveries = deliveries.filter((delivery) => delivery.documentLines.some((line) => {
+    const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
-  });
+  }));
 
   newDeliveries.forEach((delivery) => newDeliveryNote(companyId, delivery));
 };
@@ -70,4 +76,27 @@ exports.pollDelivery = async () => {
       pollDeliveryCompany(company.id)
     }
   })
+};
+
+const pollPaymentCompany = async (companyId) => {
+  const invoices = await getInvoicesNoPayment(companyId);
+  const invoicesId = new Set(invoices.map((inv) => inv.invoice_id));
+
+  const payments = await getPayments(companyId);
+
+  const newPayments = payments.filter((payment) => payment.documentLines.some((line) => {
+    const invoiceId = line.sourceDocId;
+    return invoicesId.has(invoiceId);
+  }));
+
+  newPayments.forEach((payment) => newPayment(companyId, payment));
+};
+
+exports.pollPayment = async () => {
+  const companies = await getCompanies();
+  companies.forEach((company) => {
+    if (!company.company_key.startsWith("MOCK")) {
+      pollPaymentCompany(company.id)
+    }
+  });
 };

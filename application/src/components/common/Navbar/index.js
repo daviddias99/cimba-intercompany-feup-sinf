@@ -1,15 +1,16 @@
 import React from 'react';
 import Logo from 'components/common/Logo';
+import { Link } from 'react-router-dom';
 
 import './styles.scss';
 import api from 'services/api';
-import { useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logoutUser } from 'actions/userActions';
 import icons from '../../../assets/icons';
 
 const Navbar = () => {
   const dispatch = useDispatch();
-  const username = JSON.parse(window.localStorage.getItem('CIMBA_USER')).username;
+  const username = (JSON.parse(window.localStorage.getItem('CIMBA_USER')) ? JSON.parse(window.localStorage.getItem('CIMBA_USER')).username : "");
   const logout = () => {
     api.logout((res) => {
       if (res.status === 200) {
@@ -27,25 +28,23 @@ const Navbar = () => {
   return (
     <nav className="navbar is-flex is-align-items-center is-justify-content-space-between">
       <div>
-        <Logo dark />
+        <Link to='/overview'>
+          <Logo dark />
+        </Link>
       </div>
-      <div className="is-flex">
+      {username ? <div className="is-flex">
 
         <div className="navbar-username-wrapper">
           <p>You're logged in as {username}</p>
         </div>
 
-        <div className="navbar-button-wrapper">
-          <div className="notif-icon">
-            <img src={icons.notificationIcon} alt="Notification icon" />
-          </div>
-        </div>
         <div className="navbar-button-wrapper" onClick={logout}>
           <div className="logout-icon">
             <img src={icons.exitIcon} alt="Logout icon" />
           </div>
         </div>
-      </div>
+      </div> : ""}
+
     </nav>
   );
 };

@@ -12,14 +12,18 @@ const JTW_TOKEN_KEY = 'JWT_TOKEN';
 const routes = {
   login: '/login',
   logout: '/logout',
+  getOrder: (processId) => (`/process/${processId}/order`),
+  getTransportation: (processId) => (`/process/${processId}/transportation`),
+  getInvoice: (processId) => (`/process/${processId}/invoice`),
+  getFinancial: (processId) => (`/process/${processId}/financial`),
+  getProcesses: '/process',
+  getLogs: '/logs',
   company: (companyId) => `/companies/${companyId}`,
   itemMaps: (companyId) => `/companies/${companyId}/itemMaps`,
   singleItemMap : (companyId, localId) => `/companies/${companyId}/itemMaps/${localId}`,
   companyMaps: (companyId) => `/companies/${companyId}/companyMaps`,
   singleCompanyMap: (companyId, localId) => `/companies/${companyId}/companyMaps/${localId}`,
   settings: (userId) => (`/users/${userId}/company`),
-  getBots: (loggerId, nRequests, curPage) => (`logger/${loggerId}/bots?n_req=${nRequests}&page=${curPage}`),
-  getLogs: (loggerId, nRequests, curPage) => (`logger/${loggerId}/logs?n_req=${nRequests}&page=${curPage}`)
 };
 
 /**
@@ -117,6 +121,24 @@ const api = {
   },
   setSettings: (userId, data, callback) => {
     request(routes.settings(userId), 'post', data, callback);
+  },
+  getOrder: (processId, callback) => {
+    request(routes.getOrder(processId), 'get', null, callback)
+  },
+  getTransportation: (processId, callback) => {
+    request(routes.getTransportation(processId), 'get', null, callback)
+  },
+  getInvoice: (processId, callback) => {
+    request(routes.getInvoice(processId), 'get', null, callback)
+  },
+  getFinancial: (processId, callback) => {
+    request(routes.getFinancial(processId), 'get', null, callback)
+  },
+  getProcesses: (callback) => {
+    request(routes.getProcesses, 'get', null, callback)
+  },
+  getLogs: (callback) => {
+    request(routes.getLogs, 'get', null, callback)
   },
   getItemMaps: (companyId, callback) => {
     request(routes.itemMaps(companyId), 'get', null, callback);

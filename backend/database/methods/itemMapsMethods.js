@@ -1,6 +1,6 @@
 const db = require('../knex');
 
-exports.mapLocalItemId = async (companyId, localId, mapCompanyId) => {
-  const item = await db('item_maps').where({ local_id: localId, company_id: companyId, map_company_id: mapCompanyId }).first();
+exports.mapLocalItemId = async (icId, jasminId, mapicId) => {
+  const item = await db('item_maps').where({ jasmin_id: jasminId, ic_id: icId, map_ic_id: mapicId }).first();
   return item == null ? null : item.item_id;
 };

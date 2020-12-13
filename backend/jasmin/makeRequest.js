@@ -40,7 +40,17 @@ exports.makeRequest = async (
     });
     return { status: res.status, data: res.data };
   } catch (error) {
-    console.log(error.response);
+    console.log(`Make Request:\n${JSON.stringify({
+      endPoint,
+      data,
+      companyID,
+      params,
+      companyInfo,
+    }, null, 2)}`);
+    console.log({
+      status: error.response.status,
+      data: error.response.data,
+    });
     return error;
   }
 };

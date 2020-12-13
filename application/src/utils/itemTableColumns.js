@@ -4,15 +4,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 const insertItemForm = [
     {
-        title: "Item Local ID",
-        id: "local_id"
+        title: "Jasmin ID of the item",
+        id: "jasmin_id"
     },
     {
-        title: "Company ID",
-        id: "map_company_id"
+        title: "Mapped Company IC ID",
+        id: "map_ic_id"
     },
     {
-        title: "Item ID (on other company)",
+        title: "Jasmin ID of the item in the mapped company",
         id: "item_id"
     },
     {
@@ -36,20 +36,20 @@ const itemTableColumns = (actioncell) => [
         cell: actioncell,
     },
     {
-        name: 'Company',
-        selector: 'map_company_local_id',
+        name: 'Company Jasmin ID',
+        selector: 'map_company_jasmin_id',
     },
     {
-        name: 'Local ID',
-        selector: 'local_id',
+        name: 'Item Jasmin ID',
+        selector: 'jasmin_id',
         sortable: true,
     },
     {
-        name: 'Item ID',
+        name: 'Item Jasmin ID on mapped company',
         selector: 'item_id',
     },
     {
-        name: 'Local Item Description',
+        name: 'Item Description',
         selector: 'local_description',
         grow: 2,
         style: {
@@ -57,7 +57,7 @@ const itemTableColumns = (actioncell) => [
         },
     },
     {
-        name: 'Item Description',
+        name: 'Mapped Item Description',
         selector: 'description',
         grow: 2,
         style: {
@@ -65,12 +65,12 @@ const itemTableColumns = (actioncell) => [
         },
     },
     {
-        name: 'Local Unit',
+        name: 'Unit',
         selector: 'local_unit',
         center: true,
     },
     {
-        name: 'Unit',
+        name: 'Mapped Unit',
         selector: 'unit',
         center: true,
     },

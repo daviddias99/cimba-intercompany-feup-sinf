@@ -1,32 +1,35 @@
 const { makeRequest } = require('./makeRequest');
-const { mapLocalCompanyId, mapUniversalCompanyId } = require('../database/methods/companyMapsMethods');
+const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { addOrder } = require('../database/methods/orderMethods');
+const { addOrderMaps } = require('../database/methods/orderMapsMethods');
+const { addLog } = require('../database/methods/logsMethods');
 
 exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
 
 exports.createSalesOrder = async (
-  companyIdBuyer,
-  companyIdSuplier,
+  icIdBuyer,
+  jasminIdSuplier,
   deliveryTerm,
   documentLines,
+  purchaseOrderId,
 ) => {
-  // Getting universal id of suplier
-  const universalIdSuplier = await mapLocalCompanyId(companyIdBuyer, companyIdSuplier);
-  if (universalIdSuplier == null) throw new ReferenceError(`Cannot Map Suplier ${companyIdSuplier} in Buyer`);
+  // Getting ic id of suplier
+  const icIdSuplier = await jasminToIcId(icIdBuyer, jasminIdSuplier);
+  if (icIdSuplier == null) throw new ReferenceError(`Cannot Map Suplier ${jasminIdSuplier} in Buyer`);
 
-  // Getting local id of buyer in suplier
-  const localIdBuyer = await mapUniversalCompanyId(universalIdSuplier, companyIdBuyer);
-  if (localIdBuyer == null) throw new ReferenceError(`Cannot Map Buyer ${companyIdBuyer} in Suplier`);
+  // Getting jasmin id of buyer in suplier
+  const jasminIdBuyer = await icToJasminId(icIdSuplier, icIdBuyer);
+  if (jasminIdBuyer == null) throw new ReferenceError(`Cannot Map Buyer ${icIdBuyer} in Suplier`);
 
-  const suplier = await getCompanyById(universalIdSuplier);
-  if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${universalIdSuplier}`);
+  const suplier = await getCompanyById(icIdSuplier);
+  if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdSuplier}`);
 
   // Translate documentLines
   let mapPromises = [];
   documentLines.forEach((element) => mapPromises.push(
-    mapLocalItemId(companyIdBuyer, element.purchasesItem, universalIdSuplier),
+    mapLocalItemId(icIdBuyer, element.purchasesItem, icIdSuplier),
   ));
 
   mapPromises = await Promise.all(mapPromises);
@@ -34,7 +37,11 @@ exports.createSalesOrder = async (
   const documentLinesMapped = [];
   mapPromises.forEach((element, index) => {
     if (element == null) throw new ReferenceError(`Cannot Map Item number ${index}`);
-    documentLinesMapped.push({ salesItem: element });
+    documentLinesMapped.push({
+      salesItem: element,
+      quantity: documentLines[index].quantity,
+      unitPrice: documentLines[index].unitPrice,
+    });
   });
 
   const salesOrder = await makeRequest(
@@ -44,14 +51,15 @@ exports.createSalesOrder = async (
     {},
     {
       company: suplier.company_key,
-      buyerCustomerParty: localIdBuyer,
+      buyerCustomerParty: jasminIdBuyer,
       deliveryTerm,
       documentLines: documentLinesMapped,
     },
   );
 
-  addOrder(universalIdSuplier, salesOrder.data, 'sale');
-  console.log(`Created sales order ${salesOrder.data} for company ${universalIdSuplier}`);
+  await addOrder(icIdSuplier, salesOrder.data, 'sale');
+  await addOrderMaps(purchaseOrderId, salesOrder.data);
+  console.log(`Created sales order ${salesOrder.data} for company ${icIdSuplier}`);
 
   return salesOrder;
 };
@@ -59,3 +67,19 @@ exports.createSalesOrder = async (
 exports.getInvoices = async (companyId) => (await makeRequest('billing/invoices', 'get', companyId)).data;
 
 exports.getDeliveries = async (companyId) => (await makeRequest('shipping/deliveries', 'get', companyId)).data;
+
+exports.getPurchaseOrder = async (companyId, orderId) => (await makeRequest(`purchases/orders/${orderId}`, 'get', companyId)).data;
+
+exports.getPurchaseInvoice = async (companyId, invoiceId) => (await makeRequest(`invoiceReceipt/invoices/${invoiceId}`, 'get', companyId)).data;
+
+exports.getPurchaseFinancial = async (companyId, id) => (await makeRequest(`/accountsPayable/payments/${id}`, 'get', companyId)).data;
+
+exports.getSalesOrder = async (companyId, orderId) => (await makeRequest(`sales/orders/${orderId}`, 'get', companyId)).data;
+
+exports.getSalesInvoice = async (companyId, invoiceId) => (await makeRequest(`billing/invoices/${invoiceId}`, 'get', companyId)).data;
+
+exports.getSalesDelivery = async (companyId, deliveryId) => (await makeRequest(`shipping/deliveries/${deliveryId}`, 'get', companyId)).data;
+
+exports.getSalesFinancial = async (companyId, id) => (await makeRequest(`/accountsReceivable/receipts/${id}`, 'get', companyId)).data;
+
+exports.getPayments = async (companyId) => (await makeRequest('accountsPayable/payments', 'get', companyId)).data;
