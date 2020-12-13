@@ -32,7 +32,6 @@ const Overview = () => {
 
   return (
     <Layout title='Overview'>
-      {redirect ? <Redirect to="/settings" /> : ""}
       {
         isLoading ?
           <LoadingScreen /> :
