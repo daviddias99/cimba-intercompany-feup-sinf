@@ -137,3 +137,5 @@ exports.getSalesDelivery = async (companyId, deliveryId) => (await makeRequest(`
 exports.getSalesFinancial = async (companyId, id) => (await makeRequest(`/accountsReceivable/receipts/${id}`, 'get', companyId)).data;
 
 exports.getPayments = async (companyId) => (await makeRequest('accountsPayable/payments', 'get', companyId)).data;
+
+exports.getCreditNote = async (companyId, id) => (await makeRequest(`/billing/memos/${id}`, 'get', companyId)).data;
