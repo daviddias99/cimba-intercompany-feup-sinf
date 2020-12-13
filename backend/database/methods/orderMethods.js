@@ -27,7 +27,7 @@ exports.addOrder = async (icId, orderId, type, otherCompanyName, createdOn = nul
 
 exports.getSalesOrdersNoInvoice = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'sale', invoice_id: null });
 
-exports.getReturnOrdersNoInvoice = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'return_sale', invoice_id: null });
+exports.getReturnOrdersNoPayment = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'return_sale', payment_id: null });
 
 exports.getSalesOrdersNoDelivery = async (icId) => db('orders').select('order_id').where({ ic_id: icId, type: 'sale', delivery_id: null });
 
@@ -49,6 +49,10 @@ exports.getInvoicesNoPayment = async (icId) => db('orders').select('invoice_id')
 
 exports.addPaymentToOrder = async (icId, invoiceId, paymentId) => db('orders').where({
   ic_id: icId, invoice_id: invoiceId, type: 'purchase', payment_id: null,
+}).update({ payment_id: paymentId }).returning('id');
+
+exports.addCreditNoteToOrder = async (icId, orderId, paymentId, type) => db('orders').where({
+  ic_id: icId, order_id: orderId, type, payment_id: null,
 }).update({ payment_id: paymentId }).returning('id');
 
 exports.getInvoiceOfOrder = async (icId, orderId, type) => db('orders').select('invoice_id').where({ ic_id: icId, order_id: orderId, type }).first();

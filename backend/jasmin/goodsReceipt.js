@@ -25,7 +25,7 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
       // eslint-disable-next-line no-await-in-loop
-      quantity: await convertItemQuantity(icIdSuplier, docLines.item, icIdBuyer, docLines.quantity),
+      quantity: docLines.quantity,
       // eslint-disable-next-line no-await-in-loop
       item: await mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
       sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,

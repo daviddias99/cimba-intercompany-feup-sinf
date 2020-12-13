@@ -12,6 +12,7 @@ const getProcessState = (process) => {
   if (process.type === 'return_sale' || process.type === 'return_purchase') {
     if (process.delivery_id == null) return 0;
     if (process.payment_id == null) return 1;
+    return 2;
   }
 
   return 3;
@@ -83,11 +84,11 @@ exports.getFinancial = async (req, res) => {
   const { process } = req;
 
   let document;
-  if (process.type === 'purchase' || process.type === 'return_purchase') {
+  if (process.type === 'purchase') {
     document = await jasmin.getPurchaseFinancial(process.ic_id, process.payment_id);
-  } else if (process.type === 'sale' || process.type === 'return_sale') {
+  } else if (process.type === 'sale') {
     document = await jasmin.getSalesFinancial(process.ic_id, process.payment_id);
-  } else if (process.type === 'return_sale') {
+  } else if (process.type === 'return_sale' || process.type === 'return_purchase') {
     document = await jasmin.getCreditNote(process.ic_id, process.payment_id);
   }
 
@@ -95,7 +96,7 @@ exports.getFinancial = async (req, res) => {
     type: process.type,
     document,
     processState: getProcessState(process),
-    documentState: 3,
+    documentState: (process.type === 'return_sale' || process.type === 'return_purchase') ? 2 : 3,
   });
 };
 

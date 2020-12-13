@@ -81,12 +81,12 @@ const apiRequests = (id, type) => {
     return_sale: [
       api.getOrder,
       api.getTransportation,
-      api.getCreditNote,
+      api.getFinancial,
     ],
     return_purchase: [
       api.getOrder,
       api.getTransportation,
-      api.getCreditNote,
+      api.getFinancial,
     ]
   }[type][id]
 }
@@ -117,7 +117,9 @@ const Process = (props) => {
         return;
       }
     };
-
+    console.log(endpoint)
+    console.log(shownStep)
+    console.log(type)
     endpoint(processId, callback);
   }, [redirect, processId, shownStep, type]);
 

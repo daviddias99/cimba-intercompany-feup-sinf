@@ -53,8 +53,7 @@ exports.createOrder = async (
     if (element == null) throw new ReferenceError(`Cannot Map Item number ${index}`);
     documentLinesMapped.push({
       salesItem: element,
-      quantity: await convertItemQuantity(icIdBuyer, documentLines[index].item,
-        icIdSuplier, documentLines[index].quantity),
+      quantity: documentLines[index].quantity,
       unitPrice: documentLines[index].unitPrice,
       discount1: documentLines[index].discount1,
       discount2: documentLines[index].discount2,

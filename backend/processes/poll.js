@@ -1,7 +1,7 @@
 const { getCompanies, getCompanyById } = require('../database/methods/companyMethods');
 const {
   getSalesOrdersNoInvoice, getSalesOrdersNoDelivery, getInvoicesNoPayment,
-  getReturnOrdersNoDelivery, getReturnOrdersNoInvoice,
+  getReturnOrdersNoDelivery, getReturnOrdersNoPayment,
 } = require('../database/methods/orderMethods');
 const {
   getOrders, getInvoices, getDeliveries, getPayments, getCreditNotes,
@@ -53,7 +53,7 @@ exports.pollInvoice = async () => {
 };
 
 const pollCreditNoteCompany = async (companyId) => {
-  const salesOrders = await getReturnOrdersNoInvoice(companyId);
+  const salesOrders = await getReturnOrdersNoPayment(companyId);
   const salesOrdersId = new Set(salesOrders.map((order) => order.order_id));
 
   const invoices = await getCreditNotes(companyId);
