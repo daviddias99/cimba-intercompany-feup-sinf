@@ -2,7 +2,18 @@ import { Button } from 'components/common/Button';
 import OverviewOrderStatus from 'components/common/OverviewOrderStatus';
 import { Link } from 'react-router-dom';
 import routes from 'routes';
-import {dateTimeFormat} from './utilFuncs'
+import { dateTimeFormat } from './utilFuncs'
+
+const getProperName = (type) => {
+    switch (type) {
+        case 'purchase':
+            return 'Purchase'
+        case 'sales':
+            return 'Sales'
+        default:
+            return 'Return';
+    }
+}
 
 const overviewTableColumns = [
     {
@@ -11,11 +22,11 @@ const overviewTableColumns = [
     },
     {
         name: 'Type',
-        cell: (row) => `${row.type === 'purchase' ? 'Purchase' : 'Sale'}`
+        cell: (row) => getProperName(row.type)
     },
     {
         name: 'Process',
-        cell: (row) => `${row.type === 'purchase' ? 'Purchase' : 'Sales'} process ${row.id}`
+        cell: (row) => `${getProperName(row.type)} process ${row.id}`
     },
     {
         name: 'Company',

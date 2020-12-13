@@ -1,7 +1,4 @@
-import { LOAD_USER, LOGOUT_USER, SET_SETTINGS } from 'actions/userActions';
-import { useDispatch } from 'react-redux';
-
-import api from 'services/api';
+import { LOAD_USER, LOGOUT_USER} from 'actions/userActions';
 
 const initialState = {
   loggedIn: window.localStorage.getItem('JWT_TOKEN') ? true : false,
@@ -14,13 +11,6 @@ const reducer = (state = initialState, action) => {
     case LOAD_USER:
       window.localStorage.setItem('JWT_TOKEN', action.data.token);
       window.localStorage.setItem('CIMBA_USER', JSON.stringify(action.data.data));
-
-      // api.getSettings(action.data.data.id, (res) => {
-
-      //   if (res.status === 200) {
-      //     window.localStorage.setItem('CIMBA_COMPANY', JSON.stringify(res.data));
-      //   }
-      // });
 
       return {
         ...state,

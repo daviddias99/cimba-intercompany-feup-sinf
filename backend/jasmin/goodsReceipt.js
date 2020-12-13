@@ -5,7 +5,7 @@ const { getMapOfDocSalesOrder, getMapOfDocPurchaseOrder } = require('../database
 const { addDeliveryToOrder } = require('../database/methods/orderMethods');
 const { getPurchaseOrder, getSalesOrder } = require('./orders');
 const { addLog } = require('../database/methods/logsMethods');
-const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
+const { mapLocalItemId, convertItemQuantity } = require('../database/methods/itemMapsMethods');
 
 async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
   icIdBuyer, isDefault, icIdSuplier) {
@@ -24,7 +24,8 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
       : await getSalesOrder(icIdBuyer, elementPromise);
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
-      quantity: docLines.quantity,
+      // eslint-disable-next-line no-await-in-loop
+      quantity: await convertItemQuantity(icIdSuplier, docLines.item, icIdBuyer, docLines.quantity),
       // eslint-disable-next-line no-await-in-loop
       item: await mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
       sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,

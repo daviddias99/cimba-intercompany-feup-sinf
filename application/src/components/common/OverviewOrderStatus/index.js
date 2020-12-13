@@ -5,7 +5,12 @@ import React from 'react';
 import './styles.scss';
 
 function getSteps() {
-  return {sale: ['Order', 'Transp.', 'Invoice', 'Receipt',], purchase: ['Order', 'Transp.', 'Invoice', 'Payment']};
+  return {
+    sale: ['Order', 'Transp.', 'Invoice', 'Receipt',], 
+    purchase: ['Order', 'Transp.', 'Invoice', 'Payment'],
+    return_sale: ['Order', 'Transp', 'Credit Note'],
+    return_purchase: ['Order', 'Transp', 'Credit Note']
+  };
 }
 
 const OverviewOrderStatus = ({ row }) => {

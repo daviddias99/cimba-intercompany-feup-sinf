@@ -3,9 +3,16 @@ const { getAllProcesses } = require('../database/methods/orderMethods');
 const regexNum = require('../helper/regexNum');
 
 const getProcessState = (process) => {
-  if (process.delivery_id == null) return 0;
-  if (process.invoice_id == null) return 1;
-  if (process.payment_id == null) return 2;
+  if (process.type === 'sale' || process.type === 'purchase') {
+    if (process.delivery_id == null) return 0;
+    if (process.invoice_id == null) return 1;
+    if (process.payment_id == null) return 2;
+  }
+
+  if (process.type === 'return_sale' || process.type === 'return_purchase') {
+    if (process.delivery_id == null) return 0;
+    if (process.payment_id == null) return 1;
+  }
 
   return 3;
 };
@@ -21,9 +28,9 @@ exports.getOrder = async (req, res) => {
   const { process } = req;
 
   let document;
-  if (process.type === 'purchase') {
+  if (process.type === 'purchase' || process.type === 'return_purchase') {
     document = await jasmin.getPurchaseOrder(process.ic_id, process.order_id);
-  } else if (process.type === 'sale') {
+  } else if (process.type === 'sale' || process.type === 'return_sale') {
     document = await jasmin.getSalesOrder(process.ic_id, process.order_id);
   }
 
@@ -39,9 +46,10 @@ exports.getTransportation = async (req, res) => {
   const { process } = req;
 
   let document;
-  if (process.type === 'purchase') {
+
+  if (process.type === 'purchase' || process.type === 'return_sale') {
     document = { deliveryId: process.delivery_id };
-  } else if (process.type === 'sale') {
+  } else if (process.type === 'sale' || process.type === 'return_purchase') {
     document = await jasmin.getSalesDelivery(process.ic_id, process.delivery_id);
   }
 
@@ -57,9 +65,9 @@ exports.getInvoice = async (req, res) => {
   const { process } = req;
 
   let document;
-  if (process.type === 'purchase') {
+  if (process.type === 'purchase' || process.type === 'return_purchase') {
     document = await jasmin.getPurchaseInvoice(process.ic_id, process.invoice_id);
-  } else if (process.type === 'sale') {
+  } else if (process.type === 'sale' || process.type === 'return_sale') {
     document = await jasmin.getSalesInvoice(process.ic_id, process.invoice_id);
   }
 
@@ -75,9 +83,9 @@ exports.getFinancial = async (req, res) => {
   const { process } = req;
 
   let document;
-  if (process.type === 'purchase') {
+  if (process.type === 'purchase' || process.type === 'return_purchase') {
     document = await jasmin.getPurchaseFinancial(process.ic_id, process.payment_id);
-  } else if (process.type === 'sale') {
+  } else if (process.type === 'sale' || process.type === 'return_sale') {
     document = await jasmin.getSalesFinancial(process.ic_id, process.payment_id);
   }
 

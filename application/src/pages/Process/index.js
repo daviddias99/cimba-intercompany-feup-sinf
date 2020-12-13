@@ -50,6 +50,16 @@ const getComponent = (id, data, type) => {
       <GoodsReceipt delivery={data} title='Goods Receipt details'/>,
       <BuyerInvoice invoice={data} title='Invoice Details' />,
       <Payment payment={data} title='Payment Details' />,
+    ],
+    return_sale: [
+      <SellerOrder orderData={data} title='Return Order Details' />,
+      <GoodsReceipt delivery={data} title='Delivery Details' />,
+      <SellerCreditNote creditNote={data} title='Credit Note Details'/>
+    ],
+    return_purchase: [
+      <BuyerOrder orderData={data} title='Return Order Details' />,
+      <Delivery delivery={data} title='Delivery Details' />,
+      <BuyerCreditNote creditNote={data} title='Credit Note Details'/>
     ]
   }[type][id];
 }
@@ -67,6 +77,16 @@ const apiRequests = (id, type) => {
       api.getTransportation,
       api.getInvoice,
       api.getFinancial,
+    ],
+    return_sale: [
+      api.getOrder,
+      api.getTransportation,
+      api.getCreditNote,
+    ],
+    return_purchase: [
+      api.getOrder,
+      api.getTransportation,
+      api.getCreditNote,
     ]
   }[type][id]
 }
@@ -110,7 +130,7 @@ const Process = (props) => {
           <div>
             <div className='processStepperCard'>
               <Card title={`Process ${processId}`}>
-                <ProcessStepper activeStp={shownStep} maxStep={processState} handlers={[setShownStep, setShownStep]} />
+                <ProcessStepper activeStp={shownStep} type={type} maxStep={processState} handlers={[setShownStep, setShownStep]} />
               </Card>
             </div>
             {shownCard}

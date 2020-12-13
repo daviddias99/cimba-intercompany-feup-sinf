@@ -47,7 +47,7 @@ const Payment = (props) => {
             noHeader={true}
             pagination={true}
           />
-          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${paymentData.grossValue.amount} ${paymentData.grossValue.symbol}`}</h2>
+          <h2 className='orderTotal'><span className='orderTotalText'>Total:</span> {`${paymentData.grossValue.amount.toFixed(2)} ${paymentData.grossValue.symbol}`}</h2>
         </div>
       </Subsection>
       <hr />

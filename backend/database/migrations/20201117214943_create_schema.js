@@ -41,7 +41,6 @@ exports.up = function (knex) {
       table.foreign('map_ic_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
       table.integer('ic_id').unsigned();
       table.foreign('ic_id').references('companies.id').onUpdate('CASCADE').onDelete('CASCADE');
-      
       table.unique(['jasmin_id', 'ic_id'], 'company_map_local_unique');
       table.unique(['ic_id', 'map_ic_id'], 'company_map_unique');
     })

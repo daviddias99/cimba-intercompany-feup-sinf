@@ -1,6 +1,6 @@
 const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
-const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
+const { mapLocalItemId, convertItemQuantity } = require('../database/methods/itemMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
@@ -49,11 +49,12 @@ exports.createOrder = async (
   mapPromises = await Promise.all(mapPromises);
 
   const documentLinesMapped = [];
-  mapPromises.forEach((element, index) => {
+  mapPromises.forEach(async (element, index) => {
     if (element == null) throw new ReferenceError(`Cannot Map Item number ${index}`);
     documentLinesMapped.push({
       salesItem: element,
-      quantity: documentLines[index].quantity,
+      quantity: await convertItemQuantity(icIdBuyer, documentLines[index].item,
+        icIdSuplier, documentLines[index].quantity),
       unitPrice: documentLines[index].unitPrice,
       discount1: documentLines[index].discount1,
       discount2: documentLines[index].discount2,

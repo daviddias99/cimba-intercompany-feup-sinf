@@ -63,14 +63,19 @@ ColorlibStepIcon.propTypes = {
 };
 
 
-function getSteps() {
-  return ['Order', 'Delivery', 'Invoice', 'Receipt',];
+function getSteps(type) {
+  return {
+    sales: ['Order', 'Delivery', 'Invoice', 'Receipt',],
+    purchase: ['Order', 'Goods Receipt', 'Invoice', 'Payment',],
+    return_sale: ['Order', 'Delivery', 'Credit Note'],
+    return_purchase: ['Order', 'Delivery', 'Credit Note'],
+  }[type];
 }
 
 
-export default function OverviewTooltipStepper({ activeStp, maxStep, handlers }) {
+export default function OverviewTooltipStepper({ activeStp, maxStep, handlers, type }) {
   const classes = useColorlibStepIconStyles();
-  const steps = getSteps();
+  const steps = getSteps(type);
 
   const handleNext = () => {
     handlers[1](activeStp === maxStep ? maxStep : activeStp + 1);

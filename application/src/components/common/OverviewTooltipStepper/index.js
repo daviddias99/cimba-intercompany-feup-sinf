@@ -66,23 +66,9 @@ ColorlibStepIcon.propTypes = {
   icon: PropTypes.node,
 };
 
-
-
 export default function OverviewTooltipStepper({ activeStp, steps }) {
   const classes = useColorlibStepIconStyles();
   const [activeStep] = React.useState(activeStp);
-
-  // const handleNext = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  // };
-
-  // const handleBack = () => {
-  //   setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  // };
-
-  // const handleReset = () => {
-  //   setActiveStep(0);
-  // };
 
   return (
 
