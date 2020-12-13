@@ -47,10 +47,7 @@ exports.makeRequest = async (
       params,
       companyInfo,
     }, null, 2)}`);
-    console.log({
-      status: error.response.status,
-      data: error.response.data,
-    });
+    console.log(error);
     return error;
   }
 };

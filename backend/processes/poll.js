@@ -26,9 +26,7 @@ const pollOrdersCompany = async (companyId) => {
 exports.pollPurchaseOrders = async () => {
   const companies = await getCompanies();
   companies.forEach((company) => {
-    if (!company.company_key.startsWith("MOCK")) {
-      pollOrdersCompany(company.id)
-    }
+    pollOrdersCompany(company.id);
   });
 };
 
@@ -49,10 +47,8 @@ const pollInvoiceCompany = async (companyId) => {
 exports.pollInvoice = async () => {
   const companies = await getCompanies();
   companies.forEach((company) => {
-    if (!company.company_key.startsWith("MOCK")) {
-      pollInvoiceCompany(company.id)
-    }
-  })
+    pollInvoiceCompany(company.id);
+  });
 };
 
 const pollDeliveryCompany = async (companyId) => {
@@ -72,10 +68,8 @@ const pollDeliveryCompany = async (companyId) => {
 exports.pollDelivery = async () => {
   const companies = await getCompanies();
   companies.forEach((company) => {
-    if (!company.company_key.startsWith("MOCK")) {
-      pollDeliveryCompany(company.id)
-    }
-  })
+    pollDeliveryCompany(company.id);
+  });
 };
 
 const pollPaymentCompany = async (companyId) => {
@@ -95,8 +89,6 @@ const pollPaymentCompany = async (companyId) => {
 exports.pollPayment = async () => {
   const companies = await getCompanies();
   companies.forEach((company) => {
-    if (!company.company_key.startsWith("MOCK")) {
-      pollPaymentCompany(company.id)
-    }
+    pollPaymentCompany(company.id);
   });
 };
