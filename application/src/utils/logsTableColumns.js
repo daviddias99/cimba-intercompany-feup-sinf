@@ -16,6 +16,20 @@ const docTypes = {
        invoice: 'Invoice',
        payment: 'Receipt' 
     },
+    return_purchase: {
+       order: 'Purchase Order',
+       delivery: 'Goods Receipt',
+       invoice: 'Invoice',
+       payment: 'Payment', 
+       credit_note: 'Credit Note' 
+    },
+    return_sale: {
+       order: 'Sales Order',
+       delivery: 'Delivery Note',
+       invoice: 'Invoice',
+       payment: 'Receipt',
+       credit_note: 'Credit Note'  
+    },
 
 }
 

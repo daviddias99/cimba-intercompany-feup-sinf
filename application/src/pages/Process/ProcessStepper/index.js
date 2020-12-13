@@ -65,7 +65,7 @@ ColorlibStepIcon.propTypes = {
 
 function getSteps(type) {
   return {
-    sales: ['Order', 'Delivery', 'Invoice', 'Receipt',],
+    sale: ['Order', 'Delivery', 'Invoice', 'Receipt',],
     purchase: ['Order', 'Goods Receipt', 'Invoice', 'Payment',],
     return_sale: ['Order', 'Delivery', 'Credit Note'],
     return_purchase: ['Order', 'Delivery', 'Credit Note'],

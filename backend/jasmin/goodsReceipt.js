@@ -16,7 +16,6 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
 
     if (elementPromise == null) throw new ReferenceError(`Cannot find Sales Order to Purchase Order at Index ${i}`);
 
-    // TODO: if return delivery getSalesOrder
     const orderBuyer = isDefault
       // eslint-disable-next-line no-await-in-loop
       ? await getPurchaseOrder(icIdBuyer, elementPromise)
@@ -25,7 +24,7 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines,
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
       // eslint-disable-next-line no-await-in-loop
-      quantity: docLines.quantity,
+      quantity: await convertItemQuantity(icIdSuplier, docLines.item, icIdBuyer, docLines.quantity),
       // eslint-disable-next-line no-await-in-loop
       item: await mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
       sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,

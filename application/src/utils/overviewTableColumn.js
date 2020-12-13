@@ -8,7 +8,7 @@ const getProperName = (type) => {
     switch (type) {
         case 'purchase':
             return 'Purchase'
-        case 'sales':
+        case 'sale':
             return 'Sales'
         default:
             return 'Return';

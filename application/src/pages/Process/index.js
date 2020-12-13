@@ -117,9 +117,6 @@ const Process = (props) => {
         return;
       }
     };
-    console.log(endpoint)
-    console.log(shownStep)
-    console.log(type)
     endpoint(processId, callback);
   }, [redirect, processId, shownStep, type]);
 
