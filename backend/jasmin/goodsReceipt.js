@@ -5,8 +5,9 @@ const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods'
 const { addDeliveryToPurchaseOrder } = require('../database/methods/orderMethods');
 const { getPurchaseOrder } = require('./orders');
 const { addLog } = require('../database/methods/logsMethods');
+const { mapLocalItemId } = require('../database/methods/itemMapsMethods');
 
-async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
+async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer, icIdSuplier) {
   const documentLinesMapped = [];
   for (let i = 0; i < purchaseOrderIds.length && i < documentLines.length; i += 1) {
     const elementPromise = purchaseOrderIds[i];
@@ -20,6 +21,7 @@ async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer
     documentLinesMapped.push({
       sourceDocLineNumber: docLines.sourceDocLine,
       quantity: docLines.quantity,
+      item: mapLocalItemId(icIdSuplier, docLines.item, icIdBuyer),
       sourceDocKey: `${orderBuyer.documentType}.${orderBuyer.serie}.${orderBuyer.seriesNumber}`,
     });
   }
@@ -52,7 +54,7 @@ exports.createGoodsReceipt = async (
   purchaseOrderIds = await Promise.all(purchaseOrderIds);
 
   const documentLinesMapped = await getDocumentLinesMapped(
-    purchaseOrderIds, documentLines, icIdBuyer,
+    purchaseOrderIds, documentLines, icIdBuyer, icIdSuplier,
   );
 
   const goodsReceipt = await makeRequest(
