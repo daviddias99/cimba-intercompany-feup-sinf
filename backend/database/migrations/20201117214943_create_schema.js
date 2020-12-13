@@ -62,6 +62,7 @@ exports.up = function (knex) {
       table.string('invoice_id');
       table.string('delivery_id');
       table.string('payment_id');
+      table.string('other_company_name');
     })
     .createTable('orders_maps', (table) => {
       table.string('sales_order_id').notNullable();

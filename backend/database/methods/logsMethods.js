@@ -1,7 +1,6 @@
 const db = require('../knex');
 
 exports.addLog = async (processId, logType, docId, docType) => {
-  console.log(processId);
   const log = {
     process_id: processId,
     log_type: logType,
