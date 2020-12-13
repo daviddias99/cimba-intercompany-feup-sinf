@@ -4,6 +4,7 @@ const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
 const { addDeliveryToPurchaseOrder } = require('../database/methods/orderMethods');
 const { getPurchaseOrder } = require('./orders');
+const { addLog } = require('../database/methods/logsMethods');
 
 async function getDocumentLinesMapped(purchaseOrderIds, documentLines, icIdBuyer) {
   const documentLinesMapped = [];
@@ -68,7 +69,10 @@ exports.createGoodsReceipt = async (
 
   const buyerOrderId = new Set(purchaseOrderIds);
   buyerOrderId.forEach(
-    (sourceDocId) => addDeliveryToPurchaseOrder(icIdBuyer, sourceDocId, goodsReceipt.data),
+    async (sourceDocId) => {
+      const id = await addDeliveryToPurchaseOrder(icIdBuyer, sourceDocId, goodsReceipt.data);
+      await addLog(id[0], 'create', goodsReceipt.data, 'delivery');
+    },
   );
 
   console.log(`Created goods Receipt order ${goodsReceipt.data} for company ${icIdBuyer}`);

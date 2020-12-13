@@ -107,7 +107,7 @@ exports.getAllProcesses = async (req, res) => {
   }
 
   let processes = await getAllProcesses(req.company.id, page, pageSize);
-  processes = processes.map((process) => ({ ...process, state: getProcessState(process), other_company_name: 'OTHER_COMP' }));
+  processes = processes.map((process) => ({ ...process, state: getProcessState(process) }));
 
   res.json(processes);
 };
