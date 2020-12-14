@@ -51,7 +51,10 @@ exports.newCreditNote = async (companyId, invoice) => {
     (documentLines) => documentLines.sourceDocId,
   ));
   salesOrdersId.forEach(
-    (sourceDocId) => addCreditNoteToOrder(companyId, sourceDocId, invoice.id, 'return_sale'),
+    async (sourceDocId) => {
+      const id = await addCreditNoteToOrder(companyId, sourceDocId, invoice.id, 'return_sale');
+      await addLog(id[0], 'detect', invoice.id, 'payment');
+    },
   );
 
   try {

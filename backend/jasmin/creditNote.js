@@ -2,8 +2,9 @@ const { makeRequest } = require('./makeRequest');
 const { jasminToIcId, icToJasminId } = require('../database/methods/companyMapsMethods');
 const { getCompanyById } = require('../database/methods/companyMethods');
 const { getMapOfDocSalesOrder } = require('../database/methods/orderMapsMethods');
-const { addPaymentToOrder, addCreditNoteToOrder } = require('../database/methods/orderMethods');
+const { addCreditNoteToOrder } = require('../database/methods/orderMethods');
 const { getOrdersKeyAndLines, filterAvailableLines } = require('./utils');
+const { addLog } = require('../database/methods/logsMethods');
 
 // TODO this request doesn't work
 
@@ -67,7 +68,10 @@ exports.createCreditNote = async (
 
   const buyerOrderIds = new Set(purchaseOrderIds);
   buyerOrderIds.forEach(
-    (sourceDocId) => addCreditNoteToOrder(icIdBuyer, sourceDocId, creditNote.data, 'return_purchase'),
+    async (sourceDocId) => {
+      const id = await addCreditNoteToOrder(icIdBuyer, sourceDocId, creditNote.data, 'return_purchase');
+      await addLog(id[0], 'create', creditNote.data, 'payment');
+    },
   );
 
   console.log(`Created Credit Note ${creditNote.data} for company ${icIdBuyer}`);
