@@ -101,8 +101,7 @@ const pollDeliveryCompany = async (companyId, page) => {
     const orderId = line.sourceDocId;
     return salesOrdersId.has(orderId);
   }));
-
-  const newReturnDeliveries = deliveries.filter((delivery) => delivery.documentLines.some(
+  const newReturnDeliveries = deliveries.data.filter((delivery) => delivery.documentLines.some(
     (line) => {
       const orderId = line.sourceDocId;
       return returnOrdersId.has(orderId);
