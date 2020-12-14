@@ -8,8 +8,6 @@ const { addLog } = require('../database/methods/logsMethods');
 
 const isStandardOrder = (orderNature) => orderNature === 1;
 
-exports.getOrders = async (companyId) => makeRequest('purchases/orders', 'get', companyId);
-
 exports.createOrder = async (
   icIdBuyer,
   jasminIdSuplier,
