@@ -6,6 +6,13 @@ const { addOrder } = require('../database/methods/orderMethods');
 const { addOrderMaps } = require('../database/methods/orderMapsMethods');
 const { addLog } = require('../database/methods/logsMethods');
 
+function compareDocumentLines(a, b) {
+  if (a.index > b.index) return 1;
+  if (b.index > a.index) return -1;
+
+  return 0;
+}
+
 const isStandardOrder = (orderNature) => orderNature === 1;
 
 exports.createOrder = async (
@@ -26,7 +33,8 @@ exports.createOrder = async (
   const suplier = await getCompanyById(icIdSuplier);
   if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdSuplier}`);
 
-  const { documentLines } = order;
+  // const { documentLines } = order;
+  const documentLines = order.documentLines.sort(compareDocumentLines);
   const buyer = await getCompanyById(icIdBuyer);
   if (buyer == null) throw new ReferenceError(`Cannot Find Buyer with id ${icIdSuplier}`);
 

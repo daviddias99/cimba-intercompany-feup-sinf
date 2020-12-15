@@ -60,6 +60,7 @@ exports.newCreditNote = async (companyId, invoice) => {
   try {
     await createCreditNote(invoice.buyerCustomerParty,
       companyId,
+      invoice.memoReason,
       invoice.documentLines);
   } catch (error) {
     console.log(error.message);
