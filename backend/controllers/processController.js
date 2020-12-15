@@ -88,8 +88,10 @@ exports.getFinancial = async (req, res) => {
     document = await jasmin.getPurchaseFinancial(process.ic_id, process.payment_id);
   } else if (process.type === 'sale') {
     document = await jasmin.getSalesFinancial(process.ic_id, process.payment_id);
-  } else if (process.type === 'return_sale' || process.type === 'return_purchase') {
+  } else if (process.type === 'return_sale') {
     document = await jasmin.getCreditNote(process.ic_id, process.payment_id);
+  } else if (process.type === 'return_purchase') {
+    document = await jasmin.getBuyerCreditNote(process.ic_id, process.payment_id);
   }
 
   return res.json({

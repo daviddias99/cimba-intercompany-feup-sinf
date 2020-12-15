@@ -61,7 +61,6 @@ exports.createOrder = async (
       salesItem: element,
       quantity: await convertItemQuantity(icIdBuyer, documentLines[index].purchasesItem,
         icIdSuplier, documentLines[index].quantity),
-      unitPrice: documentLines[index].unitPrice,
       discount1: documentLines[index].discount1,
       discount2: documentLines[index].discount2,
       discount3: documentLines[index].discount3,
@@ -147,3 +146,5 @@ exports.getSalesFinancial = async (companyId, id) => (await makeRequest(`/accoun
 exports.getPayments = async (companyId, page, pageSize) => (await makeRequest(`accountsPayable/payments?page=${page}&pageSize=${pageSize}`, 'get', companyId)).data;
 
 exports.getCreditNote = async (companyId, id) => (await makeRequest(`/billing/memos/${id}`, 'get', companyId)).data;
+
+exports.getBuyerCreditNote = async (companyId, id) => (await makeRequest(`/invoiceReceipt/memos/${id}`, 'get', companyId)).data;

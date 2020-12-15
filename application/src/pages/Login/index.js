@@ -82,6 +82,20 @@ const Login = () => {
     api.login({ username, password },
       (res) => {
 
+        if (res.status !== 200) {
+          setError(true);
+          setLoading(false);
+          setToastList([
+            ...toastList, {
+              id: numErrors++,
+              title: 'Wrong Credentials',
+              description: 'Form data does not match our records.',
+              color: 'danger',
+            }
+          ]);
+          return;
+        }
+
         api.getSettings(res.data.data.id, (response) => {
 
           setLoading(false);
