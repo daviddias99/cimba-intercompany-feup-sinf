@@ -285,7 +285,6 @@ const Mapping = () => {
                 loading={itemDataLoading}
                 columns={itemTableColumns(deleteItemButton(deleteItemRow))} 
                 data={itemData}
-                selecrows={true}
               />
             </Tab>
             <Tab label="Companies" switchfunc={fetchCompanyData} btntext="New Company Mapping" btnfunc={openCompanyModal}>
@@ -293,7 +292,6 @@ const Mapping = () => {
                 loading={companyDataLoading}
                 columns={companyTableColumns(deleteCompanyButton(deleteCompanyRow))} 
                 data={companyData}
-                selecrows={true}
               />
             </Tab>
           </Tabs>
