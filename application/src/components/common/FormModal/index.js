@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Button} from 'components/common/Button';
 import TextFormField from 'components/common/TextFormField';
+import DropDownFormField from 'components/common/DropdownFormField';
 import { Modal } from 'react-responsive-modal';
 
 import './styles.scss';
@@ -19,7 +20,15 @@ const FormModal = ({title, formfields, open, closefunc, submitfunc}) => {
                 <h1 className="form-modal-title">{title}</h1>
                 {
                     formfields.map(elem => {
-                        return (
+                        return elem.dropdown ? 
+                            <DropDownFormField
+                                key={elem.id}
+                                id={elem.id}
+                                title={elem.title} 
+                                options={elem.options}
+                                valueChanged={valueChanged}
+                            />
+                            :
                             <TextFormField
                                 key={elem.id}
                                 title={elem.title} 
@@ -27,7 +36,6 @@ const FormModal = ({title, formfields, open, closefunc, submitfunc}) => {
                                 id={elem.id} 
                                 valueChanged={valueChanged} 
                             />
-                        )
                     })
                 }
                 <Button 

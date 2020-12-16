@@ -18,6 +18,7 @@ const routes = {
   getFinancial: (processId) => (`/process/${processId}/financial`),
   getProcesses: '/process',
   getLogs: '/logs',
+  companies: `/companies/`,
   company: (companyId) => `/companies/${companyId}`,
   itemMaps: (companyId) => `/companies/${companyId}/itemMaps`,
   singleItemMap : (companyId, localId) => `/companies/${companyId}/itemMaps/${localId}`,
@@ -109,6 +110,9 @@ const api = {
   },
   logout: (callback) => {
     request(routes.logout, 'post', null, callback);
+  },
+  getCompanies: (callback) => {
+    request(routes.companies, 'get', null, callback);
   },
   getCompany: (companyId, callback) => {
     request(routes.company(companyId), 'get', null, callback);
