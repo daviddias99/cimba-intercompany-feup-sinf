@@ -33,8 +33,8 @@ exports.createOrder = async (
   const suplier = await getCompanyById(icIdSuplier);
   if (suplier == null) throw new ReferenceError(`Cannot Find Suplier with id ${icIdSuplier}`);
 
-  // const { documentLines } = order;
   const documentLines = order.documentLines.sort(compareDocumentLines);
+
   const buyer = await getCompanyById(icIdBuyer);
   if (buyer == null) throw new ReferenceError(`Cannot Find Buyer with id ${icIdSuplier}`);
 
@@ -54,13 +54,20 @@ exports.createOrder = async (
 
   mapPromises = await Promise.all(mapPromises);
 
-  const documentLinesMapped = [];
-  mapPromises.forEach(async (element, index) => {
+  let quantity = [];
+  mapPromises.forEach((element, index) => {
     if (element == null) throw new ReferenceError(`Cannot Map Item number ${index}`);
+    quantity.push(convertItemQuantity(icIdBuyer, documentLines[index].purchasesItem,
+      icIdSuplier, documentLines[index].quantity));
+  });
+
+  quantity = await Promise.all(quantity);
+
+  const documentLinesMapped = [];
+  mapPromises.forEach((element, index) => {
     documentLinesMapped.push({
       salesItem: element,
-      quantity: await convertItemQuantity(icIdBuyer, documentLines[index].purchasesItem,
-        icIdSuplier, documentLines[index].quantity),
+      quantity: quantity[index],
       discount1: documentLines[index].discount1,
       discount2: documentLines[index].discount2,
       discount3: documentLines[index].discount3,
