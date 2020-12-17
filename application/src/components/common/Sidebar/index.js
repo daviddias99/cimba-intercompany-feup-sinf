@@ -26,12 +26,6 @@ const Sidebar = () => {
         { title: 'Logs', link: routes.logs.ref(), image: icons.textIcon },
       ],
     },
-    {
-      title: 'Support',
-      links: [
-        { title: 'Support', link: routes.support.ref(), image:icons.supportIcon },
-      ],
-    },
   ];
 
   /**
