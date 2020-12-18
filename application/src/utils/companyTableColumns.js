@@ -2,14 +2,16 @@ import React from 'react';
 import { Button } from "components/common/Button"
 import DeleteIcon from '@material-ui/icons/Delete';
 
-const insertCompanyForm = [
+const insertCompanyForm = companyNames => [
     {
         title: "Company Jasmin ID",
         id: "jasmin_id"
     },
     {
-        title: "Company IC ID",
-        id: "map_ic_id"
+        title: "Company Name",
+        id: "map_ic_id",
+        dropdown: true,
+        options: companyNames
     },
 ]
 

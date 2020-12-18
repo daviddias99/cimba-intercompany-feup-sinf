@@ -17,19 +17,20 @@ let toastID = 1
 
 const Mapping = () => {
 
+  const userCompany = JSON.parse(localStorage.getItem('CIMBA_COMPANY'))
+
   const [toastInfo, setToastInfo] = useState(false)
   const [toastList, setToastList] = useState([])
   
-  const [itemModalVisible, setItemModalVisible] = useState(false)
   const [companyModalVisible, setCompanyModalVisible] = useState(false)
-  
-  const [itemData, setItemData] = useState([])
+  const [companyDataLoading, setCompanyDataLoading] = useState(false)
   const [companyData, setCompanyData] = useState([])
 
+  const [itemData, setItemData] = useState([])
   const [itemDataLoading, setItemDataLoading] = useState(false)
-  const [companyDataLoading, setCompanyDataLoading] = useState(false)
+  const [itemModalVisible, setItemModalVisible] = useState(false)
 
-  const userCompany = JSON.parse(localStorage.getItem('CIMBA_COMPANY'))
+  const [companyNames, setCompanyNames] = useState({})
 
   const fetchItemData = () => {
     if (userCompany && userCompany.id) {
@@ -218,7 +219,7 @@ const Mapping = () => {
         }
       })
   }
-
+ 
   const insertCompanyAction = data => {
     setCompanyDataLoading(true)
     api.addCompanyMap(userCompany.id, data,
@@ -249,6 +250,31 @@ const Mapping = () => {
       })
   }
 
+  const openCompanyModal = () => {
+    api.getCompanies(
+      (res) => {
+        if (res.status === 200) {
+          const newCompanyNames = res.data.filter(elem => elem.id !== companyData.id).map(elem => {
+            return {
+              value: elem.id.toString(),
+              label: elem.name,
+            }
+          })
+          setCompanyNames(newCompanyNames)
+          setCompanyModalVisible(true)
+        }
+        else {
+          addNewToast({
+            id: toastID++,
+            title: 'ERROR',
+            description: 'The was an error fetching data. Please try again later.',
+            color: 'danger',
+          })
+        }
+      }
+    )
+  }
+
   return (
     <>
       <Layout title='Mapping'>
@@ -259,15 +285,13 @@ const Mapping = () => {
                 loading={itemDataLoading}
                 columns={itemTableColumns(deleteItemButton(deleteItemRow))} 
                 data={itemData}
-                selecrows={true}
               />
             </Tab>
-            <Tab label="Companies" switchfunc={fetchCompanyData} btntext="New Company Mapping" btnfunc={() => setCompanyModalVisible(true)}>
+            <Tab label="Companies" switchfunc={fetchCompanyData} btntext="New Company Mapping" btnfunc={openCompanyModal}>
               <Table 
                 loading={companyDataLoading}
                 columns={companyTableColumns(deleteCompanyButton(deleteCompanyRow))} 
                 data={companyData}
-                selecrows={true}
               />
             </Tab>
           </Tabs>
@@ -284,7 +308,7 @@ const Mapping = () => {
 
       <FormModal 
         title={"Insert Company Mapping"}
-        formfields={insertCompanyForm}
+        formfields={insertCompanyForm(companyNames)}
         open={companyModalVisible}
         closefunc={() => setCompanyModalVisible(false)}
         submitfunc={insertCompanyAction}
