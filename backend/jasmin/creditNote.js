@@ -47,9 +47,6 @@ exports.createCreditNote = async (
   purchaseOrderIds = await Promise.all(purchaseOrderIds);
   const buyerOrderIds = new Set(purchaseOrderIds);
 
-  console.log(purchaseOrderIds);
-  console.log(buyerOrderIds);
-
   // Get necessary orders
   let purchaseOrders = [];
   buyerOrderIds.forEach((docId) => {
@@ -58,16 +55,11 @@ exports.createCreditNote = async (
 
   purchaseOrders = await Promise.all(purchaseOrders);
 
-  console.log(purchaseOrders);
-
   // Mapping all of the orders
   let documentLinesMapped = [];
   purchaseOrders.forEach((element) => {
-    console.log(element.documentLines);
     documentLinesMapped = [...documentLinesMapped, ...element.documentLines];
   });
-
-  console.log(documentLinesMapped);
 
   const creditNote = await makeRequest(
     'invoiceReceipt/memos',

@@ -21,28 +21,28 @@ app.use('/', routes);
 app.use(middlewares.notFound);
 app.use(middlewares.error);
 
-// pollPurchaseOrders();
-// setInterval(pollPurchaseOrders, config.pollInterval);
+pollPurchaseOrders();
+setInterval(pollPurchaseOrders, config.pollInterval);
 
-// setTimeout(() => {
-//   pollInvoice();
-//   setInterval(pollInvoice, config.pollInterval);
-// }, config.pollInterval / 3);
+setTimeout(() => {
+  pollInvoice();
+  setInterval(pollInvoice, config.pollInterval);
+}, config.pollInterval / 3);
 
-// setTimeout(() => {
-//   pollCreditNote();
-//   setInterval(pollCreditNote, config.pollInterval);
-// }, config.pollInterval / 4);
+setTimeout(() => {
+  pollCreditNote();
+  setInterval(pollCreditNote, config.pollInterval);
+}, config.pollInterval / 4);
 
-// setTimeout(() => {
-//   pollDelivery();
-//   setInterval(pollDelivery, config.pollInterval);
-// }, (config.pollInterval * 2) / 3);
+setTimeout(() => {
+  pollDelivery();
+  setInterval(pollDelivery, config.pollInterval);
+}, (config.pollInterval * 2) / 3);
 
-// setTimeout(() => {
-//   pollPayment();
-//   setInterval(pollPayment, config.pollInterval);
-// }, config.pollInterval / 4);
+setTimeout(() => {
+  pollPayment();
+  setInterval(pollPayment, config.pollInterval);
+}, config.pollInterval / 4);
 
 app.listen(config.port, () => {
   console.log(`Listening on port ${config.port}.`);
